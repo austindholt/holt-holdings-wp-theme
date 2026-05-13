@@ -4,7 +4,7 @@ Theme URI: https://holtholdings.us
 Author: Austin Holt
 Author URI: https://holtholdings.us
 Description: A lightweight portfolio and project hub for Austin Holt and Holt Holdings LLC.
-Version: 1.4.0
+Version: 1.5.0
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
@@ -185,7 +185,7 @@ img { display: block; height: auto; max-width: 100%; }
 .section { padding-block: 44px; }
 .section-heading { display: grid; gap: 10px; margin-bottom: 22px; }
 .section-heading h2, .page-title, .entry-title { font-size: clamp(1.9rem, 7vw, 3.2rem); letter-spacing: 0; line-height: 1; margin: 0; }
-.card-grid { display: grid; gap: 14px; }
+.card-grid, .quick-link-grid { display: grid; gap: 14px; }
 .hub-card, .product-feature, .contact-band, .entry-content {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -193,6 +193,7 @@ img { display: block; height: auto; max-width: 100%; }
   padding: 20px;
 }
 .hub-card { display: flex; flex-direction: column; min-height: 100%; }
+.quick-link-card { border-color: rgba(18, 39, 56, 0.18); box-shadow: 0 12px 35px rgba(13, 34, 52, 0.06); }
 .hub-card h3, .product-feature h3, .contact-band h2 { font-size: 1.35rem; line-height: 1.15; margin: 10px 0; }
 .hub-card p, .product-feature p, .contact-band p, .entry-content p { color: var(--muted); margin: 0 0 16px; }
 .card-actions { margin-top: auto; }
@@ -243,6 +244,7 @@ img { display: block; height: auto; max-width: 100%; }
   .hero-grid { grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr); }
   .section { padding-block: 62px; }
   .card-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .quick-link-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .product-feature, .contact-band { grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr); }
   .product-grid .product-feature { grid-template-columns: 1fr; }

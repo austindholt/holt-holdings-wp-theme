@@ -33,6 +33,7 @@
 </footer>
 <!-- Holt Holdings theme deploy test: GitHub-to-WordPress update active -->
 <!-- Holt Holdings deploy automation active -->
+<!-- Holt Holdings theme version: <?php echo esc_html( wp_get_theme()->get( 'Version' ) ); ?> -->
 <?php wp_footer(); ?>
 </body>
 </html>

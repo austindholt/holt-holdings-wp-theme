@@ -66,7 +66,7 @@ The main homepage copy and placeholder links can be edited in **Appearance > Cus
 - DIY Website Builder / Website Launch Kit link
 - Contact email
 - Business links
-- Social links, including Facebook, Instagram, YouTube, TikTok, LinkedIn, and personal website
+- Social links, including Facebook, Instagram, YouTube, TikTok, LinkedIn, and Personal / Linktree (`@austindholt`)
 
 Placeholder links are stored in `functions.php` as Customizer defaults and in `front-page.php` as clearly marked fallback values. Replace `#` values when final URLs are ready.
 
@@ -107,6 +107,15 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 - The design is mobile-first, responsive, and intentionally lightweight.
 
 ## Changelog
+
+### 1.5.0
+
+- Reworked the homepage into a personal link tree / portfolio hub.
+- Added Featured Links for Hands On Idaho, DIY Website Builder, Low Volt Crash Course, and Wireman.
+- Added real product URLs for DIY Website Builder and Low Volt Crash Course.
+- Kept Dirty Dumps in disabled internal config only; it is not rendered publicly.
+- Updated Wireman and Drill Bit Index copy to stay intentionally limited and non-active.
+- Added a rendered theme version HTML comment for GitHub-to-WordPress deployment checks.
 
 ### 1.4.0
 
