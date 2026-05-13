@@ -136,6 +136,24 @@ function holt_holdings_is_placeholder_url( $url ) {
 }
 
 /**
+ * Return a known external URL even if WordPress has an old hash placeholder saved.
+ *
+ * @param string $setting_name Theme mod name.
+ * @param string $default_url  Real fallback URL.
+ * @param array  $old_hashes   Old placeholder values to treat as invalid.
+ * @return string
+ */
+function holt_holdings_known_external_url( $setting_name, $default_url, $old_hashes = array() ) {
+	$saved_url = holt_holdings_setting( $setting_name, $default_url );
+
+	if ( ! holt_holdings_is_external_url( $saved_url ) || in_array( $saved_url, $old_hashes, true ) ) {
+		return $default_url;
+	}
+
+	return $saved_url;
+}
+
+/**
  * Echo a button-style link with safe external-link attributes.
  *
  * @param string $url   Link URL.
@@ -165,9 +183,9 @@ function holt_holdings_button_link( $url, $label, $class = 'button' ) {
 function holt_holdings_home_config() {
 	$links = array(
 		'main_site'     => home_url( '/' ),
-		'hands_on'      => holt_holdings_setting( 'hands_on_idaho_url', 'https://handsonidaho.com/' ),
-		'website_kit'   => holt_holdings_setting( 'website_kit_url', 'https://payhip.com/b/6gMCy' ),
-		'crash_course'  => holt_holdings_setting( 'course_url', 'https://payhip.com/b/3GVP5' ),
+		'hands_on'      => holt_holdings_known_external_url( 'hands_on_idaho_url', 'https://handsonidaho.com/', array( '#hands-on-idaho', '#handsonidaho' ) ),
+		'website_kit'   => holt_holdings_known_external_url( 'website_kit_url', 'https://payhip.com/b/6gMCy', array( '#website-launch-kit', '#diy-website-builder' ) ),
+		'crash_course'  => holt_holdings_known_external_url( 'course_url', 'https://payhip.com/b/3GVP5', array( '#low-volt-crash-course' ) ),
 		'wireman'       => holt_holdings_setting( 'wireman_url', '#wireman' ),
 		'drill_bit'     => '#drill-bit-index',
 		'future'        => '#socials',

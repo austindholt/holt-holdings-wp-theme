@@ -18,6 +18,7 @@
 				?>
 			</p>
 			<p class="footer-small"><?php esc_html_e( 'Holt Holdings LLC is a portfolio and project hub. Services, products, and business operations listed on this site are provided by their respective entities, brands, or project owners.', 'holt-holdings' ); ?></p>
+			<p class="footer-small"><?php esc_html_e( 'External product links updated', 'holt-holdings' ); ?></p>
 		</div>
 		<nav class="footer-nav" aria-label="<?php esc_attr_e( 'Footer navigation', 'holt-holdings' ); ?>">
 			<?php
@@ -34,6 +35,7 @@
 <!-- Holt Holdings theme deploy test: GitHub-to-WordPress update active -->
 <!-- Holt Holdings deploy automation active -->
 <!-- Holt Holdings external links fixed -->
+<!-- Holt Holdings external product links updated -->
 <!-- Holt Holdings theme version: <?php echo esc_html( wp_get_theme()->get( 'Version' ) ); ?> -->
 <?php wp_footer(); ?>
 </body>

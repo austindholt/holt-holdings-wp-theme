@@ -108,6 +108,12 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 
 ## Changelog
 
+### 1.7.0
+
+- Forced known external product/business links to their real URLs even when older WordPress Customizer hash placeholders are saved.
+- Added a visible footer verification line for the external product link fix.
+- Added an external product links deployment verification HTML comment.
+
 ### 1.6.0
 
 - Fixed external link rendering so known external URLs open in a new tab with safe `noopener noreferrer` attributes.
