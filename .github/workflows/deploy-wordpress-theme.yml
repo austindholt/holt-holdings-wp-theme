@@ -21,7 +21,18 @@ jobs:
             exit 1
           fi
 
-          curl --fail --show-error --silent --location \
+          echo "Calling Deployer for Git push-to-deploy endpoint..."
+
+          http_code=$(curl --fail-with-body --show-error --silent --location \
+            --output /tmp/deployer-response.txt \
+            --write-out "%{http_code}" \
             --retry 3 \
+            --retry-all-errors \
             --retry-delay 5 \
-            "$WP_DEPLOY_URL"
+            "$WP_DEPLOY_URL")
+
+          echo "Deployer endpoint returned HTTP $http_code."
+          echo "Deployer response preview:"
+          head -c 500 /tmp/deployer-response.txt || true
+          echo
+          echo "Deploy webhook call completed."

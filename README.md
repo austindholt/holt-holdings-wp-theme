@@ -49,6 +49,16 @@ Required GitHub Actions repository secret:
 
 The workflow also supports manual runs from the **Actions** tab in GitHub using **Deploy WordPress Theme > Run workflow**.
 
+To manually trigger a deploy from GitHub:
+
+1. Open the repository on GitHub.
+2. Go to **Actions**.
+3. Select **Deploy WordPress Theme**.
+4. Click **Run workflow**.
+5. Choose the `main` branch and confirm.
+
+The workflow logs should show that the Deployer for Git endpoint was called and should display the HTTP status code without printing the secret URL.
+
 ## Installation
 
 1. In WordPress, go to **Appearance > Themes > Add New > Upload Theme**.
@@ -107,6 +117,12 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 - The design is mobile-first, responsive, and intentionally lightweight.
 
 ## Changelog
+
+### 1.9.0
+
+- Improved GitHub Actions deploy logging without exposing the Push to Deploy URL.
+- Added clearer curl failure behavior and retry handling for Deployer for Git.
+- Added an auto deploy workflow test HTML comment.
 
 ### 1.8.0
 

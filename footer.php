@@ -38,6 +38,7 @@
 <!-- Holt Holdings external links fixed -->
 <!-- Holt Holdings external product links updated -->
 <!-- External product links fixed test -->
+<!-- Auto deploy workflow test active -->
 <!-- Holt Holdings theme version: <?php echo esc_html( wp_get_theme()->get( 'Version' ) ); ?> -->
 <?php wp_footer(); ?>
 </body>
