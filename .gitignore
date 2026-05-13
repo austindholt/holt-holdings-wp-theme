@@ -1,0 +1,26 @@
+# Local build artifacts
+*.zip
+
+# Legacy/non-theme workspace material kept out of this theme repo
+legacy-static-site/
+holt-holdings/
+Hands-On-Idaho/
+original/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Dependency/build directories if tooling is added later
+node_modules/
+vendor/
+
+# Local environment and secrets
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx

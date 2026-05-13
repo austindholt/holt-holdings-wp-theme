@@ -1,0 +1,104 @@
+# Holt Holdings WordPress Theme
+
+A custom lightweight WordPress theme for `holtholdings.us`, built as a clean portfolio and project hub for Austin Holt and Holt Holdings LLC.
+
+## Repository Structure
+
+This repository is intended to be the source of truth for the WordPress theme. The editable theme files live at the repository root for Git deployment compatibility.
+
+The root includes:
+
+- `style.css`
+- `functions.php`
+- `index.php`
+- `header.php`
+- `footer.php`
+- `front-page.php`
+- `page.php`
+- `assets/`
+- `README.md`
+- `screenshot.png`
+
+The WordPress theme header is in the top-level `style.css`. The theme name is **Holt Holdings**.
+
+## Git Deployment
+
+For Deployer for Git or a similar WordPress Git deployment plugin, use this repository URL placeholder:
+
+`https://github.com/<YOUR-GITHUB-USERNAME>/holt-holdings-wp-theme`
+
+Recommended deployment target inside WordPress:
+
+`wp-content/themes/holt-holdings`
+
+If the GitHub repo is private, the deployment plugin may require authentication, a deploy key, a GitHub token, or a Pro/private-repo feature. Do not commit SiteGround credentials, WordPress admin credentials, API keys, tokens, or private deployment secrets to this repository.
+
+## Installation
+
+1. In WordPress, go to **Appearance > Themes > Add New > Upload Theme**.
+2. Upload `holt-holdings.zip`.
+3. Activate **Holt Holdings**.
+4. Go to **Settings > Reading** if you want to assign a static homepage.
+5. Go to **Appearance > Menus** and assign menus to **Primary Menu** and **Footer Menu**.
+
+## Editing Site Content
+
+The main homepage copy and placeholder links can be edited in **Appearance > Customize > Holt Holdings Home**:
+
+- Hero headline and subheadline
+- Course link
+- Contact email
+- Business links
+- Social links
+
+Placeholder links are stored in `functions.php` as Customizer defaults and in `front-page.php` as clearly marked fallback values. Replace `#` values when final URLs are ready.
+
+## Logo
+
+The theme supports the WordPress custom logo feature. Add the Holt Holdings logo in **Appearance > Customize > Site Identity > Logo**. If no custom logo is uploaded, the header falls back to the text `Holt Holdings.`.
+
+The uploaded logo is also included in the theme at `assets/images/holt-holdings-logo.jpeg` for convenience.
+
+## Fallback Zip Build
+
+Git deployment should be the primary update path going forward. If you need a manual upload package, run this from the repository root in PowerShell:
+
+```powershell
+.\build-theme-zip.ps1
+```
+
+This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is ignored by git and should not be treated as the source of truth.
+
+## Included Files
+
+- `style.css`
+- `functions.php`
+- `index.php`
+- `header.php`
+- `footer.php`
+- `front-page.php`
+- `page.php`
+- `assets/js/navigation.js`
+- `assets/images/holt-holdings-logo.jpeg`
+- `screenshot.png`
+
+## Notes
+
+- No paid plugins are required.
+- The theme registers Primary and Footer menu locations.
+- Placeholder business, product, and social links use `#` until replaced.
+- The design is mobile-first, responsive, and intentionally lightweight.
+
+## Changelog
+
+### 1.2.0
+
+- Moved the editable WordPress theme source to the repository root for Git deployment.
+- Added Git deployment notes and fallback zip build process.
+- Added `Update URI` theme header pointing at the future GitHub repo path.
+
+### 1.1.0
+
+- Updated positioning so Holt Holdings reads as a portfolio and project hub.
+- Clarified Wireman as a family tool project under construction.
+- Added footer disclaimer and improved custom logo fallback behavior.
