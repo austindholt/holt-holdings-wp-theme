@@ -46,7 +46,7 @@ $home_config   = holt_holdings_home_config();
 					<h3><?php echo esc_html( $featured_link['name'] ); ?></h3>
 					<p><?php echo esc_html( $featured_link['description'] ); ?></p>
 					<div class="card-actions">
-						<a class="button secondary" href="<?php echo esc_url( $featured_link['url'] ); ?>"><?php echo esc_html( $featured_link['button'] ); ?></a>
+						<?php holt_holdings_button_link( $featured_link['url'], $featured_link['button'], 'button secondary' ); ?>
 					</div>
 				</article>
 			<?php endforeach; ?>
@@ -69,7 +69,7 @@ $home_config   = holt_holdings_home_config();
 					<h3><?php echo esc_html( $business['name'] ); ?></h3>
 					<p><?php echo esc_html( $business['description'] ); ?></p>
 					<div class="card-actions">
-						<a class="button secondary" href="<?php echo esc_url( $business['url'] ); ?>"><?php echo esc_html( $business['button'] ); ?></a>
+						<?php holt_holdings_button_link( $business['url'], $business['button'], 'button secondary' ); ?>
 					</div>
 				</article>
 			<?php endforeach; ?>
@@ -89,7 +89,7 @@ $home_config   = holt_holdings_home_config();
 					<h3><?php echo esc_html( $product['name'] ); ?></h3>
 					<p><?php echo esc_html( $product['description'] ); ?></p>
 					<div class="card-actions">
-						<a class="button" href="<?php echo esc_url( $product['url'] ); ?>"><?php echo esc_html( $product['button'] ); ?></a>
+						<?php holt_holdings_button_link( $product['url'], $product['button'] ); ?>
 					</div>
 				</article>
 			<?php endforeach; ?>
@@ -109,7 +109,7 @@ $home_config   = holt_holdings_home_config();
 					<h3><?php echo esc_html( $work['name'] ); ?></h3>
 					<p><?php echo esc_html( $work['description'] ); ?></p>
 					<div class="card-actions">
-						<a class="button secondary" href="<?php echo esc_url( $work['url'] ); ?>"><?php echo esc_html( $work['button'] ); ?></a>
+						<?php holt_holdings_button_link( $work['url'], $work['button'], 'button secondary' ); ?>
 					</div>
 				</article>
 			<?php endforeach; ?>
@@ -124,7 +124,14 @@ $home_config   = holt_holdings_home_config();
 		</div>
 		<div class="social-grid">
 			<?php foreach ( $home_config['social_links'] as $social_link ) : ?>
-				<a class="social-card" href="<?php echo esc_url( $social_link['url'] ); ?>"><?php echo esc_html( $social_link['label'] ); ?></a>
+				<?php if ( holt_holdings_is_placeholder_url( $social_link['url'] ) || 'placeholder' === $social_link['status'] ) : ?>
+					<span class="social-card social-card-disabled" aria-disabled="true">
+						<span><?php echo esc_html( $social_link['label'] ); ?></span>
+						<small><?php esc_html_e( 'Coming Soon', 'holt-holdings' ); ?></small>
+					</span>
+				<?php else : ?>
+					<a class="social-card" href="<?php echo esc_url( $social_link['url'] ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $social_link['label'] ); ?></a>
+				<?php endif; ?>
 			<?php endforeach; ?>
 		</div>
 	</section>

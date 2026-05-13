@@ -116,6 +116,45 @@ function holt_holdings_setting( $name, $default = '' ) {
 }
 
 /**
+ * Check whether a URL should be treated as an external web link.
+ *
+ * @param string $url Link URL.
+ * @return bool
+ */
+function holt_holdings_is_external_url( $url ) {
+	return 0 === strpos( $url, 'http://' ) || 0 === strpos( $url, 'https://' );
+}
+
+/**
+ * Check whether a URL is a placeholder hash rather than a real navigation target.
+ *
+ * @param string $url Link URL.
+ * @return bool
+ */
+function holt_holdings_is_placeholder_url( $url ) {
+	return empty( $url ) || '#' === $url || 0 === strpos( $url, '#facebook' ) || 0 === strpos( $url, '#instagram' ) || 0 === strpos( $url, '#youtube' ) || 0 === strpos( $url, '#tiktok' ) || 0 === strpos( $url, '#linkedin' ) || 0 === strpos( $url, '#linktree' );
+}
+
+/**
+ * Echo a button-style link with safe external-link attributes.
+ *
+ * @param string $url   Link URL.
+ * @param string $label Link label.
+ * @param string $class CSS class.
+ */
+function holt_holdings_button_link( $url, $label, $class = 'button' ) {
+	$target = holt_holdings_is_external_url( $url ) ? ' target="_blank" rel="noopener noreferrer"' : '';
+
+	printf(
+		'<a class="%1$s" href="%2$s"%3$s>%4$s</a>',
+		esc_attr( $class ),
+		esc_url( $url ),
+		$target, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		esc_html( $label )
+	);
+}
+
+/**
  * Centralized link and content config for homepage hub sections.
  *
  * Keep real URLs here when known. Use # placeholders only when a final public
@@ -232,14 +271,14 @@ function holt_holdings_home_config() {
 			),
 		),
 		'social_links'    => array(
-			array( 'label' => 'Main Website', 'url' => $links['main_site'] ),
-			array( 'label' => 'Hands On Idaho', 'url' => $links['hands_on'] ),
-			array( 'label' => 'Facebook', 'url' => $links['facebook'] ),
-			array( 'label' => 'Instagram', 'url' => $links['instagram'] ),
-			array( 'label' => 'YouTube', 'url' => $links['youtube'] ),
-			array( 'label' => 'TikTok', 'url' => $links['tiktok'] ),
-			array( 'label' => 'LinkedIn', 'url' => $links['linkedin'] ),
-			array( 'label' => 'Personal / Linktree (@austindholt)', 'url' => $links['linktree'] ),
+			array( 'label' => 'Main Website', 'url' => $links['main_site'], 'status' => 'active' ),
+			array( 'label' => 'Hands On Idaho', 'url' => $links['hands_on'], 'status' => 'active' ),
+			array( 'label' => 'Facebook', 'url' => $links['facebook'], 'status' => 'placeholder' ),
+			array( 'label' => 'Instagram', 'url' => $links['instagram'], 'status' => 'placeholder' ),
+			array( 'label' => 'YouTube', 'url' => $links['youtube'], 'status' => 'placeholder' ),
+			array( 'label' => 'TikTok', 'url' => $links['tiktok'], 'status' => 'placeholder' ),
+			array( 'label' => 'LinkedIn', 'url' => $links['linkedin'], 'status' => 'placeholder' ),
+			array( 'label' => 'Personal / Linktree (@austindholt)', 'url' => $links['linktree'], 'status' => 'placeholder' ),
 		),
 	);
 }

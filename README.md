@@ -108,6 +108,13 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 
 ## Changelog
 
+### 1.6.0
+
+- Fixed external link rendering so known external URLs open in a new tab with safe `noopener noreferrer` attributes.
+- Added helper functions for external link detection and button link output.
+- Changed unknown social placeholders into non-clickable Coming Soon items instead of misleading hash links.
+- Added an external-link deployment verification HTML comment.
+
 ### 1.5.0
 
 - Reworked the homepage into a personal link tree / portfolio hub.

@@ -4,7 +4,7 @@ Theme URI: https://holtholdings.us
 Author: Austin Holt
 Author URI: https://holtholdings.us
 Description: A lightweight portfolio and project hub for Austin Holt and Holt Holdings LLC.
-Version: 1.5.0
+Version: 1.6.0
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
@@ -223,6 +223,18 @@ img { display: block; height: auto; max-width: 100%; }
 .social-card::after { color: var(--muted); content: ">"; font-size: 1rem; }
 .social-card:hover, .social-card:focus { background: var(--navy); border-color: var(--navy); color: #fff; }
 .social-card:hover::after, .social-card:focus::after { color: #fff; }
+.social-card-disabled {
+  color: var(--muted);
+  cursor: default;
+}
+.social-card-disabled small {
+  color: var(--steel);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.social-card-disabled::after { content: ""; }
+.social-card-disabled:hover, .social-card-disabled:focus { background: var(--surface); border-color: var(--line); color: var(--muted); }
 
 .site-footer { background: var(--dark-navy); color: #fff; margin-top: 34px; padding-block: 34px; }
 .footer-inner { display: grid; gap: 18px; }
