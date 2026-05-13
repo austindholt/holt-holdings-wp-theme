@@ -37,6 +37,18 @@ Recommended deployment target inside WordPress:
 
 If the GitHub repo is private, the deployment plugin may require authentication, a deploy key, a GitHub token, or a Pro/private-repo feature. Do not commit SiteGround credentials, WordPress admin credentials, API keys, tokens, or private deployment secrets to this repository.
 
+## GitHub Actions Deployment
+
+This repo is connected to WordPress through the Deployer for Git plugin. The GitHub Actions workflow at `.github/workflows/deploy-wordpress-theme.yml` triggers the WordPress theme update after pushes to the `main` branch.
+
+Required GitHub Actions repository secret:
+
+- `WP_DEPLOY_URL`
+
+`WP_DEPLOY_URL` should contain the Deployer for Git Push to Deploy URL. The deploy URL must never be committed to this repository, printed in docs, or stored in code.
+
+The workflow also supports manual runs from the **Actions** tab in GitHub using **Deploy WordPress Theme > Run workflow**.
+
 ## Installation
 
 1. In WordPress, go to **Appearance > Themes > Add New > Upload Theme**.
@@ -95,6 +107,12 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 - The design is mobile-first, responsive, and intentionally lightweight.
 
 ## Changelog
+
+### 1.4.0
+
+- Added GitHub Actions deployment automation for Deployer for Git.
+- Documented the required `WP_DEPLOY_URL` repository secret and manual workflow trigger.
+- Added a footer HTML comment for deploy automation verification.
 
 ### 1.3.0
 

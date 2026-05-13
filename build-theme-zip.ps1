@@ -5,12 +5,16 @@ $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $zipPath = Join-Path $root "$themeSlug.zip"
 $excludeTopLevel = @(
   '.git',
+  '.github',
   'holt-holdings',
   'legacy-static-site',
   'original',
   'Hands-On-Idaho'
 )
 $excludeFiles = @(
+  '.gitattributes',
+  '.gitignore',
+  'build-theme-zip.ps1',
   "$themeSlug.zip"
 )
 

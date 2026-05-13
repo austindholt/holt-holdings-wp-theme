@@ -1,0 +1,27 @@
+name: Deploy WordPress Theme
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Trigger WordPress theme deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Deployer for Git webhook
+        env:
+          WP_DEPLOY_URL: ${{ secrets.WP_DEPLOY_URL }}
+        run: |
+          if [ -z "$WP_DEPLOY_URL" ]; then
+            echo "WP_DEPLOY_URL secret is not set."
+            exit 1
+          fi
+
+          curl --fail --show-error --silent --location \
+            --retry 3 \
+            --retry-delay 5 \
+            "$WP_DEPLOY_URL"

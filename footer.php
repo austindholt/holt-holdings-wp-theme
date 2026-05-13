@@ -32,6 +32,7 @@
 	</div>
 </footer>
 <!-- Holt Holdings theme deploy test: GitHub-to-WordPress update active -->
+<!-- Holt Holdings deploy automation active -->
 <?php wp_footer(); ?>
 </body>
 </html>
