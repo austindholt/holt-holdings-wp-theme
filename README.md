@@ -27,6 +27,10 @@ For Deployer for Git or a similar WordPress Git deployment plugin, use this repo
 
 `https://github.com/<YOUR-GITHUB-USERNAME>/holt-holdings-wp-theme`
 
+Current GitHub repository for this theme:
+
+`https://github.com/austindholt/holt-holdings-wp-theme`
+
 Recommended deployment target inside WordPress:
 
 `wp-content/themes/holt-holdings`
@@ -46,10 +50,11 @@ If the GitHub repo is private, the deployment plugin may require authentication,
 The main homepage copy and placeholder links can be edited in **Appearance > Customize > Holt Holdings Home**:
 
 - Hero headline and subheadline
-- Course link
+- Low Volt Crash Course link
+- DIY Website Builder / Website Launch Kit link
 - Contact email
 - Business links
-- Social links
+- Social links, including Facebook, Instagram, YouTube, TikTok, LinkedIn, and personal website
 
 Placeholder links are stored in `functions.php` as Customizer defaults and in `front-page.php` as clearly marked fallback values. Replace `#` values when final URLs are ready.
 
@@ -90,6 +95,14 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 - The design is mobile-first, responsive, and intentionally lightweight.
 
 ## Changelog
+
+### 1.3.0
+
+- Updated the theme color palette to match the Holt Holdings navy and white logo direction.
+- Added a stronger Follow the Build social section with Facebook and other placeholder links.
+- Added the DIY Website Builder / Website Launch Kit digital product card.
+- Kept Wireman positioned as a family tool project under construction.
+- Added a footer HTML comment for testing the Deployer for Git workflow.
 
 ### 1.2.0
 

@@ -65,15 +65,18 @@ function holt_holdings_customize_register( $wp_customize ) {
 			'type'    => 'textarea',
 		),
 		// Placeholder links: leave as # until each brand, product, or social URL is ready.
-		'course_url'       => array( 'label' => __( 'Low Volt Crash Course URL', 'holt-holdings' ), 'default' => '#', 'type' => 'url' ),
+		'course_url'       => array( 'label' => __( 'Low Volt Crash Course URL', 'holt-holdings' ), 'default' => '#low-volt-crash-course', 'type' => 'url' ),
+		'website_kit_url'  => array( 'label' => __( 'DIY Website Builder / Website Launch Kit URL', 'holt-holdings' ), 'default' => '#website-launch-kit', 'type' => 'url' ),
 		'contact_email'    => array( 'label' => __( 'Contact Email', 'holt-holdings' ), 'default' => 'hello@holtholdings.us', 'type' => 'email' ),
 		'hands_on_idaho_url' => array( 'label' => __( 'Hands On Idaho URL', 'holt-holdings' ), 'default' => '#', 'type' => 'url' ),
 		'dirty_dumps_url'  => array( 'label' => __( 'Dirty Dumps Hauling Co. URL', 'holt-holdings' ), 'default' => '#', 'type' => 'url' ),
 		'wireman_url'      => array( 'label' => __( 'Wireman URL', 'holt-holdings' ), 'default' => '#', 'type' => 'url' ),
-		'instagram_url'    => array( 'label' => __( 'Instagram URL', 'holt-holdings' ), 'default' => '#', 'type' => 'url' ),
-		'youtube_url'      => array( 'label' => __( 'YouTube URL', 'holt-holdings' ), 'default' => '#', 'type' => 'url' ),
-		'linkedin_url'     => array( 'label' => __( 'LinkedIn URL', 'holt-holdings' ), 'default' => '#', 'type' => 'url' ),
-		'x_url'            => array( 'label' => __( 'X / Twitter URL', 'holt-holdings' ), 'default' => '#', 'type' => 'url' ),
+		'facebook_url'     => array( 'label' => __( 'Facebook URL', 'holt-holdings' ), 'default' => '#facebook', 'type' => 'url' ),
+		'instagram_url'    => array( 'label' => __( 'Instagram URL', 'holt-holdings' ), 'default' => '#instagram', 'type' => 'url' ),
+		'youtube_url'      => array( 'label' => __( 'YouTube URL', 'holt-holdings' ), 'default' => '#youtube', 'type' => 'url' ),
+		'tiktok_url'       => array( 'label' => __( 'TikTok URL', 'holt-holdings' ), 'default' => '#tiktok', 'type' => 'url' ),
+		'linkedin_url'     => array( 'label' => __( 'LinkedIn URL', 'holt-holdings' ), 'default' => '#linkedin', 'type' => 'url' ),
+		'personal_site_url' => array( 'label' => __( 'Personal Website / Future Link URL', 'holt-holdings' ), 'default' => '#personal-website', 'type' => 'url' ),
 	);
 
 	foreach ( $fields as $id => $field ) {
@@ -121,6 +124,7 @@ function holt_holdings_fallback_menu() {
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#businesses"><?php esc_html_e( 'Businesses', 'holt-holdings' ); ?></a></li>
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#products"><?php esc_html_e( 'Digital Products', 'holt-holdings' ); ?></a></li>
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#projects"><?php esc_html_e( 'Projects', 'holt-holdings' ); ?></a></li>
+		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#follow"><?php esc_html_e( 'Follow', 'holt-holdings' ); ?></a></li>
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#contact"><?php esc_html_e( 'Contact', 'holt-holdings' ); ?></a></li>
 	</ul>
 	<?php

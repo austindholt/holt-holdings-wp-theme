@@ -31,6 +31,7 @@
 		</nav>
 	</div>
 </footer>
+<!-- Holt Holdings theme deploy test: GitHub-to-WordPress update active -->
 <?php wp_footer(); ?>
 </body>
 </html>

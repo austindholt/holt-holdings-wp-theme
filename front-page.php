@@ -51,6 +51,42 @@ $projects = array(
 		'label'       => 'Coming Soon',
 	),
 );
+
+$digital_products = array(
+	array(
+		'name'        => 'Low Volt Crash Course',
+		'kicker'      => 'Digital Education',
+		'description' => 'A standalone beginner-friendly digital education product covering cameras, access control, wiring basics, tools, and practical field knowledge.',
+		'url'         => holt_holdings_setting( 'course_url', '#low-volt-crash-course' ),
+		'button'      => 'View Course',
+		'points'      => array(
+			'Cameras, access control, and system fundamentals',
+			'Wiring basics, field tools, and practical learning habits',
+			'Plain-language lessons for beginners',
+		),
+	),
+	array(
+		'name'        => 'DIY Website Builder / Website Launch Kit',
+		'kicker'      => 'Website Product',
+		'description' => 'DIY Website Builder is a practical website launch kit built to help small business owners, side hustlers, and creators move from a blank screen to a live website faster. It includes structure, prompts, and guidance to make the website-building process less overwhelming.',
+		'url'         => holt_holdings_setting( 'website_kit_url', '#website-launch-kit' ),
+		'button'      => 'View Product',
+		'points'      => array(
+			'Website structure and launch planning',
+			'Prompts for copy, offers, pages, and calls to action',
+			'Guidance for getting unstuck and publishing faster',
+		),
+	),
+);
+
+$social_links = array(
+	array( 'label' => 'Facebook', 'url' => holt_holdings_setting( 'facebook_url', '#facebook' ) ),
+	array( 'label' => 'Instagram', 'url' => holt_holdings_setting( 'instagram_url', '#instagram' ) ),
+	array( 'label' => 'YouTube', 'url' => holt_holdings_setting( 'youtube_url', '#youtube' ) ),
+	array( 'label' => 'TikTok', 'url' => holt_holdings_setting( 'tiktok_url', '#tiktok' ) ),
+	array( 'label' => 'LinkedIn', 'url' => holt_holdings_setting( 'linkedin_url', '#linkedin' ) ),
+	array( 'label' => 'Personal Website', 'url' => holt_holdings_setting( 'personal_site_url', '#personal-website' ) ),
+);
 ?>
 <main id="primary" class="site-main">
 	<section class="hero" id="home">
@@ -106,21 +142,26 @@ $projects = array(
 	<section class="section" id="products">
 		<div class="section-heading">
 			<span class="eyebrow"><?php esc_html_e( 'Digital Products', 'holt-holdings' ); ?></span>
-			<h2><?php esc_html_e( 'Courses and practical resources.', 'holt-holdings' ); ?></h2>
+			<h2><?php esc_html_e( 'Courses, launch kits, and practical resources.', 'holt-holdings' ); ?></h2>
+			<p><?php esc_html_e( 'Digital products listed here are separate products and resources connected to the broader Holt Holdings portfolio.', 'holt-holdings' ); ?></p>
 		</div>
-		<article class="product-feature">
-			<div>
-				<span class="card-kicker"><?php esc_html_e( 'Featured Product', 'holt-holdings' ); ?></span>
-				<h3><?php esc_html_e( 'Low Volt Crash Course', 'holt-holdings' ); ?></h3>
-				<p><?php esc_html_e( 'A standalone beginner-friendly digital education product covering cameras, access control, wiring basics, tools, and practical field knowledge.', 'holt-holdings' ); ?></p>
-				<a class="button" href="<?php echo esc_url( holt_holdings_setting( 'course_url', '#' ) ); ?>"><?php esc_html_e( 'View Course', 'holt-holdings' ); ?></a>
-			</div>
-			<ul class="check-list">
-				<li><?php esc_html_e( 'Cameras, access control, and system fundamentals', 'holt-holdings' ); ?></li>
-				<li><?php esc_html_e( 'Wiring basics, field tools, and practical learning habits', 'holt-holdings' ); ?></li>
-				<li><?php esc_html_e( 'Plain-language lessons for beginners', 'holt-holdings' ); ?></li>
-			</ul>
-		</article>
+		<div class="product-grid">
+			<?php foreach ( $digital_products as $product ) : ?>
+				<article class="product-feature">
+					<div>
+						<span class="card-kicker"><?php echo esc_html( $product['kicker'] ); ?></span>
+						<h3><?php echo esc_html( $product['name'] ); ?></h3>
+						<p><?php echo esc_html( $product['description'] ); ?></p>
+						<a class="button" href="<?php echo esc_url( $product['url'] ); ?>"><?php echo esc_html( $product['button'] ); ?></a>
+					</div>
+					<ul class="check-list">
+						<?php foreach ( $product['points'] as $point ) : ?>
+							<li><?php echo esc_html( $point ); ?></li>
+						<?php endforeach; ?>
+					</ul>
+				</article>
+			<?php endforeach; ?>
+		</div>
 	</section>
 
 	<section class="section" id="projects">
@@ -139,6 +180,19 @@ $projects = array(
 		</div>
 	</section>
 
+	<section class="section" id="follow">
+		<div class="section-heading">
+			<span class="eyebrow"><?php esc_html_e( 'Follow Along', 'holt-holdings' ); ?></span>
+			<h2><?php esc_html_e( 'Follow the Build', 'holt-holdings' ); ?></h2>
+			<p><?php esc_html_e( 'Follow along as Holt Holdings grows practical businesses, digital products, tools, and trade-focused resources.', 'holt-holdings' ); ?></p>
+		</div>
+		<div class="social-grid">
+			<?php foreach ( $social_links as $social_link ) : ?>
+				<a class="social-card" href="<?php echo esc_url( $social_link['url'] ); ?>"><?php echo esc_html( $social_link['label'] ); ?></a>
+			<?php endforeach; ?>
+		</div>
+	</section>
+
 	<section class="section" id="contact">
 		<div class="contact-band">
 			<div>
@@ -148,12 +202,6 @@ $projects = array(
 			</div>
 			<div>
 				<a class="button" href="mailto:<?php echo esc_attr( antispambot( $contact_email ) ); ?>"><?php esc_html_e( 'Email Austin', 'holt-holdings' ); ?></a>
-				<ul class="social-list" id="social">
-					<li><a href="<?php echo esc_url( holt_holdings_setting( 'instagram_url', '#' ) ); ?>"><?php esc_html_e( 'Instagram', 'holt-holdings' ); ?></a></li>
-					<li><a href="<?php echo esc_url( holt_holdings_setting( 'youtube_url', '#' ) ); ?>"><?php esc_html_e( 'YouTube', 'holt-holdings' ); ?></a></li>
-					<li><a href="<?php echo esc_url( holt_holdings_setting( 'linkedin_url', '#' ) ); ?>"><?php esc_html_e( 'LinkedIn', 'holt-holdings' ); ?></a></li>
-					<li><a href="<?php echo esc_url( holt_holdings_setting( 'x_url', '#' ) ); ?>"><?php esc_html_e( 'X', 'holt-holdings' ); ?></a></li>
-				</ul>
 			</div>
 		</div>
 	</section>

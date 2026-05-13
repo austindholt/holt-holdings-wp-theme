@@ -4,11 +4,11 @@ Theme URI: https://holtholdings.us
 Author: Austin Holt
 Author URI: https://holtholdings.us
 Description: A lightweight portfolio and project hub for Austin Holt and Holt Holdings LLC.
-Version: 1.2.0
+Version: 1.3.0
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
-Update URI: https://github.com/YOUR-GITHUB-USERNAME/holt-holdings-wp-theme
+Update URI: https://github.com/austindholt/holt-holdings-wp-theme
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: holt-holdings
@@ -16,16 +16,17 @@ Tags: custom-logo, custom-menu, featured-images, one-column, portfolio
 */
 
 :root {
-  --bg: #f7f5ef;
+  --bg: #f4f6f8;
   --surface: #ffffff;
-  --ink: #18201c;
-  --muted: #5c665e;
-  --line: #d9d5ca;
-  --steel: #344552;
-  --green: #1f5b45;
-  --copper: #b65f2b;
-  --yellow: #f2b84b;
-  --shadow: 0 18px 55px rgba(24, 32, 28, 0.1);
+  --ink: #122738;
+  --muted: #52616f;
+  --line: #d8dee5;
+  --steel: #31414e;
+  --navy: #122738;
+  --dark-navy: #0d2234;
+  --soft-navy: #e8eef3;
+  --white: #ffffff;
+  --shadow: 0 18px 55px rgba(13, 34, 52, 0.12);
   --radius: 8px;
   --max: 1160px;
 }
@@ -40,13 +41,13 @@ body {
   font-size: 16px;
   line-height: 1.6;
 }
-a { color: inherit; text-decoration-color: rgba(31, 91, 69, 0.45); text-underline-offset: 0.18em; }
-a:hover, a:focus { color: var(--green); }
+a { color: inherit; text-decoration-color: rgba(18, 39, 56, 0.35); text-underline-offset: 0.18em; }
+a:hover, a:focus { color: var(--navy); }
 img { display: block; height: auto; max-width: 100%; }
 .screen-reader-text { clip: rect(1px, 1px, 1px, 1px); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
 
 .site-header {
-  background: rgba(247, 245, 239, 0.94);
+  background: rgba(244, 246, 248, 0.94);
   border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
@@ -69,14 +70,14 @@ img { display: block; height: auto; max-width: 100%; }
 .site-branding .custom-logo-link { display: inline-flex; flex: 0 0 auto; }
 .site-branding .custom-logo {
   height: auto;
-  max-height: 48px;
-  max-width: min(220px, 48vw);
+  max-height: 54px;
+  max-width: min(240px, 48vw);
   width: auto;
 }
 .brand-mark {
   align-items: center;
   background: var(--ink);
-  border: 2px solid var(--yellow);
+  border: 2px solid var(--white);
   color: #fff;
   display: inline-flex;
   font-size: 0.86rem;
@@ -126,7 +127,7 @@ img { display: block; height: auto; max-width: 100%; }
 .hero { padding-block: 56px 40px; }
 .hero-grid { align-items: center; display: grid; gap: 34px; }
 .eyebrow, .card-kicker, .coming-soon {
-  color: var(--copper);
+  color: var(--steel);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -160,19 +161,21 @@ img { display: block; height: auto; max-width: 100%; }
   padding: 11px 16px;
   text-decoration: none;
 }
-.button:hover, .button:focus, .wp-block-button__link:hover, .wp-block-button__link:focus { background: var(--green); border-color: var(--green); color: #fff; }
+.button:hover, .button:focus, .wp-block-button__link:hover, .wp-block-button__link:focus { background: var(--steel); border-color: var(--steel); color: #fff; }
 .button.secondary { background: transparent; color: var(--ink); }
 .button.secondary:hover, .button.secondary:focus { background: var(--ink); color: #fff; }
 
 .hero-panel {
-  background: linear-gradient(135deg, rgba(31, 91, 69, 0.95), rgba(52, 69, 82, 0.96));
+  background:
+    linear-gradient(135deg, rgba(13, 34, 52, 0.98), rgba(18, 39, 56, 0.96)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 28px);
   box-shadow: var(--shadow);
   color: #fff;
   overflow: hidden;
   padding: 24px;
   position: relative;
 }
-.hero-panel::after { background: var(--yellow); content: ""; height: 12px; inset: auto 0 0; position: absolute; }
+.hero-panel::after { background: var(--white); content: ""; height: 8px; inset: auto 0 0; position: absolute; opacity: 0.9; }
 .panel-label { color: rgba(255,255,255,0.72); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 .panel-lines { display: grid; gap: 12px; margin-top: 24px; }
 .panel-line { align-items: center; border-top: 1px solid rgba(255,255,255,0.18); display: flex; gap: 12px; justify-content: space-between; padding-top: 12px; }
@@ -193,16 +196,34 @@ img { display: block; height: auto; max-width: 100%; }
 .hub-card h3, .product-feature h3, .contact-band h2 { font-size: 1.35rem; line-height: 1.15; margin: 10px 0; }
 .hub-card p, .product-feature p, .contact-band p, .entry-content p { color: var(--muted); margin: 0 0 16px; }
 .card-actions { margin-top: auto; }
-.product-feature { background: linear-gradient(90deg, rgba(242,184,75,0.24), transparent 44%), var(--surface); display: grid; gap: 16px; }
+.product-grid { display: grid; gap: 14px; }
+.product-feature { background: linear-gradient(90deg, rgba(18, 39, 56, 0.08), transparent 48%), var(--surface); display: grid; gap: 16px; }
 .check-list { display: grid; gap: 8px; list-style: none; margin: 0; padding: 0; }
 .check-list li { color: var(--muted); padding-left: 26px; position: relative; }
-.check-list li::before { background: var(--green); content: ""; height: 8px; left: 2px; position: absolute; top: 0.65em; width: 8px; }
-.coming-soon { background: rgba(242,184,75,0.18); border: 1px solid rgba(182,95,43,0.24); display: inline-flex; padding: 4px 8px; width: fit-content; }
+.check-list li::before { background: var(--navy); content: ""; height: 8px; left: 2px; position: absolute; top: 0.65em; width: 8px; }
+.coming-soon { background: var(--soft-navy); border: 1px solid var(--line); display: inline-flex; padding: 4px 8px; width: fit-content; }
 .contact-band { align-items: center; display: grid; gap: 18px; }
 .social-list { list-style: none; margin-bottom: 0; padding: 0; }
 .social-list a { border: 1px solid var(--line); display: inline-flex; font-weight: 800; padding: 10px 12px; text-decoration: none; }
+.social-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.social-card {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  display: flex;
+  font-weight: 800;
+  justify-content: space-between;
+  min-height: 58px;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+.social-card::after { color: var(--muted); content: ">"; font-size: 1rem; }
+.social-card:hover, .social-card:focus { background: var(--navy); border-color: var(--navy); color: #fff; }
+.social-card:hover::after, .social-card:focus::after { color: #fff; }
 
-.site-footer { background: var(--ink); color: #fff; margin-top: 34px; padding-block: 34px; }
+.site-footer { background: var(--dark-navy); color: #fff; margin-top: 34px; padding-block: 34px; }
 .footer-inner { display: grid; gap: 18px; }
 .footer-main { display: grid; gap: 8px; max-width: 760px; }
 .footer-nav ul { display: flex; flex-wrap: wrap; gap: 8px 18px; list-style: none; margin: 0; padding: 0; }
@@ -222,7 +243,10 @@ img { display: block; height: auto; max-width: 100%; }
   .hero-grid { grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr); }
   .section { padding-block: 62px; }
   .card-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .product-feature, .contact-band { grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr); }
+  .product-grid .product-feature { grid-template-columns: 1fr; }
+  .social-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .footer-inner { align-items: center; grid-template-columns: minmax(0, 1fr) auto; }
 }
 @media (max-width: 782px) { .admin-bar .site-header { top: 46px; } }
