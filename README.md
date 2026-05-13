@@ -108,6 +108,12 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 
 ## Changelog
 
+### 1.8.0
+
+- Hardcoded the known public URLs for Hands On Idaho, DIY Website Builder, and Low Volt Crash Course in the rendered homepage config.
+- Removed old product hash fallback values from the rendered homepage data path.
+- Added a visible footer Payhip test link and source comment for live verification.
+
 ### 1.7.0
 
 - Forced known external product/business links to their real URLs even when older WordPress Customizer hash placeholders are saved.
