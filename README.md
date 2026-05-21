@@ -69,16 +69,21 @@ The workflow logs should show that the Deployer for Git endpoint was called and 
 
 ## Editing Site Content
 
-The main homepage copy and placeholder links can be edited in **Appearance > Customize > Holt Holdings Home**:
+The main homepage copy and public links can be edited in **Appearance > Customize > Holt Holdings Home**. The source defaults live in the centralized `holt_holdings_home_config()` section of `functions.php`.
 
 - Hero headline and subheadline
 - Low Volt Crash Course link
 - DIY Website Builder / Website Launch Kit link
+- ExacqVision Storage Server Setup Checklist / Field SOP link
 - Contact email
 - Business links
-- Social links, including Facebook, Instagram, YouTube, TikTok, LinkedIn, and Personal / Linktree (`@austindholt`)
+- Social links, including Linktree, Facebook, Instagram, YouTube, TikTok, and Hands On Idaho social links
 
-Placeholder links are stored in `functions.php` as Customizer defaults and in `front-page.php` as clearly marked fallback values. Replace `#` values when final URLs are ready.
+Unknown public links are kept empty so the theme hides them or renders non-clickable Coming Soon labels instead of misleading placeholder buttons.
+
+## Weekly Link Audit
+
+The workflow at `.github/workflows/weekly-link-audit.yml` runs weekly and can also be triggered manually from GitHub Actions. It checks that the known public Holt Holdings, social, Hands On Idaho, and Payhip URLs are present in the theme source and that public render files do not regress to placeholder social/product links.
 
 ## Logo
 
@@ -113,10 +118,18 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 
 - No paid plugins are required.
 - The theme registers Primary and Footer menu locations.
-- Placeholder business, product, and social links use `#` until replaced.
+- Unknown business, product, and social links should stay empty until a real URL is ready.
 - The design is mobile-first, responsive, and intentionally lightweight.
 
 ## Changelog
+
+### 1.10.0
+
+- Replaced placeholder social buttons with real Linktree, Instagram, YouTube, TikTok, Facebook, Hands On Idaho, and Payhip product links.
+- Added the ExacqVision Storage Server Setup Checklist / Field SOP digital product.
+- Hid unknown social links instead of rendering empty clickable placeholders.
+- Kept Dirty Dumps disabled from the public homepage and Wireman/Drill Bit Index as non-clickable Coming Soon items.
+- Added a weekly GitHub Actions link audit for required public URLs and blocked placeholder regressions.
 
 ### 1.9.0
 

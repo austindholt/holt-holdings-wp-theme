@@ -49,7 +49,7 @@ add_action( 'wp_enqueue_scripts', 'holt_holdings_assets' );
 function holt_holdings_customize_register( $wp_customize ) {
 	$wp_customize->add_section( 'holt_holdings_home', array(
 		'title'       => __( 'Holt Holdings Home', 'holt-holdings' ),
-		'description' => __( 'Edit homepage headlines, calls to action, and placeholder links. Replace # values when final URLs are ready.', 'holt-holdings' ),
+		'description' => __( 'Edit homepage headlines, calls to action, and public links.', 'holt-holdings' ),
 		'priority'    => 30,
 	) );
 
@@ -64,19 +64,22 @@ function holt_holdings_customize_register( $wp_customize ) {
 			'default' => 'Holt Holdings is the home base for Austin Holt\'s businesses, family projects, digital products, and works in progress - from home services and practical tools to trade-focused resources and small business projects.',
 			'type'    => 'textarea',
 		),
-		// Placeholder links: leave as # until each brand, product, or social URL is ready.
-		'course_url'       => array( 'label' => __( 'Low Volt Crash Course URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/3GVP5', 'type' => 'url' ),
-		'website_kit_url'  => array( 'label' => __( 'DIY Website Builder / Website Launch Kit URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/6gMCy', 'type' => 'url' ),
-		'contact_email'    => array( 'label' => __( 'Contact Email', 'holt-holdings' ), 'default' => 'hello@holtholdings.us', 'type' => 'email' ),
-		'hands_on_idaho_url' => array( 'label' => __( 'Hands On Idaho URL', 'holt-holdings' ), 'default' => 'https://handsonidaho.com/', 'type' => 'url' ),
-		'dirty_dumps_url'  => array( 'label' => __( 'Dirty Dumps Hauling Co. URL', 'holt-holdings' ), 'default' => '#', 'type' => 'url' ),
-		'wireman_url'      => array( 'label' => __( 'Wireman URL', 'holt-holdings' ), 'default' => '#wireman', 'type' => 'url' ),
-		'facebook_url'     => array( 'label' => __( 'Facebook URL', 'holt-holdings' ), 'default' => '#facebook', 'type' => 'url' ),
-		'instagram_url'    => array( 'label' => __( 'Instagram URL', 'holt-holdings' ), 'default' => '#instagram', 'type' => 'url' ),
-		'youtube_url'      => array( 'label' => __( 'YouTube URL', 'holt-holdings' ), 'default' => '#youtube', 'type' => 'url' ),
-		'tiktok_url'       => array( 'label' => __( 'TikTok URL', 'holt-holdings' ), 'default' => '#tiktok', 'type' => 'url' ),
-		'linkedin_url'     => array( 'label' => __( 'LinkedIn URL', 'holt-holdings' ), 'default' => '#linkedin', 'type' => 'url' ),
-		'linktree_url'     => array( 'label' => __( 'Personal / Linktree URL', 'holt-holdings' ), 'default' => '#linktree', 'type' => 'url' ),
+		// Update social/product URLs here. Empty project URLs render as non-clickable Coming Soon labels.
+		'course_url'          => array( 'label' => __( 'Low Volt Crash Course URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/3GVP5', 'type' => 'url' ),
+		'website_kit_url'     => array( 'label' => __( 'DIY Website Builder / Website Launch Kit URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/6gMCy', 'type' => 'url' ),
+		'exacq_checklist_url' => array( 'label' => __( 'ExacqVision Checklist / SOP URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/9iMt1', 'type' => 'url' ),
+		'contact_email'       => array( 'label' => __( 'Contact Email', 'holt-holdings' ), 'default' => 'hello@holtholdings.us', 'type' => 'email' ),
+		'hands_on_idaho_url'  => array( 'label' => __( 'Hands On Idaho URL', 'holt-holdings' ), 'default' => 'https://handsonidaho.com/', 'type' => 'url' ),
+		'hands_on_instagram_url' => array( 'label' => __( 'Hands On Idaho Instagram URL', 'holt-holdings' ), 'default' => 'https://www.instagram.com/handsonidaho', 'type' => 'url' ),
+		'hands_on_facebook_url'  => array( 'label' => __( 'Hands On Idaho Facebook URL', 'holt-holdings' ), 'default' => 'https://www.facebook.com/share/1GvksuadZf/?mibextid=wwXIfr', 'type' => 'url' ),
+		'dirty_dumps_url'     => array( 'label' => __( 'Dirty Dumps Hauling Co. URL', 'holt-holdings' ), 'default' => '', 'type' => 'url' ),
+		'wireman_url'         => array( 'label' => __( 'Wireman URL', 'holt-holdings' ), 'default' => '', 'type' => 'url' ),
+		'facebook_url'        => array( 'label' => __( 'Facebook URL', 'holt-holdings' ), 'default' => 'https://www.facebook.com/share/1HF3jGFF8L/?mibextid=wwXIfr', 'type' => 'url' ),
+		'instagram_url'       => array( 'label' => __( 'Instagram URL', 'holt-holdings' ), 'default' => 'https://www.instagram.com/austindholt', 'type' => 'url' ),
+		'youtube_url'         => array( 'label' => __( 'YouTube URL', 'holt-holdings' ), 'default' => 'https://youtube.com/@austindholt', 'type' => 'url' ),
+		'tiktok_url'          => array( 'label' => __( 'TikTok URL', 'holt-holdings' ), 'default' => 'https://www.tiktok.com/@austindholt', 'type' => 'url' ),
+		'linkedin_url'        => array( 'label' => __( 'LinkedIn URL', 'holt-holdings' ), 'default' => '', 'type' => 'url' ),
+		'linktree_url'        => array( 'label' => __( 'Personal / Linktree URL', 'holt-holdings' ), 'default' => 'https://linktr.ee/austindholt', 'type' => 'url' ),
 	);
 
 	foreach ( $fields as $id => $field ) {
@@ -116,6 +119,23 @@ function holt_holdings_setting( $name, $default = '' ) {
 }
 
 /**
+ * Return a saved URL, unless it is empty or an old placeholder.
+ *
+ * @param string $name    Setting name.
+ * @param string $default Known public URL fallback.
+ * @return string
+ */
+function holt_holdings_link_setting( $name, $default = '' ) {
+	$value = holt_holdings_setting( $name, $default );
+
+	if ( holt_holdings_is_placeholder_url( $value ) ) {
+		return $default;
+	}
+
+	return $value;
+}
+
+/**
  * Check whether a URL should be treated as an external web link.
  *
  * @param string $url Link URL.
@@ -132,7 +152,23 @@ function holt_holdings_is_external_url( $url ) {
  * @return bool
  */
 function holt_holdings_is_placeholder_url( $url ) {
-	return empty( $url ) || '#' === $url || 0 === strpos( $url, '#facebook' ) || 0 === strpos( $url, '#instagram' ) || 0 === strpos( $url, '#youtube' ) || 0 === strpos( $url, '#tiktok' ) || 0 === strpos( $url, '#linkedin' ) || 0 === strpos( $url, '#linktree' );
+	$placeholder_urls = array(
+		'',
+		'#',
+		'#facebook',
+		'#instagram',
+		'#youtube',
+		'#tiktok',
+		'#linkedin',
+		'#linktree',
+		'#low-volt-crash-course',
+		'#website-launch-kit',
+		'#diy-website-builder',
+		'#wireman',
+		'#drill-bit-index',
+	);
+
+	return in_array( trim( (string) $url ), $placeholder_urls, true );
 }
 
 /**
@@ -143,6 +179,15 @@ function holt_holdings_is_placeholder_url( $url ) {
  * @param string $class CSS class.
  */
 function holt_holdings_button_link( $url, $label, $class = 'button' ) {
+	if ( holt_holdings_is_placeholder_url( $url ) ) {
+		printf(
+			'<span class="%1$s button-disabled" aria-disabled="true">%2$s</span>',
+			esc_attr( $class ),
+			esc_html( $label )
+		);
+		return;
+	}
+
 	$target = holt_holdings_is_external_url( $url ) ? ' target="_blank" rel="noopener noreferrer"' : '';
 
 	printf(
@@ -157,26 +202,29 @@ function holt_holdings_button_link( $url, $label, $class = 'button' ) {
 /**
  * Centralized link and content config for homepage hub sections.
  *
- * Keep real URLs here when known. Use # placeholders only when a final public
- * URL is not available yet.
+ * Update social/product URLs here. Keep unknown links empty so they do not
+ * render as misleading clickable placeholders.
  *
  * @return array
  */
 function holt_holdings_home_config() {
 	$links = array(
-		'main_site'     => home_url( '/' ),
-		'hands_on'      => 'https://handsonidaho.com/',
-		'website_kit'   => 'https://payhip.com/b/6gMCy',
-		'crash_course'  => 'https://payhip.com/b/3GVP5',
-		'wireman'       => holt_holdings_setting( 'wireman_url', '#wireman' ),
-		'drill_bit'     => '#drill-bit-index',
-		'future'        => '#socials',
-		'facebook'      => holt_holdings_setting( 'facebook_url', '#facebook' ),
-		'instagram'     => holt_holdings_setting( 'instagram_url', '#instagram' ),
-		'youtube'       => holt_holdings_setting( 'youtube_url', '#youtube' ),
-		'tiktok'        => holt_holdings_setting( 'tiktok_url', '#tiktok' ),
-		'linkedin'      => holt_holdings_setting( 'linkedin_url', '#linkedin' ),
-		'linktree'      => holt_holdings_setting( 'linktree_url', '#linktree' ),
+		'main_site'          => 'https://holtholdings.us/',
+		'hands_on'           => holt_holdings_link_setting( 'hands_on_idaho_url', 'https://handsonidaho.com/' ),
+		'hands_on_instagram' => holt_holdings_link_setting( 'hands_on_instagram_url', 'https://www.instagram.com/handsonidaho' ),
+		'hands_on_facebook'  => holt_holdings_link_setting( 'hands_on_facebook_url', 'https://www.facebook.com/share/1GvksuadZf/?mibextid=wwXIfr' ),
+		'website_kit'        => holt_holdings_link_setting( 'website_kit_url', 'https://payhip.com/b/6gMCy' ),
+		'crash_course'       => holt_holdings_link_setting( 'course_url', 'https://payhip.com/b/3GVP5' ),
+		'exacq_checklist'    => holt_holdings_link_setting( 'exacq_checklist_url', 'https://payhip.com/b/9iMt1' ),
+		'wireman'            => holt_holdings_link_setting( 'wireman_url', '' ),
+		'drill_bit'          => '',
+		'future'             => '#socials',
+		'facebook'           => holt_holdings_link_setting( 'facebook_url', 'https://www.facebook.com/share/1HF3jGFF8L/?mibextid=wwXIfr' ),
+		'instagram'          => holt_holdings_link_setting( 'instagram_url', 'https://www.instagram.com/austindholt' ),
+		'youtube'            => holt_holdings_link_setting( 'youtube_url', 'https://youtube.com/@austindholt' ),
+		'tiktok'             => holt_holdings_link_setting( 'tiktok_url', 'https://www.tiktok.com/@austindholt' ),
+		'linkedin'           => holt_holdings_link_setting( 'linkedin_url', '' ),
+		'linktree'           => holt_holdings_link_setting( 'linktree_url', 'https://linktr.ee/austindholt' ),
 	);
 
 	return array(
@@ -205,6 +253,12 @@ function holt_holdings_home_config() {
 				'description' => 'Family tool project currently under construction.',
 				'url'         => $links['wireman'],
 				'button'      => 'Coming Soon',
+			),
+			array(
+				'name'        => 'ExacqVision Checklist / SOP',
+				'description' => 'A practical field checklist for cleaner ExacqVision storage server setup workflows.',
+				'url'         => $links['exacq_checklist'],
+				'button'      => 'View Checklist',
 			),
 		),
 		'businesses'      => array(
@@ -249,6 +303,13 @@ function holt_holdings_home_config() {
 				'url'         => $links['crash_course'],
 				'button'      => 'View Course',
 			),
+			array(
+				'name'        => 'ExacqVision Storage Server Setup Checklist / Field SOP',
+				'kicker'      => 'Field SOP',
+				'description' => 'A practical field checklist for setting up ExacqVision storage server/NAS-style recording workflows, built for techs who want a cleaner step-by-step reference.',
+				'url'         => $links['exacq_checklist'],
+				'button'      => 'View Checklist',
+			),
 		),
 		'works'           => array(
 			array(
@@ -271,14 +332,17 @@ function holt_holdings_home_config() {
 			),
 		),
 		'social_links'    => array(
-			array( 'label' => 'Main Website', 'url' => $links['main_site'], 'status' => 'active' ),
+			array( 'label' => 'Linktree', 'url' => $links['linktree'], 'status' => 'active' ),
+			array( 'label' => 'Instagram', 'url' => $links['instagram'], 'status' => 'active' ),
+			array( 'label' => 'YouTube', 'url' => $links['youtube'], 'status' => 'active' ),
+			array( 'label' => 'TikTok', 'url' => $links['tiktok'], 'status' => 'active' ),
+			array( 'label' => 'Facebook', 'url' => $links['facebook'], 'status' => 'active' ),
 			array( 'label' => 'Hands On Idaho', 'url' => $links['hands_on'], 'status' => 'active' ),
-			array( 'label' => 'Facebook', 'url' => $links['facebook'], 'status' => 'placeholder' ),
-			array( 'label' => 'Instagram', 'url' => $links['instagram'], 'status' => 'placeholder' ),
-			array( 'label' => 'YouTube', 'url' => $links['youtube'], 'status' => 'placeholder' ),
-			array( 'label' => 'TikTok', 'url' => $links['tiktok'], 'status' => 'placeholder' ),
-			array( 'label' => 'LinkedIn', 'url' => $links['linkedin'], 'status' => 'placeholder' ),
-			array( 'label' => 'Personal / Linktree (@austindholt)', 'url' => $links['linktree'], 'status' => 'placeholder' ),
+			array( 'label' => 'Low Volt Crash Course', 'url' => $links['crash_course'], 'status' => 'active' ),
+			array( 'label' => 'DIY Website Builder', 'url' => $links['website_kit'], 'status' => 'active' ),
+			array( 'label' => 'ExacqVision Checklist / SOP', 'url' => $links['exacq_checklist'], 'status' => 'active' ),
+			array( 'label' => 'Hands On Idaho Instagram', 'url' => $links['hands_on_instagram'], 'status' => 'active' ),
+			array( 'label' => 'Hands On Idaho Facebook', 'url' => $links['hands_on_facebook'], 'status' => 'active' ),
 		),
 	);
 }

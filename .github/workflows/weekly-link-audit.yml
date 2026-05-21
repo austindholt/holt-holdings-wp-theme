@@ -1,0 +1,60 @@
+name: Weekly Link Audit
+
+on:
+  schedule:
+    - cron: "0 15 * * 1"
+  workflow_dispatch:
+
+jobs:
+  link-audit:
+    name: Verify public Holt Holdings links
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out theme
+        uses: actions/checkout@v4
+
+      - name: Verify required URLs and blocked placeholders
+        run: |
+          set -euo pipefail
+
+          required_urls=(
+            "https://linktr.ee/austindholt"
+            "https://www.instagram.com/austindholt"
+            "https://youtube.com/@austindholt"
+            "https://www.tiktok.com/@austindholt"
+            "https://www.facebook.com/share/1HF3jGFF8L/?mibextid=wwXIfr"
+            "https://handsonidaho.com/"
+            "https://payhip.com/b/3GVP5"
+            "https://payhip.com/b/6gMCy"
+            "https://payhip.com/b/9iMt1"
+          )
+
+          for url in "${required_urls[@]}"; do
+            if ! grep -R --fixed-strings "$url" functions.php front-page.php footer.php README.md >/dev/null; then
+              echo "Missing required public URL: $url"
+              exit 1
+            fi
+          done
+
+          blocked_patterns=(
+            'href="#"'
+            '#facebook'
+            '#instagram'
+            '#youtube'
+            '#tiktok'
+            '#linkedin'
+            '#linktree'
+            '#low-volt-crash-course'
+            '#website-launch-kit'
+            '#diy-website-builder'
+          )
+
+          for pattern in "${blocked_patterns[@]}"; do
+            if grep -R --fixed-strings "$pattern" front-page.php footer.php >/dev/null; then
+              echo "Blocked public placeholder found: $pattern"
+              exit 1
+            fi
+          done
+
+          echo "Holt Holdings public link audit passed."
