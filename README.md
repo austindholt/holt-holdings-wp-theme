@@ -1,6 +1,6 @@
 # Holt Holdings WordPress Theme
 
-A custom lightweight WordPress theme for `holtholdings.us`, built as a clean portfolio and project hub for Austin Holt and Holt Holdings LLC.
+A custom lightweight WordPress theme for `holtholdings.us`, built as Austin Holt's personal-brand hub for digital products, field guides, affiliate resources, business projects, and Holt Holdings LLC updates.
 
 ## Repository Structure
 
@@ -75,11 +75,17 @@ The main homepage copy and public links can be edited in **Appearance > Customiz
 - Low Volt Crash Course link
 - DIY Website Builder / Website Launch Kit link
 - ExacqVision Storage Server Setup Checklist / Field SOP link
+- LowVoltHolt Payhip Store and field guide links
+- Amazon affiliate/resource links
 - Contact email
 - Business links
 - Social links, including Linktree, Facebook, Instagram, YouTube, TikTok, and Hands On Idaho social links
 
+General Holt Holdings / Austin Holt contact uses `holtholdings@outlook.com`. Business-specific contact details, such as Hands-On Idaho email addresses, should stay with their own business pages or sections.
+
 Unknown public links are kept empty so the theme hides them or renders non-clickable Coming Soon labels instead of misleading placeholder buttons.
+
+Amazon affiliate links use `rel="sponsored noopener noreferrer"` and include a visible disclosure near the resource cards and in the footer.
 
 ## Weekly Link Audit
 
@@ -122,6 +128,22 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 - The design is mobile-first, responsive, and intentionally lightweight.
 
 ## Changelog
+
+### 1.11.2
+
+- Fixed the general Holt Holdings contact email to `holtholdings@outlook.com`.
+- Updated the contact CTA to use the exact `mailto:holtholdings@outlook.com` link.
+- Added compatibility handling so an older saved `hello@holtholdings.us` Customizer value is treated as `holtholdings@outlook.com`.
+- Confirmed current Payhip, Amazon, business, and social links remain centralized in `functions.php`.
+
+### 1.11.0
+
+- Repositioned the homepage as an Austin Holt / Holt Holdings personal-brand hub instead of a local service site.
+- Added current LowVoltHolt Payhip store and field guide products.
+- Added Amazon Storefront, Prime, Audible, and Amazon Business resource links with affiliate disclosure.
+- Added Dirty Dumps, Hands-On Idaho Google Review, and updated Hands-On Idaho Facebook links.
+- Added lightweight homepage SEO/Open Graph tags and a Resources navigation path.
+- Updated the weekly link audit for the current Payhip, Amazon, business, and social URLs.
 
 ### 1.10.0
 

@@ -44,6 +44,31 @@ function holt_holdings_assets() {
 add_action( 'wp_enqueue_scripts', 'holt_holdings_assets' );
 
 /**
+ * Add lightweight SEO and sharing meta for the homepage.
+ */
+function holt_holdings_meta_tags() {
+	if ( ! is_front_page() && ! is_home() ) {
+		return;
+	}
+
+	$title       = 'Austin Holt / Holt Holdings - Digital Products, Field Guides, Tools, and Projects';
+	$description = 'Austin Holt and Holt Holdings hub for Payhip field guides, practical resources, affiliate tools, business projects, and creator links.';
+	$url         = home_url( '/' );
+	$image       = get_template_directory_uri() . '/assets/images/holt-holdings-logo.jpeg';
+	?>
+	<meta name="description" content="<?php echo esc_attr( $description ); ?>">
+	<meta property="og:site_name" content="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
+	<meta property="og:title" content="<?php echo esc_attr( $title ); ?>">
+	<meta property="og:description" content="<?php echo esc_attr( $description ); ?>">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="<?php echo esc_url( $url ); ?>">
+	<meta property="og:image" content="<?php echo esc_url( $image ); ?>">
+	<meta name="twitter:card" content="summary_large_image">
+	<?php
+}
+add_action( 'wp_head', 'holt_holdings_meta_tags', 5 );
+
+/**
  * Register Customizer fields for easy homepage editing.
  */
 function holt_holdings_customize_register( $wp_customize ) {
@@ -56,30 +81,44 @@ function holt_holdings_customize_register( $wp_customize ) {
 	$fields = array(
 		'hero_headline'    => array(
 			'label'   => __( 'Hero Headline', 'holt-holdings' ),
-			'default' => 'Building practical businesses, tools, and digital products.',
+			'default' => 'Field notes, digital guides, tools, and business projects.',
 			'type'    => 'textarea',
 		),
 		'hero_subheadline' => array(
 			'label'   => __( 'Hero Subheadline', 'holt-holdings' ),
-			'default' => 'Holt Holdings is the home base for Austin Holt\'s businesses, family projects, digital products, and works in progress - from home services and practical tools to trade-focused resources and small business projects.',
+			'default' => 'Holt Holdings is Austin Holt\'s personal hub for practical field notes, Payhip guides, useful tools, affiliate resources, business projects, inventions, and creator links.',
 			'type'    => 'textarea',
 		),
 		// Update social/product URLs here. Empty project URLs render as non-clickable Coming Soon labels.
-		'course_url'          => array( 'label' => __( 'Low Volt Crash Course URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/3GVP5', 'type' => 'url' ),
-		'website_kit_url'     => array( 'label' => __( 'DIY Website Builder / Website Launch Kit URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/6gMCy', 'type' => 'url' ),
-		'exacq_checklist_url' => array( 'label' => __( 'ExacqVision Checklist / SOP URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/9iMt1', 'type' => 'url' ),
-		'contact_email'       => array( 'label' => __( 'Contact Email', 'holt-holdings' ), 'default' => 'hello@holtholdings.us', 'type' => 'email' ),
-		'hands_on_idaho_url'  => array( 'label' => __( 'Hands On Idaho URL', 'holt-holdings' ), 'default' => 'https://handsonidaho.com/', 'type' => 'url' ),
+		'payhip_store_url'       => array( 'label' => __( 'LowVoltHolt Payhip Store URL', 'holt-holdings' ), 'default' => 'https://payhip.com/LowVoltHolt', 'type' => 'url' ),
+		'course_url'             => array( 'label' => __( 'Low Voltage Crash Course URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/3GVP5', 'type' => 'url' ),
+		'everyday_money_url'     => array( 'label' => __( 'Everyday Money Moves URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/sa17H', 'type' => 'url' ),
+		'windows_rebuild_url'    => array( 'label' => __( 'Windows Rebuild Guide URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/kROjv', 'type' => 'url' ),
+		'exacq_checklist_url'    => array( 'label' => __( 'ExacqVision Checklist / SOP URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/9iMt1', 'type' => 'url' ),
+		'rytec_guide_url'        => array( 'label' => __( 'Rytec Door Interlock Field Guide URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/T9YW2', 'type' => 'url' ),
+		'pdk_notes_url'          => array( 'label' => __( 'PDK Field Notes URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/mGHjT', 'type' => 'url' ),
+		'lenels2_sop_url'        => array( 'label' => __( 'LenelS2 NetBox Field SOP URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/NK4IS', 'type' => 'url' ),
+		'synology_guide_url'     => array( 'label' => __( 'Synology NAS Setup Field Guide URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/xEdtR', 'type' => 'url' ),
+		'website_kit_url'        => array( 'label' => __( 'DIY Website Builder / Website Launch Kit URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/6gMCy', 'type' => 'url' ),
+		'amazon_storefront_url'  => array( 'label' => __( 'Amazon Storefront URL', 'holt-holdings' ), 'default' => 'https://a.co/d/0aEp6yu6', 'type' => 'url' ),
+		'amazon_prime_url'       => array( 'label' => __( 'Amazon Prime URL', 'holt-holdings' ), 'default' => 'https://amzn.to/4u1aeBb', 'type' => 'url' ),
+		'audible_url'            => array( 'label' => __( 'Audible Premium Plus URL', 'holt-holdings' ), 'default' => 'https://amzn.to/4twRitV', 'type' => 'url' ),
+		'amazon_business_url'    => array( 'label' => __( 'Amazon Business URL', 'holt-holdings' ), 'default' => 'https://amzn.to/4wY2e6H', 'type' => 'url' ),
+		'contact_email'          => array( 'label' => __( 'Contact Email', 'holt-holdings' ), 'default' => 'holtholdings@outlook.com', 'type' => 'email' ),
+		'hands_on_idaho_url'     => array( 'label' => __( 'Hands On Idaho URL', 'holt-holdings' ), 'default' => 'https://handsonidaho.com', 'type' => 'url' ),
 		'hands_on_instagram_url' => array( 'label' => __( 'Hands On Idaho Instagram URL', 'holt-holdings' ), 'default' => 'https://www.instagram.com/handsonidaho', 'type' => 'url' ),
-		'hands_on_facebook_url'  => array( 'label' => __( 'Hands On Idaho Facebook URL', 'holt-holdings' ), 'default' => 'https://www.facebook.com/share/1GvksuadZf/?mibextid=wwXIfr', 'type' => 'url' ),
-		'dirty_dumps_url'     => array( 'label' => __( 'Dirty Dumps Hauling Co. URL', 'holt-holdings' ), 'default' => '', 'type' => 'url' ),
-		'wireman_url'         => array( 'label' => __( 'Wireman URL', 'holt-holdings' ), 'default' => '', 'type' => 'url' ),
-		'facebook_url'        => array( 'label' => __( 'Facebook URL', 'holt-holdings' ), 'default' => 'https://www.facebook.com/share/1HF3jGFF8L/?mibextid=wwXIfr', 'type' => 'url' ),
-		'instagram_url'       => array( 'label' => __( 'Instagram URL', 'holt-holdings' ), 'default' => 'https://www.instagram.com/austindholt', 'type' => 'url' ),
-		'youtube_url'         => array( 'label' => __( 'YouTube URL', 'holt-holdings' ), 'default' => 'https://youtube.com/@austindholt', 'type' => 'url' ),
-		'tiktok_url'          => array( 'label' => __( 'TikTok URL', 'holt-holdings' ), 'default' => 'https://www.tiktok.com/@austindholt', 'type' => 'url' ),
-		'linkedin_url'        => array( 'label' => __( 'LinkedIn URL', 'holt-holdings' ), 'default' => '', 'type' => 'url' ),
-		'linktree_url'        => array( 'label' => __( 'Personal / Linktree URL', 'holt-holdings' ), 'default' => 'https://linktr.ee/austindholt', 'type' => 'url' ),
+		'hands_on_facebook_url'  => array( 'label' => __( 'Hands On Idaho Facebook URL', 'holt-holdings' ), 'default' => 'https://www.facebook.com/profile.php?id=61580497944298', 'type' => 'url' ),
+		'hands_on_review_url'    => array( 'label' => __( 'Hands On Idaho Google Review URL', 'holt-holdings' ), 'default' => 'https://g.page/r/CWVQEsDBWd1GEBM/review', 'type' => 'url' ),
+		'dirty_dumps_url'        => array( 'label' => __( 'Dirty Dumps Hauling Co. URL', 'holt-holdings' ), 'default' => 'https://dirtydumpshaulingco.com', 'type' => 'url' ),
+		'dirty_dumps_instagram_url' => array( 'label' => __( 'Dirty Dumps Instagram URL', 'holt-holdings' ), 'default' => 'https://www.instagram.com/dirtydumpshaulingco', 'type' => 'url' ),
+		'wireman_url'            => array( 'label' => __( 'Wireman URL', 'holt-holdings' ), 'default' => '', 'type' => 'url' ),
+		'facebook_url'           => array( 'label' => __( 'Facebook URL', 'holt-holdings' ), 'default' => 'https://www.facebook.com/share/1HF3jGFF8L/?mibextid=wwXIfr', 'type' => 'url' ),
+		'instagram_url'          => array( 'label' => __( 'Instagram URL', 'holt-holdings' ), 'default' => 'https://www.instagram.com/austindholt', 'type' => 'url' ),
+		'youtube_url'            => array( 'label' => __( 'YouTube URL', 'holt-holdings' ), 'default' => 'https://youtube.com/@austindholt', 'type' => 'url' ),
+		'tiktok_url'             => array( 'label' => __( 'TikTok URL', 'holt-holdings' ), 'default' => 'https://www.tiktok.com/@austindholt', 'type' => 'url' ),
+		'linkedin_url'           => array( 'label' => __( 'LinkedIn URL', 'holt-holdings' ), 'default' => '', 'type' => 'url' ),
+		'github_url'             => array( 'label' => __( 'GitHub URL', 'holt-holdings' ), 'default' => '', 'type' => 'url' ),
+		'linktree_url'           => array( 'label' => __( 'Austin Holt / Linktree URL', 'holt-holdings' ), 'default' => 'https://linktr.ee/austindholt', 'type' => 'url' ),
 	);
 
 	foreach ( $fields as $id => $field ) {
@@ -119,6 +158,21 @@ function holt_holdings_setting( $name, $default = '' ) {
 }
 
 /**
+ * Return the general Holt Holdings contact email.
+ *
+ * @return string
+ */
+function holt_holdings_contact_email() {
+	$email = strtolower( trim( holt_holdings_setting( 'contact_email', 'holtholdings@outlook.com' ) ) );
+
+	if ( empty( $email ) || 'hello@holtholdings.us' === $email ) {
+		return 'holtholdings@outlook.com';
+	}
+
+	return $email;
+}
+
+/**
  * Return a saved URL, unless it is empty or an old placeholder.
  *
  * @param string $name    Setting name.
@@ -143,6 +197,38 @@ function holt_holdings_link_setting( $name, $default = '' ) {
  */
 function holt_holdings_is_external_url( $url ) {
 	return 0 === strpos( $url, 'http://' ) || 0 === strpos( $url, 'https://' );
+}
+
+/**
+ * Check whether a URL is an Amazon affiliate/resource link.
+ *
+ * @param string $url Link URL.
+ * @return bool
+ */
+function holt_holdings_is_affiliate_url( $url ) {
+	$host = wp_parse_url( $url, PHP_URL_HOST );
+
+	if ( ! $host ) {
+		return false;
+	}
+
+	$host = strtolower( $host );
+
+	return in_array( $host, array( 'a.co', 'amzn.to' ), true ) || false !== strpos( $host, 'amazon.' );
+}
+
+/**
+ * Return safe rel attributes for external links.
+ *
+ * @param string $url Link URL.
+ * @return string
+ */
+function holt_holdings_link_rel( $url ) {
+	if ( ! holt_holdings_is_external_url( $url ) ) {
+		return '';
+	}
+
+	return holt_holdings_is_affiliate_url( $url ) ? 'sponsored noopener noreferrer' : 'noopener noreferrer';
 }
 
 /**
@@ -188,7 +274,8 @@ function holt_holdings_button_link( $url, $label, $class = 'button' ) {
 		return;
 	}
 
-	$target = holt_holdings_is_external_url( $url ) ? ' target="_blank" rel="noopener noreferrer"' : '';
+	$rel    = holt_holdings_link_rel( $url );
+	$target = holt_holdings_is_external_url( $url ) ? sprintf( ' target="_blank" rel="%s"', esc_attr( $rel ) ) : '';
 
 	printf(
 		'<a class="%1$s" href="%2$s"%3$s>%4$s</a>',
@@ -210,12 +297,26 @@ function holt_holdings_button_link( $url, $label, $class = 'button' ) {
 function holt_holdings_home_config() {
 	$links = array(
 		'main_site'          => 'https://holtholdings.us/',
-		'hands_on'           => holt_holdings_link_setting( 'hands_on_idaho_url', 'https://handsonidaho.com/' ),
-		'hands_on_instagram' => holt_holdings_link_setting( 'hands_on_instagram_url', 'https://www.instagram.com/handsonidaho' ),
-		'hands_on_facebook'  => holt_holdings_link_setting( 'hands_on_facebook_url', 'https://www.facebook.com/share/1GvksuadZf/?mibextid=wwXIfr' ),
-		'website_kit'        => holt_holdings_link_setting( 'website_kit_url', 'https://payhip.com/b/6gMCy' ),
+		'payhip_store'       => holt_holdings_link_setting( 'payhip_store_url', 'https://payhip.com/LowVoltHolt' ),
 		'crash_course'       => holt_holdings_link_setting( 'course_url', 'https://payhip.com/b/3GVP5' ),
+		'everyday_money'     => holt_holdings_link_setting( 'everyday_money_url', 'https://payhip.com/b/sa17H' ),
+		'windows_rebuild'    => holt_holdings_link_setting( 'windows_rebuild_url', 'https://payhip.com/b/kROjv' ),
 		'exacq_checklist'    => holt_holdings_link_setting( 'exacq_checklist_url', 'https://payhip.com/b/9iMt1' ),
+		'rytec_guide'        => holt_holdings_link_setting( 'rytec_guide_url', 'https://payhip.com/b/T9YW2' ),
+		'pdk_notes'          => holt_holdings_link_setting( 'pdk_notes_url', 'https://payhip.com/b/mGHjT' ),
+		'lenels2_sop'        => holt_holdings_link_setting( 'lenels2_sop_url', 'https://payhip.com/b/NK4IS' ),
+		'synology_guide'     => holt_holdings_link_setting( 'synology_guide_url', 'https://payhip.com/b/xEdtR' ),
+		'website_kit'        => holt_holdings_link_setting( 'website_kit_url', 'https://payhip.com/b/6gMCy' ),
+		'amazon_storefront'  => holt_holdings_link_setting( 'amazon_storefront_url', 'https://a.co/d/0aEp6yu6' ),
+		'amazon_prime'       => holt_holdings_link_setting( 'amazon_prime_url', 'https://amzn.to/4u1aeBb' ),
+		'audible'            => holt_holdings_link_setting( 'audible_url', 'https://amzn.to/4twRitV' ),
+		'amazon_business'    => holt_holdings_link_setting( 'amazon_business_url', 'https://amzn.to/4wY2e6H' ),
+		'hands_on'           => holt_holdings_link_setting( 'hands_on_idaho_url', 'https://handsonidaho.com' ),
+		'hands_on_instagram' => holt_holdings_link_setting( 'hands_on_instagram_url', 'https://www.instagram.com/handsonidaho' ),
+		'hands_on_facebook'  => 'https://www.facebook.com/profile.php?id=61580497944298',
+		'hands_on_review'    => holt_holdings_link_setting( 'hands_on_review_url', 'https://g.page/r/CWVQEsDBWd1GEBM/review' ),
+		'dirty_dumps'        => holt_holdings_link_setting( 'dirty_dumps_url', 'https://dirtydumpshaulingco.com' ),
+		'dirty_dumps_instagram' => holt_holdings_link_setting( 'dirty_dumps_instagram_url', 'https://www.instagram.com/dirtydumpshaulingco' ),
 		'wireman'            => holt_holdings_link_setting( 'wireman_url', '' ),
 		'drill_bit'          => '',
 		'future'             => '#socials',
@@ -224,50 +325,63 @@ function holt_holdings_home_config() {
 		'youtube'            => holt_holdings_link_setting( 'youtube_url', 'https://youtube.com/@austindholt' ),
 		'tiktok'             => holt_holdings_link_setting( 'tiktok_url', 'https://www.tiktok.com/@austindholt' ),
 		'linkedin'           => holt_holdings_link_setting( 'linkedin_url', '' ),
+		'github'             => holt_holdings_link_setting( 'github_url', '' ),
 		'linktree'           => holt_holdings_link_setting( 'linktree_url', 'https://linktr.ee/austindholt' ),
 	);
 
 	return array(
 		'links'           => $links,
+		// TODO when real URLs are ready: LinkedIn, GitHub, Hands-On Idaho Nextdoor,
+		// Dirty Dumps Facebook, Dirty Dumps Nextdoor, Wireman, and Drill Bit Index.
 		'featured_links'  => array(
 			array(
-				'name'        => 'Hands On Idaho',
-				'description' => 'Handyman, home improvement, and practical home services based in the Boise/Meridian area.',
-				'url'         => $links['hands_on'],
-				'button'      => 'Visit Hands On Idaho',
+				'name'        => 'Digital Products',
+				'description' => 'Payhip field guides, practical checklists, and learning resources.',
+				'url'         => '#products',
+				'button'      => 'Browse Products',
 			),
 			array(
-				'name'        => 'DIY Website Builder / Website Launch Kit',
-				'description' => 'A practical website launch kit built to help small business owners, side hustlers, and creators move from a blank screen to a live website faster.',
-				'url'         => $links['website_kit'],
-				'button'      => 'View Product',
+				'name'        => 'Tools & Resources',
+				'description' => 'Affiliate links for useful tools, gear, audiobooks, and business buying.',
+				'url'         => '#resources',
+				'button'      => 'View Resources',
 			),
 			array(
-				'name'        => 'Low Volt Crash Course',
-				'description' => 'A beginner-friendly digital education product for people interested in cameras, access control, wiring basics, tools, and practical field knowledge.',
-				'url'         => $links['crash_course'],
-				'button'      => 'View Course',
+				'name'        => 'Businesses & Projects',
+				'description' => 'Separate public business/project links connected to Austin Holt.',
+				'url'         => '#businesses',
+				'button'      => 'Explore Projects',
 			),
 			array(
-				'name'        => 'Wireman',
-				'description' => 'Family tool project currently under construction.',
-				'url'         => $links['wireman'],
-				'button'      => 'Coming Soon',
-			),
-			array(
-				'name'        => 'ExacqVision Checklist / SOP',
-				'description' => 'A practical field checklist for cleaner ExacqVision storage server setup workflows.',
-				'url'         => $links['exacq_checklist'],
-				'button'      => 'View Checklist',
+				'name'        => 'Follow & Contact',
+				'description' => 'Creator links, social profiles, and the main Linktree hub.',
+				'url'         => '#socials',
+				'button'      => 'Follow Along',
 			),
 		),
 		'businesses'      => array(
 			array(
 				'name'        => 'Hands On Idaho',
-				'kicker'      => 'Public-facing business',
-				'description' => 'Hands On Idaho is a practical home improvement and handyman service serving the Boise/Meridian area, focused on clean work, useful fixes, and homeowner-friendly solutions.',
+				'kicker'      => 'Local home services',
+				'description' => 'Hands-On Idaho is the separate local handyman and home improvement service for Boise, Meridian, and the Treasure Valley.',
 				'url'         => $links['hands_on'],
 				'button'      => 'Visit Hands On Idaho',
+				'visible'     => true,
+			),
+			array(
+				'name'        => 'Hands-On Idaho Google Review',
+				'kicker'      => 'Review link',
+				'description' => 'Worked with Hands-On Idaho? This link points directly to the Google review page.',
+				'url'         => $links['hands_on_review'],
+				'button'      => 'Leave a Review',
+				'visible'     => true,
+			),
+			array(
+				'name'        => 'Dirty Dumps Hauling Co.',
+				'kicker'      => 'Hauling project',
+				'description' => 'Dirty Dumps Hauling Co. is a separate junk removal and hauling project.',
+				'url'         => $links['dirty_dumps'],
+				'button'      => 'Visit Dirty Dumps',
 				'visible'     => true,
 			),
 			array(
@@ -278,17 +392,15 @@ function holt_holdings_home_config() {
 				'button'      => 'Coming Soon',
 				'visible'     => true,
 			),
-			// Internal/disabled project. Do not render publicly until intentionally enabled.
-			array(
-				'name'        => 'Dirty Dumps',
-				'kicker'      => 'Internal project',
-				'description' => 'Separate project held back from the public Holt Holdings homepage.',
-				'url'         => holt_holdings_setting( 'dirty_dumps_url', '#' ),
-				'button'      => 'Private',
-				'visible'     => false,
-			),
 		),
 		'digital_products' => array(
+			array(
+				'name'        => 'LowVoltHolt Payhip Store',
+				'kicker'      => 'Full store',
+				'description' => 'The main Payhip storefront for current field guides, checklists, and practical digital resources.',
+				'url'         => $links['payhip_store'],
+				'button'      => 'Visit Store',
+			),
 			array(
 				'name'        => 'DIY Website Builder / Website Launch Kit',
 				'kicker'      => 'Website product',
@@ -297,18 +409,86 @@ function holt_holdings_home_config() {
 				'button'      => 'View Product',
 			),
 			array(
-				'name'        => 'Low Volt Crash Course',
+				'name'        => 'Low Voltage Crash Course',
 				'kicker'      => 'Digital education',
-				'description' => 'A beginner-friendly digital education product for people interested in cameras, access control, wiring basics, tools, and practical field knowledge.',
+				'description' => 'A practical beginner-friendly guide for learning low-voltage basics, field mindset, tools, and real-world installation concepts.',
 				'url'         => $links['crash_course'],
 				'button'      => 'View Course',
 			),
 			array(
+				'name'        => 'Everyday Money Moves',
+				'kicker'      => 'Personal finance',
+				'description' => 'A simple personal finance guide focused on practical money habits, saving, and small moves that add up over time.',
+				'url'         => $links['everyday_money'],
+				'button'      => 'View Guide',
+			),
+			array(
+				'name'        => 'Windows Rebuild Guide',
+				'kicker'      => 'Computer setup',
+				'description' => 'A practical guide/checklist for rebuilding or refreshing a Windows computer setup.',
+				'url'         => $links['windows_rebuild'],
+				'button'      => 'View Guide',
+			),
+			array(
 				'name'        => 'ExacqVision Storage Server Setup Checklist / Field SOP',
 				'kicker'      => 'Field SOP',
-				'description' => 'A practical field checklist for setting up ExacqVision storage server/NAS-style recording workflows, built for techs who want a cleaner step-by-step reference.',
+				'description' => 'A practical field checklist for ExacqVision storage server setup, storage planning, and troubleshooting.',
 				'url'         => $links['exacq_checklist'],
 				'button'      => 'View Checklist',
+			),
+			array(
+				'name'        => 'Rytec Door Interlock Field Guide',
+				'kicker'      => 'Door controls',
+				'description' => 'Field notes for Rytec locked-closed input setup, interlock troubleshooting, and practical door-control checks.',
+				'url'         => $links['rytec_guide'],
+				'button'      => 'View Guide',
+			),
+			array(
+				'name'        => 'PDK Field Notes',
+				'kicker'      => 'Access control',
+				'description' => 'Practical notes for PDK power, WiMAC, integration, and troubleshooting issues.',
+				'url'         => $links['pdk_notes'],
+				'button'      => 'View Notes',
+			),
+			array(
+				'name'        => 'LenelS2 NetBox Field SOP',
+				'kicker'      => 'Access control',
+				'description' => 'Field SOP for NetBox blade, reader, and upgrade troubleshooting.',
+				'url'         => $links['lenels2_sop'],
+				'button'      => 'View SOP',
+			),
+			array(
+				'name'        => 'Synology NAS Setup Field Guide',
+				'kicker'      => 'Private cloud',
+				'description' => 'A practical guide for setting up a private cloud/home lab style Synology NAS.',
+				'url'         => $links['synology_guide'],
+				'button'      => 'View Guide',
+			),
+		),
+		'resources'        => array(
+			array(
+				'name'        => 'Amazon Storefront',
+				'description' => 'Shop my current tool, tech, and project gear list.',
+				'url'         => $links['amazon_storefront'],
+				'button'      => 'Shop Storefront',
+			),
+			array(
+				'name'        => 'Amazon Prime',
+				'description' => 'Amazon Prime link for fast shipping and everyday essentials.',
+				'url'         => $links['amazon_prime'],
+				'button'      => 'View Prime',
+			),
+			array(
+				'name'        => 'Audible Premium Plus',
+				'description' => 'Audiobooks and personal development listening.',
+				'url'         => $links['audible'],
+				'button'      => 'View Audible',
+			),
+			array(
+				'name'        => 'Amazon Business',
+				'description' => 'Business buying/account setup for tools, supplies, and project materials.',
+				'url'         => $links['amazon_business'],
+				'button'      => 'View Amazon Business',
 			),
 		),
 		'works'           => array(
@@ -319,30 +499,21 @@ function holt_holdings_home_config() {
 				'button'      => 'Coming Soon',
 			),
 			array(
-				'name'        => 'Wireman / Pocket Buddy',
-				'description' => 'Family tool project currently under construction.',
-				'url'         => $links['wireman'],
-				'button'      => 'Coming Soon',
-			),
-			array(
 				'name'        => 'Future resources',
-				'description' => 'More guides, templates, tools, and practical resources are in progress.',
+				'description' => 'More guides, templates, affiliate resources, tools, and practical field notes are in progress.',
 				'url'         => $links['future'],
 				'button'      => 'Follow Along',
 			),
 		),
 		'social_links'    => array(
-			array( 'label' => 'Linktree', 'url' => $links['linktree'], 'status' => 'active' ),
+			array( 'label' => 'Austin Holt / Linktree', 'url' => $links['linktree'], 'status' => 'active' ),
 			array( 'label' => 'Instagram', 'url' => $links['instagram'], 'status' => 'active' ),
 			array( 'label' => 'YouTube', 'url' => $links['youtube'], 'status' => 'active' ),
 			array( 'label' => 'TikTok', 'url' => $links['tiktok'], 'status' => 'active' ),
 			array( 'label' => 'Facebook', 'url' => $links['facebook'], 'status' => 'active' ),
-			array( 'label' => 'Hands On Idaho', 'url' => $links['hands_on'], 'status' => 'active' ),
-			array( 'label' => 'Low Volt Crash Course', 'url' => $links['crash_course'], 'status' => 'active' ),
-			array( 'label' => 'DIY Website Builder', 'url' => $links['website_kit'], 'status' => 'active' ),
-			array( 'label' => 'ExacqVision Checklist / SOP', 'url' => $links['exacq_checklist'], 'status' => 'active' ),
 			array( 'label' => 'Hands On Idaho Instagram', 'url' => $links['hands_on_instagram'], 'status' => 'active' ),
 			array( 'label' => 'Hands On Idaho Facebook', 'url' => $links['hands_on_facebook'], 'status' => 'active' ),
+			array( 'label' => 'Dirty Dumps Instagram', 'url' => $links['dirty_dumps_instagram'], 'status' => 'active' ),
 		),
 	);
 }
@@ -355,6 +526,7 @@ function holt_holdings_fallback_menu() {
 	<ul id="primary-menu">
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#businesses"><?php esc_html_e( 'Businesses', 'holt-holdings' ); ?></a></li>
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#products"><?php esc_html_e( 'Digital Products', 'holt-holdings' ); ?></a></li>
+		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#resources"><?php esc_html_e( 'Resources', 'holt-holdings' ); ?></a></li>
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#works"><?php esc_html_e( 'Works in Progress', 'holt-holdings' ); ?></a></li>
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#socials"><?php esc_html_e( 'Follow', 'holt-holdings' ); ?></a></li>
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#contact"><?php esc_html_e( 'Contact', 'holt-holdings' ); ?></a></li>
