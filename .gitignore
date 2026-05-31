@@ -6,6 +6,8 @@ legacy-static-site/
 holt-holdings/
 Hands-On-Idaho/
 original/
+bookkeeping-output/
+/scripts/
 
 # OS/editor noise
 .DS_Store

@@ -154,7 +154,7 @@ $home_config   = holt_holdings_home_config();
 						<small><?php esc_html_e( 'Coming Soon', 'holt-holdings' ); ?></small>
 					</span>
 				<?php else : ?>
-					<a class="social-card" href="<?php echo esc_url( $social_link['url'] ); ?>" target="_blank" rel="<?php echo esc_attr( holt_holdings_link_rel( $social_link['url'] ) ); ?>"><?php echo esc_html( $social_link['label'] ); ?></a>
+					<a class="social-card" href="<?php echo esc_url( $social_link['url'] ); ?>" target="_blank" rel="<?php echo esc_attr( holt_holdings_link_rel( $social_link['url'] ) ); ?>" data-track="outbound-link" data-link-category="<?php echo esc_attr( holt_holdings_link_category( $social_link['url'] ) ); ?>" data-link-label="<?php echo esc_attr( $social_link['label'] ); ?>" data-link-url="<?php echo esc_url( $social_link['url'] ); ?>"><?php echo esc_html( $social_link['label'] ); ?></a>
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</div>

@@ -87,9 +87,56 @@ Unknown public links are kept empty so the theme hides them or renders non-click
 
 Amazon affiliate links use `rel="sponsored noopener noreferrer"` and include a visible disclosure near the resource cards and in the footer.
 
-## Weekly Link Audit
+## Google Analytics 4
 
-The workflow at `.github/workflows/weekly-link-audit.yml` runs weekly and can also be triggered manually from GitHub Actions. It checks that the known public Holt Holdings, social, Hands On Idaho, and Payhip URLs are present in the theme source and that public render files do not regress to placeholder social/product links.
+GA4 support is optional and disabled by default. To enable it:
+
+1. In WordPress, go to **Appearance > Customize > Holt Holdings Home**.
+2. Add your GA4 Measurement ID in **GA4 Measurement ID**.
+3. Use an ID that starts with `G-`, such as `G-XXXXXXXXXX`.
+4. Publish the Customizer change.
+
+If the field is blank or invalid, the theme outputs no Google Analytics script. The theme also skips the GA4 tag for logged-in admins who can manage options, so admin browsing is less likely to pollute analytics.
+
+To verify GA4:
+
+1. Open your site in a private/incognito browser window.
+2. Visit **Reports > Realtime** in Google Analytics.
+3. Click a Payhip, Amazon, or business link and watch for the `outbound_click` event.
+
+Google Analytics can take a little time to start showing data outside Realtime.
+
+## Weekly Audits
+
+The workflow at `.github/workflows/weekly-site-audit.yml` runs every Monday morning and can also be triggered manually from GitHub Actions with **Weekly Site Audit > Run workflow**.
+
+It runs `.github/scripts/site-audit.mjs` against the live site at `https://holtholdings.us` and checks:
+
+- homepage HTTP 200
+- correct Holt Holdings contact email and mailto link
+- old `hello@holtholdings.us` email is not present
+- required Payhip, Amazon, business, and social links are present
+- Amazon links use `rel="sponsored noopener noreferrer"` and open in a new tab
+- affiliate disclosure is visible
+- internal links are reachable
+- external links are checked where practical
+- title tag, meta description, canonical URL, H1, and image alt basics
+- `https://holtholdings.us/sitemap.xml`
+- `https://holtholdings.us/robots.txt`
+
+Critical failures cause the workflow to fail: live site unreachable, wrong/old contact email, required links missing, affiliate disclosure missing, sitemap/robots unavailable, missing basic SEO tags, or broken internal links.
+
+Warnings do not fail the workflow: external link check issues, missing image alt text, or optional Lighthouse score concerns.
+
+There is also a source-level workflow at `.github/workflows/weekly-link-audit.yml` that checks the theme repository for required URLs and blocked placeholder regressions.
+
+## Search Console
+
+Google Search Console setup is manual:
+
+1. Add `holtholdings.us` to Google Search Console.
+2. Submit the sitemap: `https://holtholdings.us/sitemap.xml`.
+3. Check indexing and search performance periodically.
 
 ## Logo
 
@@ -128,6 +175,14 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 - The design is mobile-first, responsive, and intentionally lightweight.
 
 ## Changelog
+
+### 1.11.3
+
+- Added optional GA4 Measurement ID support through the WordPress Customizer.
+- Added outbound click event tracking for Payhip, Amazon, and business/social links when GA4 is configured.
+- Added a weekly live-site audit workflow for availability, required links, affiliate disclosure, SEO basics, sitemap, robots.txt, and practical broken-link checks.
+- Added Search Console setup notes.
+- Updated the fallback zip build script to exclude local bookkeeping/script folders from manual theme packages.
 
 ### 1.11.2
 

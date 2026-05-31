@@ -56,6 +56,7 @@ function holt_holdings_meta_tags() {
 	$url         = home_url( '/' );
 	$image       = get_template_directory_uri() . '/assets/images/holt-holdings-logo.jpeg';
 	?>
+	<link rel="canonical" href="<?php echo esc_url( $url ); ?>">
 	<meta name="description" content="<?php echo esc_attr( $description ); ?>">
 	<meta property="og:site_name" content="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
 	<meta property="og:title" content="<?php echo esc_attr( $title ); ?>">
@@ -67,6 +68,31 @@ function holt_holdings_meta_tags() {
 	<?php
 }
 add_action( 'wp_head', 'holt_holdings_meta_tags', 5 );
+
+/**
+ * Output GA4 only when a valid Measurement ID is configured.
+ */
+function holt_holdings_ga4_tag() {
+	if ( is_user_logged_in() && current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	$measurement_id = strtoupper( trim( holt_holdings_setting( 'ga4_measurement_id', '' ) ) );
+
+	if ( ! preg_match( '/^G-[A-Z0-9]{6,}$/', $measurement_id ) ) {
+		return;
+	}
+	?>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_attr( $measurement_id ); ?>"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', '<?php echo esc_js( $measurement_id ); ?>');
+	</script>
+	<?php
+}
+add_action( 'wp_head', 'holt_holdings_ga4_tag', 20 );
 
 /**
  * Register Customizer fields for easy homepage editing.
@@ -105,6 +131,7 @@ function holt_holdings_customize_register( $wp_customize ) {
 		'audible_url'            => array( 'label' => __( 'Audible Premium Plus URL', 'holt-holdings' ), 'default' => 'https://amzn.to/4twRitV', 'type' => 'url' ),
 		'amazon_business_url'    => array( 'label' => __( 'Amazon Business URL', 'holt-holdings' ), 'default' => 'https://amzn.to/4wY2e6H', 'type' => 'url' ),
 		'contact_email'          => array( 'label' => __( 'Contact Email', 'holt-holdings' ), 'default' => 'holtholdings@outlook.com', 'type' => 'email' ),
+		'ga4_measurement_id'     => array( 'label' => __( 'GA4 Measurement ID', 'holt-holdings' ), 'default' => '', 'type' => 'text' ),
 		'hands_on_idaho_url'     => array( 'label' => __( 'Hands On Idaho URL', 'holt-holdings' ), 'default' => 'https://handsonidaho.com', 'type' => 'url' ),
 		'hands_on_instagram_url' => array( 'label' => __( 'Hands On Idaho Instagram URL', 'holt-holdings' ), 'default' => 'https://www.instagram.com/handsonidaho', 'type' => 'url' ),
 		'hands_on_facebook_url'  => array( 'label' => __( 'Hands On Idaho Facebook URL', 'holt-holdings' ), 'default' => 'https://www.facebook.com/profile.php?id=61580497944298', 'type' => 'url' ),
@@ -124,7 +151,9 @@ function holt_holdings_customize_register( $wp_customize ) {
 	foreach ( $fields as $id => $field ) {
 		$sanitize_callback = 'sanitize_text_field';
 
-		if ( 'textarea' === $field['type'] ) {
+		if ( 'ga4_measurement_id' === $id ) {
+			$sanitize_callback = 'holt_holdings_sanitize_ga4_measurement_id';
+		} elseif ( 'textarea' === $field['type'] ) {
 			$sanitize_callback = 'sanitize_textarea_field';
 		} elseif ( 'url' === $field['type'] ) {
 			$sanitize_callback = 'esc_url_raw';
@@ -145,6 +174,18 @@ function holt_holdings_customize_register( $wp_customize ) {
 	}
 }
 add_action( 'customize_register', 'holt_holdings_customize_register' );
+
+/**
+ * Sanitize an optional GA4 Measurement ID.
+ *
+ * @param string $value Raw Customizer value.
+ * @return string
+ */
+function holt_holdings_sanitize_ga4_measurement_id( $value ) {
+	$value = strtoupper( trim( sanitize_text_field( $value ) ) );
+
+	return preg_match( '/^G-[A-Z0-9]{6,}$/', $value ) ? $value : '';
+}
 
 /**
  * Return a Customizer value with a fallback.
@@ -232,6 +273,30 @@ function holt_holdings_link_rel( $url ) {
 }
 
 /**
+ * Return a broad outbound tracking category for a URL.
+ *
+ * @param string $url Link URL.
+ * @return string
+ */
+function holt_holdings_link_category( $url ) {
+	$host = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
+
+	if ( holt_holdings_is_affiliate_url( $url ) ) {
+		return 'amazon';
+	}
+
+	if ( false !== strpos( $host, 'payhip.com' ) ) {
+		return 'payhip';
+	}
+
+	if ( $host && false === strpos( $host, 'holtholdings.us' ) ) {
+		return 'business';
+	}
+
+	return '';
+}
+
+/**
  * Check whether a URL is a placeholder hash rather than a real navigation target.
  *
  * @param string $url Link URL.
@@ -276,12 +341,23 @@ function holt_holdings_button_link( $url, $label, $class = 'button' ) {
 
 	$rel    = holt_holdings_link_rel( $url );
 	$target = holt_holdings_is_external_url( $url ) ? sprintf( ' target="_blank" rel="%s"', esc_attr( $rel ) ) : '';
+	$track  = '';
+
+	if ( holt_holdings_is_external_url( $url ) ) {
+		$track = sprintf(
+			' data-track="outbound-link" data-link-category="%1$s" data-link-label="%2$s" data-link-url="%3$s"',
+			esc_attr( holt_holdings_link_category( $url ) ),
+			esc_attr( $label ),
+			esc_url( $url )
+		);
+	}
 
 	printf(
-		'<a class="%1$s" href="%2$s"%3$s>%4$s</a>',
+		'<a class="%1$s" href="%2$s"%3$s%4$s>%5$s</a>',
 		esc_attr( $class ),
 		esc_url( $url ),
 		$target, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$track, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		esc_html( $label )
 	);
 }

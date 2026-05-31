@@ -9,7 +9,9 @@ $excludeTopLevel = @(
   'holt-holdings',
   'legacy-static-site',
   'original',
-  'Hands-On-Idaho'
+  'Hands-On-Idaho',
+  'bookkeeping-output',
+  'scripts'
 )
 $excludeFiles = @(
   '.gitattributes',

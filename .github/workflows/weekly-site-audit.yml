@@ -1,0 +1,35 @@
+name: Weekly Site Audit
+
+on:
+  schedule:
+    - cron: "0 14 * * 1"
+  workflow_dispatch:
+
+jobs:
+  site-audit:
+    name: Audit live Holt Holdings site
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run live-site audit
+        run: node .github/scripts/site-audit.mjs
+
+      - name: Optional Lighthouse audit
+        continue-on-error: true
+        run: |
+          npx --yes lighthouse https://holtholdings.us \
+            --quiet \
+            --chrome-flags="--headless --no-sandbox" \
+            --only-categories=performance,accessibility,seo \
+            --output=json \
+            --output-path=./lighthouse-report.json
+
+          node -e "const fs=require('fs'); const r=JSON.parse(fs.readFileSync('lighthouse-report.json','utf8')); for (const [name,data] of Object.entries(r.categories)) { console.log(name + ': ' + Math.round(data.score * 100)); }"
