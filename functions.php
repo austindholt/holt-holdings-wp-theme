@@ -44,6 +44,46 @@ function holt_holdings_assets() {
 add_action( 'wp_enqueue_scripts', 'holt_holdings_assets' );
 
 /**
+ * Check whether a known SEO plugin is likely handling canonical tags.
+ *
+ * @return bool
+ */
+function holt_holdings_seo_plugin_handles_canonical() {
+	return defined( 'WPSEO_VERSION' )
+		|| defined( 'RANK_MATH_VERSION' )
+		|| defined( 'AIOSEO_VERSION' )
+		|| defined( 'SEOPRESS_VERSION' );
+}
+
+/**
+ * Output one canonical URL for theme-rendered pages.
+ */
+function holt_holdings_canonical_url() {
+	if ( holt_holdings_seo_plugin_handles_canonical() ) {
+		return;
+	}
+
+	remove_action( 'wp_head', 'rel_canonical' );
+
+	if ( is_front_page() || is_home() ) {
+		$canonical = home_url( '/' );
+	} elseif ( is_singular() ) {
+		$canonical = get_permalink();
+	} else {
+		$request_path = isset( $GLOBALS['wp']->request ) ? trim( $GLOBALS['wp']->request, '/' ) : '';
+		$canonical    = $request_path ? home_url( '/' . $request_path . '/' ) : home_url( '/' );
+	}
+
+	if ( empty( $canonical ) ) {
+		return;
+	}
+	?>
+	<link rel="canonical" href="<?php echo esc_url( $canonical ); ?>">
+	<?php
+}
+add_action( 'wp_head', 'holt_holdings_canonical_url', 4 );
+
+/**
  * Add lightweight SEO and sharing meta for the homepage.
  */
 function holt_holdings_meta_tags() {
@@ -56,7 +96,6 @@ function holt_holdings_meta_tags() {
 	$url         = home_url( '/' );
 	$image       = get_template_directory_uri() . '/assets/images/holt-holdings-logo.jpeg';
 	?>
-	<link rel="canonical" href="<?php echo esc_url( $url ); ?>">
 	<meta name="description" content="<?php echo esc_attr( $description ); ?>">
 	<meta property="og:site_name" content="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
 	<meta property="og:title" content="<?php echo esc_attr( $title ); ?>">

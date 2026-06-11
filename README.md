@@ -176,6 +176,12 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 
 ## Changelog
 
+### 1.11.4
+
+- Added dedicated canonical URL support for the homepage and singular WordPress pages.
+- Updated the weekly site audit to verify the homepage canonical URL and accept normal canonical tag attribute ordering.
+- Kept third-party Payhip, Amazon, and social platform request failures as warnings while continuing to require those links in the homepage HTML.
+
 ### 1.11.3
 
 - Added optional GA4 Measurement ID support through the WordPress Customizer.

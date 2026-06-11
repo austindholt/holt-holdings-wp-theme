@@ -1,4 +1,5 @@
 const SITE_URL = "https://holtholdings.us";
+const EXPECTED_HOMEPAGE_CANONICAL = "https://holtholdings.us/";
 const CONTACT_EMAIL = "holtholdings@outlook.com";
 const OLD_CONTACT_EMAIL = "hello@holtholdings.us";
 const AFFILIATE_DISCLOSURE = "As an Amazon Associate I earn from qualifying purchases";
@@ -117,6 +118,20 @@ function extractAnchors(html) {
   return anchors;
 }
 
+function extractCanonicalHref(html) {
+  const linkTags = html.match(/<link\b[^>]*>/gi) || [];
+
+  for (const tag of linkTags) {
+    const relTokens = getAttribute(tag, "rel").toLowerCase().split(/\s+/).filter(Boolean);
+
+    if (relTokens.includes("canonical")) {
+      return normalizeHtml(getAttribute(tag, "href"));
+    }
+  }
+
+  return "";
+}
+
 function shouldSkipLink(href) {
   return (
     href.startsWith("#") ||
@@ -179,7 +194,7 @@ async function main() {
     }
 
     for (const anchor of matchingAnchors) {
-      const relTokens = anchor.rel.split(/\s+/).filter(Boolean);
+      const relTokens = anchor.rel.toLowerCase().split(/\s+/).filter(Boolean);
 
       for (const token of ["sponsored", "noopener", "noreferrer"]) {
         if (!relTokens.includes(token)) {
@@ -211,10 +226,21 @@ async function main() {
     reportFailure("Meta description is missing.");
   }
 
-  if (/<link\s+rel=["']canonical["']\s+href=["'][^"']+["']/i.test(rawHtml)) {
-    reportPass("Canonical URL exists.");
-  } else {
+  const canonicalHref = extractCanonicalHref(rawHtml);
+  if (!canonicalHref) {
     reportFailure("Canonical URL is missing.");
+  } else if (!canonicalHref.startsWith(SITE_URL)) {
+    reportFailure(`Canonical URL should start with ${SITE_URL}: ${canonicalHref}`);
+  } else if (canonicalHref !== EXPECTED_HOMEPAGE_CANONICAL) {
+    reportWarning(`Homepage canonical should preferably be ${EXPECTED_HOMEPAGE_CANONICAL}; found ${canonicalHref}.`);
+  } else {
+    reportPass(`Homepage canonical URL is correct: ${canonicalHref}`);
+  }
+
+  if (canonicalHref && canonicalHref.startsWith(SITE_URL) && canonicalHref !== EXPECTED_HOMEPAGE_CANONICAL) {
+    reportPass("Canonical URL exists and uses the Holt Holdings domain.");
+  } else if (canonicalHref === EXPECTED_HOMEPAGE_CANONICAL) {
+    reportPass("Canonical URL exists.");
   }
 
   if (/<h1\b/i.test(rawHtml)) {
