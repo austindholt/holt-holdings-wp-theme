@@ -13,6 +13,7 @@
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'holt-holdings' ); ?></a>
 <header class="site-header">
 	<div class="header-inner">
 		<div class="site-branding">

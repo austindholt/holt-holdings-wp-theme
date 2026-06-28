@@ -82,19 +82,34 @@ $home_config   = holt_holdings_home_config();
 			<span class="eyebrow"><?php esc_html_e( 'Digital Products', 'holt-holdings' ); ?></span>
 			<h2><?php esc_html_e( 'Payhip guides, SOPs, and practical learning resources.', 'holt-holdings' ); ?></h2>
 			<p><?php esc_html_e( 'Digital products here are guides, checklists, field notes, and practical resources. Low-voltage topics are framed as learning material, not a service offering.', 'holt-holdings' ); ?></p>
+			<div class="section-actions">
+				<?php holt_holdings_button_link( $home_config['links']['payhip_store'], 'View All Products', 'button secondary' ); ?>
+			</div>
 		</div>
-		<div class="product-grid">
-			<?php foreach ( $home_config['digital_products'] as $product ) : ?>
-				<article class="product-feature">
-					<span class="card-kicker"><?php echo esc_html( $product['kicker'] ); ?></span>
-					<h3><?php echo esc_html( $product['name'] ); ?></h3>
-					<p><?php echo esc_html( $product['description'] ); ?></p>
-					<div class="card-actions">
-						<?php holt_holdings_button_link( $product['url'], $product['button'] ); ?>
-					</div>
-				</article>
+		<?php
+		$product_groups = array();
+		foreach ( $home_config['digital_products'] as $product ) {
+			$group                    = isset( $product['group'] ) ? $product['group'] : __( 'Digital Products', 'holt-holdings' );
+			$product_groups[ $group ][] = $product;
+		}
+		?>
+		<?php foreach ( $product_groups as $group_title => $products ) : ?>
+			<div class="product-group">
+				<h3 class="product-group-title"><?php echo esc_html( $group_title ); ?></h3>
+				<div class="product-grid">
+					<?php foreach ( $products as $product ) : ?>
+						<article class="product-feature">
+							<span class="card-kicker"><?php echo esc_html( $product['kicker'] ); ?></span>
+							<h4><?php echo esc_html( $product['name'] ); ?></h4>
+							<p><?php echo esc_html( $product['description'] ); ?></p>
+							<div class="card-actions">
+								<?php holt_holdings_button_link( $product['url'], $product['button'] ); ?>
+							</div>
+						</article>
+					<?php endforeach; ?>
+				</div>
+			</div>
 			<?php endforeach; ?>
-		</div>
 	</section>
 
 	<section class="section" id="resources">
@@ -129,11 +144,18 @@ $home_config   = holt_holdings_home_config();
 		<div class="card-grid">
 			<?php foreach ( $home_config['works'] as $work ) : ?>
 				<article class="hub-card">
-					<span class="coming-soon"><?php esc_html_e( 'Coming Soon', 'holt-holdings' ); ?></span>
+					<?php if ( empty( $work['url'] ) ) : ?>
+						<span class="coming-soon"><?php esc_html_e( 'Under Construction', 'holt-holdings' ); ?></span>
+					<?php elseif ( ! empty( $work['status'] ) && 'in_development' === $work['status'] ) : ?>
+						<span class="coming-soon"><?php esc_html_e( 'In Development', 'holt-holdings' ); ?></span>
+					<?php endif; ?>
 					<h3><?php echo esc_html( $work['name'] ); ?></h3>
 					<p><?php echo esc_html( $work['description'] ); ?></p>
 					<div class="card-actions">
 						<?php holt_holdings_button_link( $work['url'], $work['button'], 'button secondary' ); ?>
+						<?php if ( ! empty( $work['secondary_url'] ) && ! empty( $work['secondary_button'] ) ) : ?>
+							<?php holt_holdings_button_link( $work['secondary_url'], $work['secondary_button'], 'button secondary' ); ?>
+						<?php endif; ?>
 					</div>
 				</article>
 			<?php endforeach; ?>
@@ -154,7 +176,7 @@ $home_config   = holt_holdings_home_config();
 						<small><?php esc_html_e( 'Coming Soon', 'holt-holdings' ); ?></small>
 					</span>
 				<?php else : ?>
-					<a class="social-card" href="<?php echo esc_url( $social_link['url'] ); ?>" target="_blank" rel="<?php echo esc_attr( holt_holdings_link_rel( $social_link['url'] ) ); ?>" data-track="outbound-link" data-link-category="<?php echo esc_attr( holt_holdings_link_category( $social_link['url'] ) ); ?>" data-link-label="<?php echo esc_attr( $social_link['label'] ); ?>" data-link-url="<?php echo esc_url( $social_link['url'] ); ?>"><?php echo esc_html( $social_link['label'] ); ?></a>
+					<a class="social-card" href="<?php echo esc_url( $social_link['url'] ); ?>" target="_blank" rel="<?php echo esc_attr( holt_holdings_link_rel( $social_link['url'] ) ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Visit %s', 'holt-holdings' ), $social_link['label'] ) ); ?>" data-track="outbound-link" data-link-category="<?php echo esc_attr( holt_holdings_link_category( $social_link['url'] ) ); ?>" data-link-label="<?php echo esc_attr( $social_link['label'] ); ?>" data-link-url="<?php echo esc_url( $social_link['url'] ); ?>"><?php echo esc_html( $social_link['label'] ); ?></a>
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</div>
@@ -169,9 +191,9 @@ $home_config   = holt_holdings_home_config();
 			</div>
 			<div>
 				<?php if ( $contact_email ) : ?>
-					<a class="button" href="mailto:holtholdings@outlook.com"><?php esc_html_e( 'Contact Holt Holdings', 'holt-holdings' ); ?></a>
+					<a class="button" href="mailto:<?php echo esc_attr( $contact_email ); ?>"><?php esc_html_e( 'Contact Holt Holdings', 'holt-holdings' ); ?></a>
 				<?php else : ?>
-					<a class="button" href="#contact"><?php esc_html_e( 'Contact Holt Holdings', 'holt-holdings' ); ?></a>
+					<span class="button button-disabled" aria-disabled="true"><?php esc_html_e( 'Contact Holt Holdings', 'holt-holdings' ); ?></span>
 				<?php endif; ?>
 			</div>
 		</div>

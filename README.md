@@ -74,16 +74,20 @@ The main homepage copy and public links can be edited in **Appearance > Customiz
 - Hero headline and subheadline
 - Low Volt Crash Course link
 - DIY Website Builder / Website Launch Kit link
+- Camera Systems Field Guide link
 - ExacqVision Storage Server Setup Checklist / Field SOP link
+- Money product bundle link
+- Homeowner AC Tips / Home Cooling Guide link
+- BitReady Index project and GitHub links
 - LowVoltHolt Payhip Store and field guide links
 - Amazon affiliate/resource links
 - Contact email
 - Business links
 - Social links, including Linktree, Facebook, Instagram, YouTube, TikTok, and Hands On Idaho social links
 
-General Holt Holdings / Austin Holt contact uses `holtholdings@outlook.com`. Business-specific contact details, such as Hands-On Idaho email addresses, should stay with their own business pages or sections.
+General Holt Holdings / Austin Holt contact uses `holtholdings@outlook.com`. Business-specific contact details, such as Hands On Idaho phone/email details, should stay with their own business pages or sections.
 
-Unknown public links are kept empty so the theme hides them or renders non-clickable Coming Soon labels instead of misleading placeholder buttons.
+Unknown public links are kept empty so the theme hides them or renders non-clickable Coming Soon / Under Construction labels instead of misleading placeholder buttons.
 
 Amazon affiliate links use `rel="sponsored noopener noreferrer"` and include a visible disclosure near the resource cards and in the footer.
 
@@ -113,16 +117,22 @@ The workflow at `.github/workflows/weekly-site-audit.yml` runs every Monday morn
 It runs `.github/scripts/site-audit.mjs` against the live site at `https://holtholdings.us` and checks:
 
 - homepage HTTP 200
+- Holt Holdings title/content
 - correct Holt Holdings contact email and mailto link
 - old `hello@holtholdings.us` email is not present
 - required Payhip, Amazon, business, and social links are present
+- BitReady project and GitHub links are present
+- no empty clickable social links or fake `href="#"` links
+- internal same-page anchor destinations exist
 - Amazon links use `rel="sponsored noopener noreferrer"` and open in a new tab
 - affiliate disclosure is visible
+- footer portfolio disclaimer and deployment/version marker are visible
 - internal links are reachable
-- external links are checked where practical
-- title tag, meta description, canonical URL, H1, and image alt basics
+- external links are checked where practical, with bot-protected third-party failures deduplicated as warnings
+- title tag, meta description, Open Graph tags, canonical URL, one H1, and image alt basics
 - `https://holtholdings.us/sitemap.xml`
 - `https://holtholdings.us/robots.txt`
+- a lightweight responsive smoke audit at mobile, tablet, and desktop widths
 
 Critical failures cause the workflow to fail: live site unreachable, wrong/old contact email, required links missing, affiliate disclosure missing, sitemap/robots unavailable, missing basic SEO tags, or broken internal links.
 
@@ -175,6 +185,15 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 - The design is mobile-first, responsive, and intentionally lightweight.
 
 ## Changelog
+
+### 1.12.0
+
+- Added and organized newer Payhip products into Featured Products, Free Field Guides and Resources, and Money and Business Resources.
+- Added current Hands On Idaho, Dirty Dumps, personal social, Amazon storefront, and BitReady links while preserving existing valid Payhip, Amazon affiliate, review, and social links.
+- Kept Wireman public but non-clickable as Under Construction because the public URL did not return a normal success status during testing.
+- Added homepage JSON-LD for Austin Holt, Holt Holdings LLC, the website, and the rendered hub item list.
+- Improved mobile button stacking, focus indicators, skip-to-content support, social accessible labels, and contact mailto rendering.
+- Expanded the weekly live-site audit for required rendered links, placeholder href regressions, canonical/Open Graph metadata, footer disclaimer, deployment marker, internal anchors, and responsive smoke checks.
 
 ### 1.11.4
 

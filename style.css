@@ -4,7 +4,7 @@ Theme URI: https://holtholdings.us
 Author: Austin Holt
 Author URI: https://holtholdings.us
 Description: A lightweight personal-brand hub for Austin Holt, digital products, resources, and Holt Holdings LLC projects.
-Version: 1.11.4
+Version: 1.12.0
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
@@ -43,8 +43,25 @@ body {
 }
 a { color: inherit; text-decoration-color: rgba(18, 39, 56, 0.35); text-underline-offset: 0.18em; }
 a:hover, a:focus { color: var(--navy); }
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid #5f8fb8;
+  outline-offset: 3px;
+}
 img { display: block; height: auto; max-width: 100%; }
 .screen-reader-text { clip: rect(1px, 1px, 1px, 1px); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
+.skip-link:focus {
+  background: var(--white);
+  border: 2px solid var(--ink);
+  clip: auto;
+  color: var(--ink);
+  height: auto;
+  left: 16px;
+  padding: 10px 14px;
+  top: 16px;
+  width: auto;
+  z-index: 1000;
+}
 
 .site-header {
   background: rgba(244, 246, 248, 0.94);
@@ -160,6 +177,7 @@ img { display: block; height: auto; max-width: 100%; }
   min-height: 46px;
   padding: 11px 16px;
   text-decoration: none;
+  word-break: break-word;
 }
 .button:hover, .button:focus, .wp-block-button__link:hover, .wp-block-button__link:focus { background: var(--steel); border-color: var(--steel); color: #fff; }
 .button.secondary { background: transparent; color: var(--ink); }
@@ -190,8 +208,9 @@ img { display: block; height: auto; max-width: 100%; }
 .panel-line strong { font-size: 1.05rem; }
 .panel-line span { color: rgba(255,255,255,0.74); font-size: 0.88rem; }
 
-.section { padding-block: 44px; }
+.section { padding-block: 44px; scroll-margin-top: 92px; }
 .section-heading { display: grid; gap: 10px; margin-bottom: 22px; }
+.section-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
 .section-heading h2, .page-title, .entry-title { font-size: clamp(1.9rem, 7vw, 3.2rem); letter-spacing: 0; line-height: 1; margin: 0; }
 .card-grid, .quick-link-grid { display: grid; gap: 14px; }
 .hub-card, .product-feature, .contact-band, .entry-content {
@@ -202,10 +221,13 @@ img { display: block; height: auto; max-width: 100%; }
 }
 .hub-card { display: flex; flex-direction: column; min-height: 100%; }
 .quick-link-card { border-color: rgba(18, 39, 56, 0.18); box-shadow: 0 12px 35px rgba(13, 34, 52, 0.06); }
-.hub-card h3, .product-feature h3, .contact-band h2 { font-size: 1.35rem; line-height: 1.15; margin: 10px 0; }
+.hub-card h3, .product-feature h3, .product-feature h4, .contact-band h2 { font-size: 1.35rem; line-height: 1.15; margin: 10px 0; }
 .hub-card p, .product-feature p, .contact-band p, .entry-content p { color: var(--muted); margin: 0 0 16px; }
 .card-actions { margin-top: auto; }
 .product-grid { display: grid; gap: 14px; }
+.product-group { display: grid; gap: 16px; margin-top: 26px; }
+.product-group:first-of-type { margin-top: 0; }
+.product-group-title { font-size: 1.25rem; line-height: 1.2; margin: 0; }
 .product-feature { background: linear-gradient(90deg, rgba(18, 39, 56, 0.08), transparent 48%), var(--surface); display: grid; gap: 16px; }
 .affiliate-disclosure {
   background: var(--soft-navy);
@@ -279,6 +301,14 @@ img { display: block; height: auto; max-width: 100%; }
   .product-grid .product-feature { grid-template-columns: 1fr; }
   .social-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .footer-inner { align-items: center; grid-template-columns: minmax(0, 1fr) auto; }
+}
+@media (max-width: 430px) {
+  .header-inner, .site-main > section, .page-shell, .footer-inner { padding-inline: 16px; }
+  .hero h1 { font-size: clamp(2.25rem, 15vw, 3.55rem); }
+  .hero-actions, .card-actions, .section-actions { align-items: stretch; flex-direction: column; }
+  .button, .wp-block-button__link { width: 100%; }
+  .social-grid { grid-template-columns: 1fr; }
+  .site-title { white-space: normal; }
 }
 @media (max-width: 782px) { .admin-bar .site-header { top: 46px; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
