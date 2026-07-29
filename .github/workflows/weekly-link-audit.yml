@@ -19,7 +19,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          if grep -R --exclude-dir=.git --fixed-strings 'https://a.co/d/0aEp6yu6' .; then
+          if grep --fixed-strings 'https://a.co/d/0aEp6yu6' functions.php front-page.php footer.php README.md; then
             echo "FAIL: Known broken Amazon short URL is present."
             exit 1
           fi

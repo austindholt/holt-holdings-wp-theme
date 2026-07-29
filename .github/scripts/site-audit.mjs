@@ -19,7 +19,7 @@ async function fetchTimed(url, options = {}) {
   try {
     return await fetch(url, {
       redirect: "follow",
-      headers: { "user-agent": "Mozilla/5.0 (compatible; HoltHoldingsSiteAudit/1.13; +https://holtholdings.us)" },
+      headers: { "user-agent": "Holt Holdings weekly site audit" },
       ...options,
       signal: controller.signal
     });

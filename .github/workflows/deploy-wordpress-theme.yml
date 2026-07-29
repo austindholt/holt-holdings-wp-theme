@@ -48,7 +48,7 @@ jobs:
           echo "Waiting for production to report theme version $expected_version..."
           for attempt in {1..8}; do
             live_html=$(curl --fail --show-error --silent --location \
-              --user-agent "Mozilla/5.0 (compatible; HoltHoldingsDeployVerifier/1.0; +https://holtholdings.us)" \
+              --user-agent "Holt Holdings weekly site audit" \
               --retry 2 --retry-all-errors --retry-delay 3 \
               "https://holtholdings.us/?deploy_check=${GITHUB_SHA}") || true
             live_version=$(printf '%s' "$live_html" | sed -n 's/.*Holt Holdings theme version: *\([^<[:space:]]*\).*/\1/p' | head -n 1)
