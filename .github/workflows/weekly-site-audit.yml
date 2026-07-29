@@ -27,7 +27,7 @@ jobs:
           npm install --no-save playwright@1.45.3
           npx playwright install --with-deps chromium
           node <<'NODE'
-          const { chromium } = require('playwright');
+          const { chromium } = await import('playwright');
 
           const viewports = [
             { name: 'small-mobile', width: 320, height: 720 },
