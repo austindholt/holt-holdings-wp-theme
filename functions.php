@@ -125,7 +125,7 @@ function holt_holdings_structured_data() {
 	$items  = array();
 	$index  = 1;
 
-	foreach ( array( 'businesses', 'digital_products', 'resources', 'works' ) as $section ) {
+	foreach ( array( 'businesses', 'digital_products', 'merchandise', 'resources', 'works' ) as $section ) {
 		foreach ( $config[ $section ] as $item ) {
 			if ( isset( $item['visible'] ) && ! $item['visible'] ) {
 				continue;
@@ -546,6 +546,12 @@ function holt_holdings_home_config() {
 				'button'      => 'Browse Products',
 			),
 			array(
+				'name'        => 'Merchandise',
+				'description' => 'Small-batch hats, shirts, and gear from the brands being built.',
+				'url'         => '#merch',
+				'button'      => 'Browse Merch',
+			),
+			array(
 				'name'        => 'Tools & Resources',
 				'description' => 'Affiliate links for useful tools, gear, audiobooks, and business buying.',
 				'url'         => '#resources',
@@ -705,6 +711,14 @@ function holt_holdings_home_config() {
 				'group'       => 'Free Field Guides and Resources',
 			),
 		),
+		'merchandise'      => array(
+			array( 'name' => 'Holt Holdings Hat', 'brand' => 'Holt Holdings', 'description' => 'Small-batch branded hat.', 'price' => '$25', 'image' => '', 'colors' => array(), 'sizes' => array(), 'availability' => 'inquiry', 'featured' => true, 'url' => '#merch-order', 'button' => 'Request to Order' ),
+			array( 'name' => 'Low Volt Holt Hat', 'brand' => 'Low Volt Holt', 'description' => 'Trade-focused Low Volt Holt branded hat.', 'price' => '$25', 'image' => '', 'colors' => array(), 'sizes' => array(), 'availability' => 'inquiry', 'featured' => true, 'url' => '#merch-order', 'button' => 'Request to Order' ),
+			array( 'name' => 'Hands On Idaho Hat', 'brand' => 'Hands On Idaho', 'description' => 'Hands On Idaho branded hat.', 'price' => '$25', 'image' => '', 'colors' => array(), 'sizes' => array(), 'availability' => 'inquiry', 'featured' => false, 'url' => '#merch-order', 'button' => 'Request to Order' ),
+			array( 'name' => 'Holt Holdings Shirt', 'brand' => 'Holt Holdings', 'description' => 'Holt Holdings branded shirt. Pricing, colors, and sizes are confirmed directly.', 'price' => 'Contact for pricing', 'image' => '', 'colors' => array(), 'sizes' => array(), 'availability' => 'inquiry', 'featured' => false, 'url' => '#merch-order', 'button' => 'Request to Order' ),
+			array( 'name' => 'Low Volt Holt Shirt', 'brand' => 'Low Volt Holt', 'description' => 'Low Volt Holt branded shirt. Pricing, colors, and sizes are confirmed directly.', 'price' => 'Contact for pricing', 'image' => '', 'colors' => array(), 'sizes' => array(), 'availability' => 'inquiry', 'featured' => false, 'url' => '#merch-order', 'button' => 'Request to Order' ),
+			array( 'name' => 'Custom / Other Merch Request', 'brand' => 'Holt Holdings', 'description' => 'Ask about another brand, item, or small-batch merchandise idea.', 'price' => 'Contact for pricing', 'image' => '', 'colors' => array(), 'sizes' => array(), 'availability' => 'inquiry', 'featured' => false, 'url' => '#merch-order', 'button' => 'Send an Inquiry' ),
+		),
 		'resources'        => array(
 			array(
 				'name'        => 'Amazon Storefront',
@@ -769,6 +783,7 @@ function holt_holdings_fallback_menu() {
 	<ul id="primary-menu">
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#businesses"><?php esc_html_e( 'Businesses', 'holt-holdings' ); ?></a></li>
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#products"><?php esc_html_e( 'Digital Products', 'holt-holdings' ); ?></a></li>
+		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#merch"><?php esc_html_e( 'Merch', 'holt-holdings' ); ?></a></li>
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#resources"><?php esc_html_e( 'Resources', 'holt-holdings' ); ?></a></li>
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#works"><?php esc_html_e( 'Works in Progress', 'holt-holdings' ); ?></a></li>
 		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#socials"><?php esc_html_e( 'Follow', 'holt-holdings' ); ?></a></li>
@@ -776,3 +791,44 @@ function holt_holdings_fallback_menu() {
 	</ul>
 	<?php
 }
+
+/**
+ * Process the public merchandise inquiry form.
+ */
+function holt_holdings_handle_merch_inquiry() {
+	$redirect = home_url( '/#merch-order' );
+	$nonce    = isset( $_POST['holt_merch_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['holt_merch_nonce'] ) ) : '';
+
+	if ( ! wp_verify_nonce( $nonce, 'holt_merch_inquiry' ) ) {
+		wp_safe_redirect( add_query_arg( 'merch_status', 'error', $redirect ) );
+		exit;
+	}
+	if ( ! empty( $_POST['website'] ) ) {
+		wp_safe_redirect( add_query_arg( 'merch_status', 'success', $redirect ) );
+		exit;
+	}
+
+	$name        = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+	$email       = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
+	$phone       = isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '';
+	$product     = isset( $_POST['product'] ) ? sanitize_text_field( wp_unslash( $_POST['product'] ) ) : '';
+	$quantity    = isset( $_POST['quantity'] ) ? min( 25, max( 1, absint( $_POST['quantity'] ) ) ) : 1;
+	$color       = isset( $_POST['color'] ) ? sanitize_text_field( wp_unslash( $_POST['color'] ) ) : '';
+	$size        = isset( $_POST['size'] ) ? sanitize_text_field( wp_unslash( $_POST['size'] ) ) : '';
+	$fulfillment = isset( $_POST['fulfillment'] ) ? sanitize_text_field( wp_unslash( $_POST['fulfillment'] ) ) : '';
+	$notes       = isset( $_POST['notes'] ) ? sanitize_textarea_field( wp_unslash( $_POST['notes'] ) ) : '';
+	$products    = wp_list_pluck( holt_holdings_home_config()['merchandise'], 'name' );
+
+	if ( ! $name || ! is_email( $email ) || ! in_array( $product, $products, true ) ) {
+		wp_safe_redirect( add_query_arg( 'merch_status', 'error', $redirect ) );
+		exit;
+	}
+
+	$body = sprintf( "Name: %s\nEmail: %s\nPhone: %s\nProduct: %s\nQuantity: %d\nColor: %s\nSize: %s\nPickup/shipping: %s\n\nNotes:\n%s", $name, $email, $phone, $product, $quantity, $color, $size, $fulfillment, $notes );
+	$sent = wp_mail( holt_holdings_contact_email(), 'Merchandise inquiry: ' . $product, $body, array( 'Reply-To: ' . $name . ' <' . $email . '>' ) );
+
+	wp_safe_redirect( add_query_arg( 'merch_status', $sent ? 'success' : 'error', $redirect ) );
+	exit;
+}
+add_action( 'admin_post_nopriv_holt_merch_inquiry', 'holt_holdings_handle_merch_inquiry' );
+add_action( 'admin_post_holt_merch_inquiry', 'holt_holdings_handle_merch_inquiry' );

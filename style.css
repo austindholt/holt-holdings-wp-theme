@@ -4,7 +4,7 @@ Theme URI: https://holtholdings.us
 Author: Austin Holt
 Author URI: https://holtholdings.us
 Description: A lightweight personal-brand hub for Austin Holt, digital products, resources, and Holt Holdings LLC projects.
-Version: 1.12.0
+Version: 1.13.0
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
@@ -311,4 +311,19 @@ img { display: block; height: auto; max-width: 100%; }
   .site-title { white-space: normal; }
 }
 @media (max-width: 782px) { .admin-bar .site-header { top: 46px; } }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+.merch-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+.merch-card, .merch-order { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; }
+.merch-card { display: flex; flex-direction: column; }
+.merch-card .card-actions { margin-top: auto; padding-top: 18px; }
+.merch-placeholder { align-items: center; aspect-ratio: 16 / 10; background: linear-gradient(135deg, var(--dark-navy), var(--steel)); border-radius: calc(var(--radius) - 2px); color: var(--white); display: flex; font-size: clamp(2rem, 10vw, 4rem); font-weight: 800; justify-content: center; letter-spacing: .08em; margin-bottom: 20px; }
+.merch-price { display: block; margin-top: 12px; }
+.merch-order { margin-top: 32px; }
+.merch-form { display: grid; gap: 16px; margin-top: 20px; }
+.merch-form label { color: var(--ink); display: grid; font-weight: 700; gap: 7px; }
+.merch-form input, .merch-form select, .merch-form textarea { background: var(--white); border: 1px solid var(--line); border-radius: 6px; color: var(--ink); font: inherit; padding: 12px; width: 100%; }
+.merch-form input:focus, .merch-form select:focus, .merch-form textarea:focus { outline: 3px solid rgba(18, 39, 56, .25); outline-offset: 2px; }
+.honeypot { left: -10000px; position: absolute; }
+.form-notice { background: var(--soft-navy); border-left: 4px solid var(--navy); padding: 12px 16px; }
+.footer-nav > a { color: inherit; margin-inline-start: 16px; }
+@media (min-width: 760px) { .merch-form { grid-template-columns: repeat(2, minmax(0, 1fr)); } .form-wide { grid-column: 1 / -1; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }

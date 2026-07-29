@@ -19,6 +19,7 @@ $home_config   = holt_holdings_home_config();
 				<p><?php echo esc_html( holt_holdings_setting( 'hero_subheadline', 'Holt Holdings is Austin Holt\'s personal hub for practical field notes, Payhip guides, useful tools, affiliate resources, business projects, inventions, and creator links.' ) ); ?></p>
 				<div class="hero-actions">
 					<a class="button" href="#products"><?php esc_html_e( 'View Digital Products', 'holt-holdings' ); ?></a>
+					<a class="button secondary" href="#merch"><?php esc_html_e( 'Browse Merch', 'holt-holdings' ); ?></a>
 					<a class="button secondary" href="#resources"><?php esc_html_e( 'Tools & Resources', 'holt-holdings' ); ?></a>
 					<a class="button secondary" href="#businesses"><?php esc_html_e( 'Projects', 'holt-holdings' ); ?></a>
 					<a class="button secondary" href="#socials"><?php esc_html_e( 'Follow', 'holt-holdings' ); ?></a>
@@ -110,6 +111,48 @@ $home_config   = holt_holdings_home_config();
 				</div>
 			</div>
 			<?php endforeach; ?>
+	</section>
+
+	<section class="section" id="merch">
+		<div class="section-heading">
+			<span class="eyebrow"><?php esc_html_e( 'Holt Holdings Merch', 'holt-holdings' ); ?></span>
+			<h2><?php esc_html_e( 'Hats, shirts, and gear from the brands I’m building.', 'holt-holdings' ); ?></h2>
+			<p><?php esc_html_e( 'Small-batch Holt Holdings, Low Volt Holt, and Hands On Idaho merchandise. Availability may vary while the full online store is being built.', 'holt-holdings' ); ?></p>
+		</div>
+		<div class="merch-grid">
+			<?php foreach ( $home_config['merchandise'] as $item ) : ?>
+				<article class="merch-card" data-merch-status="<?php echo esc_attr( $item['availability'] ); ?>">
+					<div class="merch-placeholder" aria-hidden="true"><?php echo esc_html( strtoupper( substr( $item['brand'], 0, 2 ) ) ); ?></div>
+					<span class="card-kicker"><?php echo esc_html( $item['brand'] ); ?></span>
+					<h3><?php echo esc_html( $item['name'] ); ?></h3>
+					<p><?php echo esc_html( $item['description'] ); ?></p>
+					<strong class="merch-price"><?php echo esc_html( $item['price'] ); ?></strong>
+					<div class="card-actions"><?php holt_holdings_button_link( $item['url'], $item['button'], 'button secondary merch-request-link' ); ?></div>
+				</article>
+			<?php endforeach; ?>
+		</div>
+		<div class="merch-order" id="merch-order">
+			<h3><?php esc_html_e( 'Merchandise order request', 'holt-holdings' ); ?></h3>
+			<p><?php esc_html_e( 'No payment is collected here. Submitting does not reserve inventory; availability and the final total will be confirmed directly.', 'holt-holdings' ); ?></p>
+			<?php if ( isset( $_GET['merch_status'] ) ) : ?>
+				<p class="form-notice" role="status"><?php echo 'success' === sanitize_key( wp_unslash( $_GET['merch_status'] ) ) ? esc_html__( 'Thanks—your request was sent. We’ll follow up directly.', 'holt-holdings' ) : esc_html__( 'The request could not be sent. Please check the required fields or email Holt Holdings directly.', 'holt-holdings' ); ?></p>
+			<?php endif; ?>
+			<form class="merch-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<input type="hidden" name="action" value="holt_merch_inquiry">
+				<?php wp_nonce_field( 'holt_merch_inquiry', 'holt_merch_nonce' ); ?>
+				<label>Name <input name="name" required autocomplete="name"></label>
+				<label>Email <input name="email" type="email" required autocomplete="email"></label>
+				<label>Phone (optional) <input name="phone" type="tel" autocomplete="tel"></label>
+				<label>Product <select name="product" required><option value="">Choose an item</option><?php foreach ( $home_config['merchandise'] as $item ) : ?><option value="<?php echo esc_attr( $item['name'] ); ?>"><?php echo esc_html( $item['name'] ); ?></option><?php endforeach; ?></select></label>
+				<label>Quantity <input name="quantity" type="number" min="1" max="25" value="1" required></label>
+				<label>Color (requested) <input name="color"></label>
+				<label>Size (if applicable) <input name="size"></label>
+				<label>Pickup or shipping <select name="fulfillment"><option value="">Not sure yet</option><option value="Pickup">Pickup</option><option value="Shipping">Shipping</option></select></label>
+				<label class="form-wide">Notes <textarea name="notes" rows="4"></textarea></label>
+				<label class="honeypot" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
+				<div class="form-wide"><button class="button" type="submit"><?php esc_html_e( 'Send Order Request', 'holt-holdings' ); ?></button></div>
+			</form>
+		</div>
 	</section>
 
 	<section class="section" id="resources">

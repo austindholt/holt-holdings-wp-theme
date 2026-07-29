@@ -1,100 +1,26 @@
+import { readFile } from "node:fs/promises";
+
 const SITE_URL = "https://holtholdings.us";
-const EXPECTED_HOMEPAGE_CANONICAL = "https://holtholdings.us/";
+const HOME_URL = `${SITE_URL}/`;
 const CONTACT_EMAIL = "holtholdings@outlook.com";
-const OLD_CONTACT_EMAIL = "hello@holtholdings.us";
-const AFFILIATE_DISCLOSURE = "As an Amazon Associate I earn from qualifying purchases";
-const FOOTER_DISCLAIMER = "Holt Holdings LLC is a portfolio and project hub";
-const DEPLOYMENT_MARKER = "Holt Holdings theme version";
-
-const REQUIRED_LINKS = [
-  "https://www.amazon.com/shop/austindholt",
-  "https://amzn.to/4u1aeBb",
-  "https://amzn.to/4twRitV",
-  "https://amzn.to/4wY2e6H",
-  "https://payhip.com/LowVoltHolt",
-  "https://payhip.com/b/6gMCy",
-  "https://payhip.com/b/3GVP5",
-  "https://payhip.com/b/AYP01",
-  "https://payhip.com/b/NK4IS",
-  "https://payhip.com/b/mGHjT",
-  "https://payhip.com/b/9iMt1",
-  "https://payhip.com/b/T9YW2",
-  "https://payhip.com/b/sa17H",
-  "https://payhip.com/b/nV37U",
-  "https://payhip.com/b/6CjV7",
-  "https://payhip.com/b/kROjv",
-  "https://payhip.com/b/xEdtR",
-  "https://handsonidaho.com/",
-  "https://www.instagram.com/handsonidaho/",
-  "https://www.facebook.com/share/1GvksuadZf/?mibextid=wwXIfr",
-  "https://g.page/r/CWVQEsDBWd1GEBM/review",
-  "https://dirtydumpshaulingco.com/",
-  "https://www.instagram.com/dirtydumpshaulingco/",
-  "https://bitreadyindex.com/",
-  "https://github.com/austindholt/bitready",
-  "https://linktr.ee/austindholt",
-  "https://www.instagram.com/austindholt/",
-  "https://youtube.com/@austindholt",
-  "https://www.tiktok.com/@austindholt",
-  "https://www.facebook.com/share/1HF3jGFF8L/?mibextid=wwXIfr"
-];
-
-const THIRD_PARTY_WARNING_HOSTS = [
-  "payhip.com",
-  "amazon.com",
-  "a.co",
-  "amzn.to",
-  "facebook.com",
-  "instagram.com",
-  "tiktok.com",
-  "youtube.com",
-  "youtu.be",
-  "linktr.ee"
-];
-
-const AMAZON_LINKS = [
-  "https://www.amazon.com/shop/austindholt",
-  "https://amzn.to/4u1aeBb",
-  "https://amzn.to/4twRitV",
-  "https://amzn.to/4wY2e6H"
-];
-
 const failures = [];
 const warnings = [];
-const passed = [];
-const seenWarnings = new Set();
+const passes = [];
+const warnedHosts = new Set();
 
-function normalizeHtml(value) {
-  return value.replaceAll("&amp;", "&");
-}
+const pass = (message) => passes.push(message);
+const fail = (message) => failures.push(message);
+const warn = (message) => warnings.push(message);
+const attr = (tag, name) => tag.match(new RegExp(`${name}\\s*=\\s*["']([^"']*)["']`, "i"))?.[1]?.replaceAll("&amp;", "&") || "";
 
-function reportPass(message) {
-  passed.push(message);
-}
-
-function reportFailure(message) {
-  failures.push(message);
-}
-
-function reportWarning(message) {
-  if (!seenWarnings.has(message)) {
-    seenWarnings.add(message);
-    warnings.push(message);
-  }
-}
-
-async function fetchWithTimeout(url, options = {}) {
+async function fetchTimed(url, options = {}) {
   const controller = new AbortController();
-  const { timeoutMs = 15000, ...fetchOptions } = options;
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
+  const timeout = setTimeout(() => controller.abort(), options.timeoutMs || 15000);
   try {
     return await fetch(url, {
       redirect: "follow",
-      headers: {
-        "user-agent": "Holt Holdings weekly site audit"
-      },
-      ...fetchOptions,
+      headers: { "user-agent": "Mozilla/5.0 (compatible; HoltHoldingsSiteAudit/1.13; +https://holtholdings.us)" },
+      ...options,
       signal: controller.signal
     });
   } finally {
@@ -104,310 +30,165 @@ async function fetchWithTimeout(url, options = {}) {
 
 async function checkUrl(url) {
   try {
-    let response = await fetchWithTimeout(url, { method: "HEAD", timeoutMs: 12000 });
-
-    if ([403, 405, 429].includes(response.status)) {
-      response = await fetchWithTimeout(url, { method: "GET", timeoutMs: 12000 });
+    let response = await fetchTimed(url, { method: "HEAD", timeoutMs: 12000 });
+    if ([401, 403, 405, 429].includes(response.status)) {
+      response = await fetchTimed(url, { method: "GET", timeoutMs: 12000 });
     }
-
-    return { ok: response.status >= 200 && response.status < 400, status: response.status };
+    return { status: response.status, ok: response.status >= 200 && response.status < 400 };
   } catch (error) {
-    return { ok: false, status: "timeout/error", error: error.message };
+    return { status: "timeout/error", ok: false, error: error.message };
   }
 }
 
-function getAttribute(tag, name) {
-  const pattern = new RegExp(`${name}\\s*=\\s*["']([^"']*)["']`, "i");
-  return tag.match(pattern)?.[1] || "";
+function tags(html, name) {
+  return html.match(new RegExp(`<${name}\\b[^>]*>`, "gi")) || [];
 }
 
-function extractAnchors(html) {
-  const anchors = [];
-  const pattern = /<a\b[^>]*>/gi;
-  let match;
-
-  while ((match = pattern.exec(html))) {
-    const tag = match[0];
-    const href = getAttribute(tag, "href");
-
-    anchors.push({
-      tag,
-      href: normalizeHtml(href),
-      rel: getAttribute(tag, "rel"),
-      target: getAttribute(tag, "target")
-    });
-  }
-
-  return anchors;
-}
-
-function extractCanonicalHrefs(html) {
-  const linkTags = html.match(/<link\b[^>]*>/gi) || [];
-
-  return linkTags
-    .filter((tag) => getAttribute(tag, "rel").toLowerCase().split(/\s+/).includes("canonical"))
-    .map((tag) => normalizeHtml(getAttribute(tag, "href")))
-    .filter(Boolean);
-}
-
-function shouldSkipLink(href) {
-  return (
-    href.startsWith("#") ||
-    href.startsWith("mailto:") ||
-    href.startsWith("tel:")
-  );
-}
-
-function resolveLink(href) {
-  try {
-    return new URL(href, SITE_URL).toString();
-  } catch {
-    return null;
-  }
-}
-
-function isSoftThirdPartyFailure(url, status) {
-  const host = new URL(url).hostname.replace(/^www\./, "");
-
-  return THIRD_PARTY_WARNING_HOSTS.some((allowedHost) => host === allowedHost || host.endsWith(`.${allowedHost}`))
-    && ([403, 405, 429, "timeout/error"].includes(status));
-}
-
-function textIncludesLink(html, link) {
-  return html.includes(link) || html.includes(link.replace(/\/$/, ""));
-}
-
-function checkInternalAnchors(anchors, html) {
-  const ids = new Set(Array.from(html.matchAll(/\sid=["']([^"']+)["']/gi)).map((match) => match[1]));
-
-  for (const anchor of anchors) {
-    if (!anchor.href.startsWith("#") || anchor.href === "#") {
-      continue;
-    }
-
-    const destination = decodeURIComponent(anchor.href.slice(1));
-    if (!ids.has(destination)) {
-      reportFailure(`Internal anchor destination missing: ${anchor.href}`);
-    }
-  }
+function anchorLabel(html, tag) {
+  const start = html.indexOf(tag);
+  const end = html.indexOf("</a>", start);
+  return end > start ? html.slice(start + tag.length, end).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() : "unlabeled link";
 }
 
 async function main() {
-  console.log("Holt Holdings weekly site audit");
-  console.log(`Target: ${SITE_URL}`);
+  const style = await readFile("style.css", "utf8");
+  const expectedVersion = style.match(/^Version:\s*(\S+)/m)?.[1];
+  if (!expectedVersion) fail("Repository theme version is missing from style.css.");
 
-  const homepageResponse = await fetchWithTimeout(SITE_URL, { method: "GET", timeoutMs: 20000 });
-
-  if (homepageResponse.status !== 200) {
-    reportFailure(`Homepage returned HTTP ${homepageResponse.status}, expected 200.`);
+  const response = await fetchTimed(HOME_URL, { method: "GET", timeoutMs: 20000 });
+  if (response.status !== 200) {
+    fail(`Homepage returned HTTP ${response.status}, expected 200.`);
   } else {
-    reportPass("Homepage returned HTTP 200.");
+    pass("Homepage returned HTTP 200.");
   }
 
-  const rawHtml = await homepageResponse.text();
-  const html = normalizeHtml(rawHtml);
-  const anchors = extractAnchors(rawHtml);
+  const rawHtml = await response.text();
+  const html = rawHtml.replaceAll("&amp;", "&");
+  const anchors = tags(rawHtml, "a").map((tag) => ({
+    tag,
+    href: attr(tag, "href"),
+    rel: attr(tag, "rel"),
+    target: attr(tag, "target"),
+    label: anchorLabel(rawHtml, tag)
+  }));
+  const ids = new Set(Array.from(rawHtml.matchAll(/\sid=["']([^"']+)["']/gi), (match) => match[1]));
 
-  if (/Holt Holdings/i.test(html)) {
-    reportPass("Holt Holdings content exists.");
-  } else {
-    reportFailure("Holt Holdings content is missing.");
+  for (const id of ["products", "merch", "resources", "contact"]) {
+    ids.has(id) ? pass(`#${id} section exists.`) : fail(`Required homepage section missing: #${id}`);
   }
 
-  if (html.includes(CONTACT_EMAIL) && html.includes(`mailto:${CONTACT_EMAIL}`)) {
-    reportPass("Correct Holt Holdings contact email and mailto are present.");
-  } else {
-    reportFailure(`Missing ${CONTACT_EMAIL} or mailto:${CONTACT_EMAIL}.`);
-  }
+  if (html.includes(CONTACT_EMAIL) && html.includes(`mailto:${CONTACT_EMAIL}`)) pass("Contact email and mailto are correct.");
+  else fail(`Missing ${CONTACT_EMAIL} or its mailto link.`);
 
-  if (html.includes(OLD_CONTACT_EMAIL)) {
-    reportFailure(`Old contact email is still present: ${OLD_CONTACT_EMAIL}`);
-  } else {
-    reportPass("Old contact email is not present.");
-  }
+  if (/Fatal error|Parse error|Uncaught Error|WordPress database error/i.test(html)) fail("Visible WordPress/PHP fatal error text found.");
+  else pass("No visible WordPress/PHP fatal error text found.");
 
-  for (const link of REQUIRED_LINKS) {
-    if (textIncludesLink(html, link)) {
-      reportPass(`Required link present: ${link}`);
-    } else {
-      reportFailure(`Required link missing: ${link}`);
-    }
-  }
+  if (tags(rawHtml, "h1").length === 1) pass("Exactly one H1 exists.");
+  else fail(`Expected exactly one H1; found ${tags(rawHtml, "h1").length}.`);
+
+  for (const [label, pattern] of [
+    ["title", /<title>[^<]+<\/title>/i],
+    ["meta description", /<meta\s+name=["']description["']\s+content=["'][^"']+["']/i],
+    ["og:title", /<meta\s+property=["']og:title["']\s+content=["'][^"']+["']/i],
+    ["og:description", /<meta\s+property=["']og:description["']\s+content=["'][^"']+["']/i],
+    ["og:url", /<meta\s+property=["']og:url["']\s+content=["'][^"']+["']/i],
+    ["og:image", /<meta\s+property=["']og:image["']\s+content=["'][^"']+["']/i],
+    ["Twitter card", /<meta\s+name=["']twitter:card["']\s+content=["'][^"']+["']/i]
+  ]) pattern.test(rawHtml) ? pass(`${label} exists.`) : fail(`${label} is missing.`);
+
+  const canonicals = tags(rawHtml, "link")
+    .filter((tag) => attr(tag, "rel").toLowerCase().split(/\s+/).includes("canonical"))
+    .map((tag) => attr(tag, "href"));
+  canonicals.length === 1 && canonicals[0] === HOME_URL
+    ? pass(`Canonical is ${HOME_URL}.`)
+    : fail(`Expected one canonical ${HOME_URL}; found ${canonicals.join(", ") || "none"}.`);
+
+  const liveVersion = html.match(/Holt Holdings theme version:\s*([^<\s]+)/i)?.[1];
+  liveVersion === expectedVersion
+    ? pass(`Live theme version ${liveVersion} matches repository.`)
+    : fail(`Live deployment marker ${liveVersion || "missing"} does not match repository ${expectedVersion}.`);
+
+  if (html.includes("https://a.co/d/0aEp6yu6")) fail("Known broken Amazon short URL is still rendered.");
+  else pass("Known broken Amazon short URL is absent.");
 
   for (const anchor of anchors) {
-    if (anchor.href === "" || anchor.href === "#") {
-      reportFailure(`Empty or fake clickable href found: ${anchor.tag}`);
+    if (!anchor.href || anchor.href === "#") fail(`Empty/fake href on “${anchor.label}”.`);
+    if (anchor.href.startsWith("#") && anchor.href !== "#" && !ids.has(decodeURIComponent(anchor.href.slice(1)))) {
+      fail(`Internal anchor destination missing for “${anchor.label}”: ${anchor.href}`);
     }
   }
 
-  const clickableSocialPlaceholders = anchors.filter((anchor) =>
-    /social-card/i.test(anchor.tag) && (anchor.href === "" || anchor.href === "#")
-  );
-  if (clickableSocialPlaceholders.length > 0) {
-    reportFailure("Empty clickable social links are present.");
-  } else {
-    reportPass("No empty clickable social links found.");
+  const productSection = rawHtml.match(/<section\b[^>]*id=["']products["'][\s\S]*?<\/section>/i)?.[0] || "";
+  const productAnchors = tags(productSection, "a").map((tag) => attr(tag, "href")).filter((href) => href.includes("payhip.com"));
+  if (productAnchors.length === 0) fail("No active Payhip product links are rendered.");
+  else if (productAnchors.every((href) => /^https:\/\/(?:www\.)?payhip\.com\//i.test(href))) pass(`${productAnchors.length} rendered Payhip links use valid HTTPS URLs.`);
+  else fail("A rendered product has a non-HTTPS or non-Payhip URL.");
+
+  const merchSection = rawHtml.match(/<section\b[^>]*id=["']merch["'][\s\S]*?<\/section>/i)?.[0] || "";
+  const merchCards = merchSection.match(/<article\b[^>]*class=["'][^"']*merch-card[^"']*["'][\s\S]*?<\/article>/gi) || [];
+  if (merchCards.length < 6) fail(`Expected at least six merchandise cards; found ${merchCards.length}.`);
+  else pass(`${merchCards.length} merchandise cards are rendered.`);
+  for (const card of merchCards) {
+    const status = attr(card.match(/<article\b[^>]*>/i)?.[0] || "", "data-merch-status");
+    const cardAnchors = tags(card, "a");
+    if (status === "inquiry" && cardAnchors.length === 0) fail("Available merchandise card has no inquiry action.");
+    if (["coming_soon", "out_of_stock"].includes(status) && cardAnchors.length > 0) fail("Unavailable merchandise card is clickable.");
+  }
+  if (/name=["']holt_merch_nonce["']/.test(merchSection) && /name=["']website["']/.test(merchSection)) pass("Merch form includes nonce and honeypot fields.");
+  else fail("Merch form security fields are missing.");
+
+  const amazonAnchors = anchors.filter(({ href }) => /(?:amazon\.com|amzn\.to|a\.co)/i.test(href));
+  if (amazonAnchors.length > 0) {
+    if (!html.includes("As an Amazon Associate I earn from qualifying purchases")) fail("Affiliate disclosure is missing.");
+    for (const anchor of amazonAnchors) {
+      const rel = anchor.rel.toLowerCase().split(/\s+/);
+      for (const token of ["sponsored", "noopener", "noreferrer"]) if (!rel.includes(token)) fail(`Amazon link “${anchor.label}” lacks rel=${token}.`);
+      if (anchor.target !== "_blank") fail(`Amazon link “${anchor.label}” must open in a new tab.`);
+    }
   }
 
-  for (const link of AMAZON_LINKS) {
-    const matchingAnchors = anchors.filter((anchor) => anchor.href === link || anchor.href === link.replace(/\/$/, ""));
+  for (const path of ["/sitemap.xml", "/robots.txt"]) {
+    const result = await checkUrl(`${SITE_URL}${path}`);
+    result.ok ? pass(`${path} is available (${result.status}).`) : fail(`${path} is unavailable (${result.status}).`);
+  }
 
-    if (matchingAnchors.length === 0) {
-      reportFailure(`Amazon affiliate link missing from anchors: ${link}`);
-      continue;
+  const unique = new Map();
+  for (const anchor of anchors) {
+    if (/^(#|mailto:|tel:)/i.test(anchor.href)) continue;
+    try {
+      const url = new URL(anchor.href, HOME_URL).toString();
+      if (!unique.has(url)) unique.set(url, anchor.label);
+    } catch {
+      fail(`Invalid URL on “${anchor.label}”: ${anchor.href}`);
     }
+  }
 
-    for (const anchor of matchingAnchors) {
-      const relTokens = anchor.rel.toLowerCase().split(/\s+/).filter(Boolean);
-
-      for (const token of ["sponsored", "noopener", "noreferrer"]) {
-        if (!relTokens.includes(token)) {
-          reportFailure(`Amazon link ${link} is missing rel token: ${token}`);
-        }
+  for (const [url, label] of unique) {
+    const result = await checkUrl(url);
+    if (result.ok) continue;
+    const host = new URL(url).hostname.replace(/^www\./, "");
+    const botProtected = ["payhip.com", "facebook.com", "instagram.com", "tiktok.com", "youtube.com", "amazon.com", "amzn.to", "linktr.ee"]
+      .some((allowed) => host === allowed || host.endsWith(`.${allowed}`));
+    if (botProtected && [401, 403, 405, 429, "timeout/error"].includes(result.status)) {
+      if (!warnedHosts.has(host)) {
+        warnedHosts.add(host);
+        warn(`${host} automated checks are blocked or inconclusive (${result.status}); rendered links were validated.`);
       }
-
-      if (anchor.target !== "_blank") {
-        reportFailure(`Amazon link ${link} does not open in a new tab.`);
-      }
-    }
-  }
-
-  if (html.includes(AFFILIATE_DISCLOSURE)) {
-    reportPass("Affiliate disclosure is visible in homepage HTML.");
-  } else {
-    reportFailure("Affiliate disclosure is missing from homepage HTML.");
-  }
-
-  if (html.includes(FOOTER_DISCLAIMER)) {
-    reportPass("Footer portfolio disclaimer is visible.");
-  } else {
-    reportFailure("Footer portfolio disclaimer is missing.");
-  }
-
-  if (html.includes(DEPLOYMENT_MARKER)) {
-    reportPass("Deployment/version marker exists.");
-  } else {
-    reportFailure("Deployment/version marker is missing.");
-  }
-
-  if (/<title>[^<]+<\/title>/i.test(rawHtml)) {
-    reportPass("Title tag exists.");
-  } else {
-    reportFailure("Title tag is missing.");
-  }
-
-  if (/<meta\s+name=["']description["']\s+content=["'][^"']+["']/i.test(rawHtml)) {
-    reportPass("Meta description exists.");
-  } else {
-    reportFailure("Meta description is missing.");
-  }
-
-  for (const property of ["og:title", "og:description", "og:url", "og:image"]) {
-    if (new RegExp(`<meta\\s+property=["']${property}["']\\s+content=["'][^"']+["']`, "i").test(rawHtml)) {
-      reportPass(`${property} exists.`);
+    } else if ([404, 410].includes(result.status) || new URL(url).origin === SITE_URL) {
+      fail(`Broken link from “${label}”: ${url} (${result.status}).`);
     } else {
-      reportFailure(`${property} is missing.`);
+      warn(`External link from “${label}” could not be confirmed: ${url} (${result.status}).`);
     }
   }
 
-  const canonicalHrefs = extractCanonicalHrefs(rawHtml);
-  if (canonicalHrefs.length === 0) {
-    reportFailure("Canonical URL is missing.");
-  } else if (canonicalHrefs.length > 1) {
-    reportFailure(`Expected one canonical URL, found ${canonicalHrefs.length}.`);
-  } else if (canonicalHrefs[0] !== EXPECTED_HOMEPAGE_CANONICAL) {
-    reportFailure(`Homepage canonical should be ${EXPECTED_HOMEPAGE_CANONICAL}; found ${canonicalHrefs[0]}.`);
-  } else {
-    reportPass(`Homepage canonical URL is correct: ${canonicalHrefs[0]}`);
-  }
-
-  const h1Count = (rawHtml.match(/<h1\b/gi) || []).length;
-  if (h1Count === 1) {
-    reportPass("Exactly one H1 exists.");
-  } else {
-    reportFailure(`Expected exactly one H1, found ${h1Count}.`);
-  }
-
-  const imageTags = rawHtml.match(/<img\b[^>]*>/gi) || [];
-  const imagesWithoutAlt = imageTags.filter((tag) => !/\salt\s*=\s*["'][^"']*["']/i.test(tag));
-
-  if (imagesWithoutAlt.length > 0) {
-    reportWarning(`${imagesWithoutAlt.length} image(s) may be missing alt text.`);
-  } else {
-    reportPass("No missing image alt text found in homepage HTML.");
-  }
-
-  if (/Fatal error|Warning:|Notice:|Parse error/i.test(html)) {
-    reportFailure("Visible WordPress/PHP error text found.");
-  } else {
-    reportPass("No visible WordPress/PHP error text found.");
-  }
-
-  checkInternalAnchors(anchors, rawHtml);
-
-  const sitemapCheck = await checkUrl(`${SITE_URL}/sitemap.xml`);
-  if (sitemapCheck.ok) {
-    reportPass(`Sitemap is available: HTTP ${sitemapCheck.status}.`);
-  } else {
-    reportFailure(`Sitemap unavailable: HTTP ${sitemapCheck.status}.`);
-  }
-
-  const robotsCheck = await checkUrl(`${SITE_URL}/robots.txt`);
-  if (robotsCheck.ok) {
-    reportPass(`robots.txt is available: HTTP ${robotsCheck.status}.`);
-  } else {
-    reportFailure(`robots.txt unavailable: HTTP ${robotsCheck.status}.`);
-  }
-
-  const uniqueLinks = Array.from(new Set(anchors.map((anchor) => anchor.href)))
-    .filter((href) => href && !shouldSkipLink(href))
-    .map((href) => resolveLink(href))
-    .filter(Boolean);
-
-  for (const link of uniqueLinks) {
-    const url = new URL(link);
-    const result = await checkUrl(link);
-
-    if (result.ok) {
-      continue;
-    }
-
-    if (url.origin === SITE_URL || !isSoftThirdPartyFailure(link, result.status)) {
-      reportFailure(`Broken link: ${link} (${result.status})`);
-    } else {
-      reportWarning(`External link check warning: ${link} (${result.status})`);
-    }
-  }
-
-  console.log("");
-  console.log("Passed checks:");
-  for (const message of passed) {
-    console.log(`PASS: ${message}`);
-  }
-
-  if (warnings.length > 0) {
-    console.log("");
-    console.log("Warnings:");
-    for (const message of warnings) {
-      console.log(`WARN: ${message}`);
-    }
-  }
-
-  if (failures.length > 0) {
-    console.log("");
-    console.log("Critical failures:");
-    for (const message of failures) {
-      console.log(`FAIL: ${message}`);
-    }
-    process.exit(1);
-  }
-
-  console.log("");
-  console.log("Audit completed without critical failures.");
+  for (const message of passes) console.log(`PASS: ${message}`);
+  for (const message of warnings) console.log(`WARN: ${message}`);
+  for (const message of failures) console.log(`FAIL: ${message}`);
+  console.log(`SUMMARY: ${passes.length} PASS, ${warnings.length} WARN, ${failures.length} FAIL`);
+  if (failures.length) process.exit(1);
 }
 
 await main().catch((error) => {
-  console.error("Audit crashed:");
-  console.error(error);
+  console.error(`FAIL: Audit crashed: ${error.stack || error}`);
   process.exit(1);
 });

@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check out theme source
+        uses: actions/checkout@v4
+
       - name: Trigger Deployer for Git webhook
         env:
           WP_DEPLOY_URL: ${{ secrets.WP_DEPLOY_URL }}
@@ -32,7 +35,31 @@ jobs:
             "$WP_DEPLOY_URL")
 
           echo "Deployer endpoint returned HTTP $http_code."
-          echo "Deployer response preview:"
-          head -c 500 /tmp/deployer-response.txt || true
-          echo
           echo "Deploy webhook call completed."
+
+      - name: Verify production applied this theme version
+        run: |
+          expected_version=$(awk '/^Version:/ { print $2; exit }' style.css)
+          if [ -z "$expected_version" ]; then
+            echo "Could not read the expected theme version from style.css."
+            exit 1
+          fi
+
+          echo "Waiting for production to report theme version $expected_version..."
+          for attempt in {1..8}; do
+            live_html=$(curl --fail --show-error --silent --location \
+              --user-agent "Mozilla/5.0 (compatible; HoltHoldingsDeployVerifier/1.0; +https://holtholdings.us)" \
+              --retry 2 --retry-all-errors --retry-delay 3 \
+              "https://holtholdings.us/?deploy_check=${GITHUB_SHA}") || true
+            live_version=$(printf '%s' "$live_html" | sed -n 's/.*Holt Holdings theme version: *\([^<[:space:]]*\).*/\1/p' | head -n 1)
+            if [ "$live_version" = "$expected_version" ]; then
+              echo "Production is serving theme version $live_version."
+              exit 0
+            fi
+            echo "Attempt $attempt/8: production reports ${live_version:-no marker}; expected $expected_version."
+            sleep 15
+          done
+
+          echo "GitHub completed the deploy call, but WordPress did not apply theme version $expected_version."
+          echo "Open WordPress Admin -> Deployer for Git -> Holt Holdings theme -> Update Theme, then rerun this workflow."
+          exit 1

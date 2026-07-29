@@ -292,3 +292,23 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 - Updated positioning so Holt Holdings reads as a portfolio and project hub.
 - Clarified Wireman as a family tool project under construction.
 - Added footer disclaimer and improved custom logo fallback behavior.
+## Version 1.13.0
+
+- Adds a responsive `#merch` catalog for Holt Holdings, Low Volt Holt, and Hands On Idaho hats and shirts.
+- Adds a secure merchandise inquiry form with WordPress nonce validation, server-side sanitization, a honeypot, allow-listed products, and `wp_mail` delivery to the configured Holt Holdings contact email. The form does not collect payment or reserve inventory.
+- Keeps merchandise inventory in the `merchandise` array returned by `holt_holdings_home_config()`. Add photos, confirmed shirt prices, colors, sizes, availability, and future checkout URLs there.
+- Preserves Payhip as the price and checkout source of truth. Product cards use the existing configured Payhip URLs and do not cache prices.
+- Replaces hardcoded live-audit link inventories with rendered-card validation, one warning per bot-protected host, explicit `#products`/`#merch` checks, and repository-versus-live version matching.
+- Makes deployment fail when the webhook responds but production does not report the committed theme version after retries.
+
+### Merchandise request flow
+
+Requests post to WordPress `admin-post.php`, are sanitized and validated, and are emailed through the site's configured mail system. Successful delivery depends on working WordPress mail configuration. Availability and final totals are confirmed manually; submission is not a reservation.
+
+### Deployment troubleshooting
+
+The deploy workflow now polls the public homepage for the version marker in `footer.php`. If the webhook is green but the marker remains stale, open **WordPress Admin → Deployer for Git → Holt Holdings theme → Update Theme**, then rerun the deploy and weekly site audits. The secret deployment URL is never printed.
+
+### Audit behavior
+
+Confirmed HTTP 404/410 responses and broken internal links fail. Payhip and other known bot-protected hosts returning 401, 403, 405, 429, or a timeout produce one deduplicated warning per host when the rendered anchor itself is valid.

@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Run live-site audit
         run: node .github/scripts/site-audit.mjs
@@ -30,8 +30,10 @@ jobs:
           const { chromium } = require('playwright');
 
           const viewports = [
+            { name: 'small-mobile', width: 320, height: 720 },
             { name: 'mobile', width: 375, height: 812 },
             { name: 'tablet', width: 768, height: 1024 },
+            { name: 'laptop', width: 1024, height: 768 },
             { name: 'desktop', width: 1280, height: 900 }
           ];
 
@@ -59,6 +61,8 @@ jobs:
               return {
                 overflow: document.documentElement.scrollWidth > window.innerWidth + 1,
                 hasNav: Boolean(nav),
+                hasProducts: Boolean(document.querySelector('#products')),
+                hasMerch: Boolean(document.querySelector('#merch')),
                 activeLinks: activeLinks.length,
                 phpError: /Fatal error|Warning:|Notice:|Parse error/i.test(document.body.innerText)
               };
@@ -66,6 +70,8 @@ jobs:
 
             if (result.overflow) failures.push(`${viewport.name}: horizontal overflow detected`);
             if (!result.hasNav) failures.push(`${viewport.name}: navigation missing`);
+            if (!result.hasProducts) failures.push(`${viewport.name}: #products missing`);
+            if (!result.hasMerch) failures.push(`${viewport.name}: #merch missing`);
             if (result.activeLinks === 0) failures.push(`${viewport.name}: no active links found`);
             if (result.phpError) failures.push(`${viewport.name}: visible PHP/WordPress error found`);
             if (consoleErrors.length > 0) failures.push(`${viewport.name}: console errors: ${consoleErrors.slice(0, 3).join(' | ')}`);
