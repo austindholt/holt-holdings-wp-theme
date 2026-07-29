@@ -49,8 +49,10 @@ jobs:
           for attempt in {1..8}; do
             live_html=$(curl --fail --show-error --silent --location \
               --user-agent "Holt Holdings weekly site audit" \
+              --header "Cache-Control: no-cache" \
+              --header "Pragma: no-cache" \
               --retry 2 --retry-all-errors --retry-delay 3 \
-              "https://holtholdings.us/?deploy_check=${GITHUB_SHA}") || true
+              "https://holtholdings.us/") || true
             live_version=$(printf '%s' "$live_html" | sed -n 's/.*Holt Holdings theme version: *\([^<[:space:]]*\).*/\1/p' | head -n 1)
             if [ "$live_version" = "$expected_version" ]; then
               echo "Production is serving theme version $live_version."
