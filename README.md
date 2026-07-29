@@ -305,6 +305,8 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 
 Requests post to WordPress `admin-post.php`, are sanitized and validated, and are emailed through the site's configured mail system. Successful delivery depends on working WordPress mail configuration. Availability and final totals are confirmed manually; submission is not a reservation.
 
+As of version `1.13.1`, every validated request is first stored as a private **Merch Request** in the WordPress dashboard. The request records the configured destination and whether WordPress accepted or rejected the email handoff. A successful `wp_mail()` return does not prove inbox delivery, so the public confirmation no longer claims that an email was delivered.
+
 ### Deployment troubleshooting
 
 The deploy workflow now polls the public homepage for the version marker in `footer.php`. If the webhook is green but the marker remains stale, open **WordPress Admin → Deployer for Git → Holt Holdings theme → Update Theme**, then rerun the deploy and weekly site audits. The secret deployment URL is never printed.

@@ -793,6 +793,62 @@ function holt_holdings_fallback_menu() {
 }
 
 /**
+ * Register private merchandise requests as an admin-visible delivery backup.
+ */
+function holt_holdings_register_merch_requests() {
+	register_post_type( 'holt_merch_request', array(
+		'labels' => array(
+			'name'          => __( 'Merch Requests', 'holt-holdings' ),
+			'singular_name' => __( 'Merch Request', 'holt-holdings' ),
+			'menu_name'     => __( 'Merch Requests', 'holt-holdings' ),
+		),
+		'public'              => false,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'menu_icon'           => 'dashicons-email-alt',
+		'supports'            => array( 'title', 'editor' ),
+		'capability_type'     => 'post',
+		'map_meta_cap'        => true,
+		'exclude_from_search' => true,
+		'show_in_rest'        => false,
+	) );
+}
+add_action( 'init', 'holt_holdings_register_merch_requests' );
+
+/**
+ * Add useful delivery details to the merchandise request list.
+ *
+ * @param array $columns Existing admin columns.
+ * @return array
+ */
+function holt_holdings_merch_request_columns( $columns ) {
+	return array(
+		'cb'             => $columns['cb'],
+		'title'          => __( 'Request', 'holt-holdings' ),
+		'merch_email'    => __( 'Customer email', 'holt-holdings' ),
+		'merch_delivery' => __( 'Email handoff', 'holt-holdings' ),
+		'date'           => $columns['date'],
+	);
+}
+add_filter( 'manage_holt_merch_request_posts_columns', 'holt_holdings_merch_request_columns' );
+
+/**
+ * Render merchandise request list details.
+ *
+ * @param string $column  Column name.
+ * @param int    $post_id Request ID.
+ */
+function holt_holdings_merch_request_column_content( $column, $post_id ) {
+	if ( 'merch_email' === $column ) {
+		echo esc_html( get_post_meta( $post_id, '_customer_email', true ) );
+	} elseif ( 'merch_delivery' === $column ) {
+		$status = get_post_meta( $post_id, '_email_status', true );
+		echo esc_html( 'accepted' === $status ? __( 'Accepted by WordPress mail', 'holt-holdings' ) : __( 'Email handoff failed', 'holt-holdings' ) );
+	}
+}
+add_action( 'manage_holt_merch_request_posts_custom_column', 'holt_holdings_merch_request_column_content', 10, 2 );
+
+/**
  * Process the public merchandise inquiry form.
  */
 function holt_holdings_handle_merch_inquiry() {
@@ -824,10 +880,60 @@ function holt_holdings_handle_merch_inquiry() {
 		exit;
 	}
 
-	$body = sprintf( "Name: %s\nEmail: %s\nPhone: %s\nProduct: %s\nQuantity: %d\nColor: %s\nSize: %s\nPickup/shipping: %s\n\nNotes:\n%s", $name, $email, $phone, $product, $quantity, $color, $size, $fulfillment, $notes );
-	$sent = wp_mail( holt_holdings_contact_email(), 'Merchandise inquiry: ' . $product, $body, array( 'Reply-To: ' . $name . ' <' . $email . '>' ) );
+	$destination = holt_holdings_contact_email();
+	$content     = sprintf( "Name: %s\nEmail: %s\nPhone: %s\nProduct: %s\nQuantity: %d\nColor: %s\nSize: %s\nPickup/shipping: %s\n\nNotes:\n%s", $name, $email, $phone, $product, $quantity, $color, $size, $fulfillment, $notes );
+	$request_id = wp_insert_post( array(
+		'post_type'    => 'holt_merch_request',
+		'post_status'  => 'private',
+		'post_title'   => sprintf( '%s — %s', $product, $name ),
+		'post_content' => $content,
+	), true );
 
-	wp_safe_redirect( add_query_arg( 'merch_status', $sent ? 'success' : 'error', $redirect ) );
+	if ( is_wp_error( $request_id ) ) {
+		wp_safe_redirect( add_query_arg( 'merch_status', 'storage_failed', $redirect ) );
+		exit;
+	}
+
+	$meta = array(
+		'_customer_name'       => $name,
+		'_customer_email'      => $email,
+		'_customer_phone'      => $phone,
+		'_product'             => $product,
+		'_quantity'            => $quantity,
+		'_color'               => $color,
+		'_size'                => $size,
+		'_fulfillment'         => $fulfillment,
+		'_notes'               => $notes,
+		'_email_destination'   => $destination,
+		'_email_status'        => 'pending',
+	);
+	foreach ( $meta as $key => $value ) {
+		update_post_meta( $request_id, $key, $value );
+	}
+
+	$mail_error = '';
+	$mail_failure_handler = function( $error ) use ( &$mail_error ) {
+		$mail_error = $error->get_error_message();
+	};
+	add_action( 'wp_mail_failed', $mail_failure_handler );
+	$mail_accepted = wp_mail(
+		$destination,
+		sprintf( 'Merchandise request #%d: %s', $request_id, $product ),
+		"Stored in WordPress as merchandise request #{$request_id}.\n\n" . $content,
+		array( 'Reply-To: ' . $name . ' <' . $email . '>' )
+	);
+	remove_action( 'wp_mail_failed', $mail_failure_handler );
+
+	update_post_meta( $request_id, '_email_status', $mail_accepted ? 'accepted' : 'failed' );
+	update_post_meta( $request_id, '_email_attempted_at', current_time( 'mysql', true ) );
+	if ( $mail_error ) {
+		update_post_meta( $request_id, '_email_error', sanitize_text_field( $mail_error ) );
+	}
+
+	wp_safe_redirect( add_query_arg( array(
+		'merch_status' => $mail_accepted ? 'stored_email_accepted' : 'stored_email_failed',
+		'request_id'   => $request_id,
+	), $redirect ) );
 	exit;
 }
 add_action( 'admin_post_nopriv_holt_merch_inquiry', 'holt_holdings_handle_merch_inquiry' );

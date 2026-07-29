@@ -135,7 +135,20 @@ $home_config   = holt_holdings_home_config();
 			<h3><?php esc_html_e( 'Merchandise order request', 'holt-holdings' ); ?></h3>
 			<p><?php esc_html_e( 'No payment is collected here. Submitting does not reserve inventory; availability and the final total will be confirmed directly.', 'holt-holdings' ); ?></p>
 			<?php if ( isset( $_GET['merch_status'] ) ) : ?>
-				<p class="form-notice" role="status"><?php echo 'success' === sanitize_key( wp_unslash( $_GET['merch_status'] ) ) ? esc_html__( 'Thanks—your request was sent. We’ll follow up directly.', 'holt-holdings' ) : esc_html__( 'The request could not be sent. Please check the required fields or email Holt Holdings directly.', 'holt-holdings' ); ?></p>
+				<?php
+				$merch_status = sanitize_key( wp_unslash( $_GET['merch_status'] ) );
+				$request_id   = isset( $_GET['request_id'] ) ? absint( $_GET['request_id'] ) : 0;
+				if ( 'stored_email_accepted' === $merch_status ) {
+					$notice = sprintf( __( 'Request #%d was saved in WordPress. The email notification was accepted by the site’s mail system, but inbox delivery is not guaranteed.', 'holt-holdings' ), $request_id );
+				} elseif ( 'stored_email_failed' === $merch_status ) {
+					$notice = sprintf( __( 'Request #%d was saved in WordPress, but the email notification could not be handed off. Holt Holdings can still retrieve it from the WordPress dashboard.', 'holt-holdings' ), $request_id );
+				} elseif ( 'storage_failed' === $merch_status ) {
+					$notice = __( 'The request could not be saved. Please contact Holt Holdings directly using the backup email link below.', 'holt-holdings' );
+				} else {
+					$notice = __( 'The request was not accepted. Please check the required fields or use the backup email link below.', 'holt-holdings' );
+				}
+				?>
+				<p class="form-notice" role="status"><?php echo esc_html( $notice ); ?></p>
 			<?php endif; ?>
 			<form class="merch-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<input type="hidden" name="action" value="holt_merch_inquiry">
@@ -152,6 +165,7 @@ $home_config   = holt_holdings_home_config();
 				<label class="honeypot" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
 				<div class="form-wide"><button class="button" type="submit"><?php esc_html_e( 'Send Order Request', 'holt-holdings' ); ?></button></div>
 			</form>
+			<p class="merch-backup"><?php esc_html_e( 'Backup:', 'holt-holdings' ); ?> <a href="mailto:<?php echo esc_attr( $contact_email ); ?>?subject=<?php echo esc_attr( rawurlencode( 'Merchandise order request' ) ); ?>"><?php esc_html_e( 'email Holt Holdings directly', 'holt-holdings' ); ?></a>. <?php esc_html_e( 'Valid form requests are also retained privately under Merch Requests in the WordPress dashboard.', 'holt-holdings' ); ?></p>
 		</div>
 	</section>
 

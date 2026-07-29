@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.13.1
+
+- Retains every validated merchandise request privately in WordPress before email is attempted.
+- Adds an admin-visible **Merch Requests** list with customer and email-handoff status.
+- Replaces the ambiguous “request was sent” notice with separate storage and mail-handoff results.
+- Records the email destination, attempt time, return status, and any `wp_mail_failed` error.
+- Adds a visible direct-email fallback beneath the form.
+
 ## 1.13.0
 
 - Added the merchandise catalog and secure order-request form.

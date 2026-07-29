@@ -43,6 +43,7 @@ jobs:
           if (!template.includes('data-merch-status')) failures.push('Merchandise status metadata is missing.');
           if (!template.includes('holt_merch_nonce') || !source.includes("wp_verify_nonce")) failures.push('Merchandise nonce validation is missing.');
           if (!template.includes('name="website"')) failures.push('Merchandise honeypot is missing.');
+          if (!source.includes("register_post_type( 'holt_merch_request'") || !source.includes("wp_insert_post(")) failures.push('WordPress merchandise request backup storage is missing.');
           if (!source.includes("wp_mail(")) failures.push('Merchandise email delivery is missing.');
 
           for (const failure of failures) console.error(`FAIL: ${failure}`);
