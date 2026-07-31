@@ -8,6 +8,7 @@
 get_header();
 
 $contact_email = holt_holdings_contact_email();
+$merch_email   = holt_holdings_merch_recipient_email();
 $home_config   = holt_holdings_home_config();
 ?>
 <main id="primary" class="site-main">
@@ -165,7 +166,7 @@ $home_config   = holt_holdings_home_config();
 				<label class="honeypot" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
 				<div class="form-wide"><button class="button" type="submit"><?php esc_html_e( 'Send Order Request', 'holt-holdings' ); ?></button></div>
 			</form>
-			<p class="merch-backup"><?php esc_html_e( 'Backup:', 'holt-holdings' ); ?> <a href="mailto:<?php echo esc_attr( $contact_email ); ?>?subject=<?php echo esc_attr( rawurlencode( 'Merchandise order request' ) ); ?>"><?php esc_html_e( 'email Holt Holdings directly', 'holt-holdings' ); ?></a>. <?php esc_html_e( 'Valid form requests are also retained privately under Merch Requests in the WordPress dashboard.', 'holt-holdings' ); ?></p>
+			<p class="merch-backup"><?php esc_html_e( 'Backup:', 'holt-holdings' ); ?> <a href="mailto:<?php echo esc_attr( $merch_email ); ?>?subject=<?php echo esc_attr( rawurlencode( 'Merchandise order request' ) ); ?>"><?php esc_html_e( 'email Holt Holdings directly', 'holt-holdings' ); ?></a>. <?php esc_html_e( 'Valid form requests are also retained privately under Merch Requests in the WordPress dashboard.', 'holt-holdings' ); ?></p>
 		</div>
 	</section>
 

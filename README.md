@@ -85,7 +85,7 @@ The main homepage copy and public links can be edited in **Appearance > Customiz
 - Business links
 - Social links, including Linktree, Facebook, Instagram, YouTube, TikTok, and Hands On Idaho social links
 
-General Holt Holdings / Austin Holt contact uses `holtholdings@outlook.com`. Business-specific contact details, such as Hands On Idaho phone/email details, should stay with their own business pages or sections.
+General Holt Holdings / Austin Holt contact uses `holtholdingsllc@outlook.com`. Merchandise notifications use the separate **Merch Request Notification Email** Customizer setting, which defaults to the same address. Business-specific contact details, such as Hands On Idaho phone/email details, stay with their own business pages or sections.
 
 Unknown public links are kept empty so the theme hides them or renders non-clickable Coming Soon / Under Construction labels instead of misleading placeholder buttons.
 
@@ -306,6 +306,10 @@ This creates `holt-holdings.zip` as a fallback upload artifact. The zip file is 
 Requests post to WordPress `admin-post.php`, are sanitized and validated, and are emailed through the site's configured mail system. Successful delivery depends on working WordPress mail configuration. Availability and final totals are confirmed manually; submission is not a reservation.
 
 As of version `1.13.1`, every validated request is first stored as a private **Merch Request** in the WordPress dashboard. The request records the configured destination and whether WordPress accepted or rejected the email handoff. A successful `wp_mail()` return does not prove inbox delivery, so the public confirmation no longer claims that an email was delivered.
+
+Form storage in WordPress confirms the form works. If a request appears under **WordPress Admin → Merch Requests** but no notification email arrives, the remaining issue is WordPress mail deliverability/SMTP, not the form itself.
+
+To test manually, submit the public merchandise form with a monitored requester email and note the request number in the confirmation. Open **WordPress Admin → Merch Requests**, find the same request number, and confirm the attempted destination is `holtholdingsllc@outlook.com`. The list and request details will show either **Accepted by WordPress mail** or **Email handoff failed**. “Accepted” confirms only that `wp_mail()` handed the message to the configured mail system; verify the Outlook inbox and junk folder separately.
 
 ### Deployment troubleshooting
 

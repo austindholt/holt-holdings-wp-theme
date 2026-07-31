@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 
 const SITE_URL = "https://holtholdings.us";
 const HOME_URL = `${SITE_URL}/`;
-const CONTACT_EMAIL = "holtholdings@outlook.com";
+const CONTACT_EMAIL = "holtholdingsllc@outlook.com";
 const failures = [];
 const warnings = [];
 const passes = [];

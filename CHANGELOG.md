@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.13.2
+
+- Corrects Holt Holdings and merchandise-request email defaults to `holtholdingsllc@outlook.com`.
+- Adds a dedicated Customizer setting for merchandise notifications with safe legacy-address fallback.
+- Shows the attempted destination in the **Merch Requests** list and full mail handoff details on each request.
+- Documents manual request testing and the difference between WordPress storage, mail handoff, and inbox delivery.
+
 ## 1.13.1
 
 - Retains every validated merchandise request privately in WordPress before email is attempted.

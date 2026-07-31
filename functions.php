@@ -253,7 +253,8 @@ function holt_holdings_customize_register( $wp_customize ) {
 		'amazon_prime_url'       => array( 'label' => __( 'Amazon Prime URL', 'holt-holdings' ), 'default' => 'https://amzn.to/4u1aeBb', 'type' => 'url' ),
 		'audible_url'            => array( 'label' => __( 'Audible Premium Plus URL', 'holt-holdings' ), 'default' => 'https://amzn.to/4twRitV', 'type' => 'url' ),
 		'amazon_business_url'    => array( 'label' => __( 'Amazon Business URL', 'holt-holdings' ), 'default' => 'https://amzn.to/4wY2e6H', 'type' => 'url' ),
-		'contact_email'          => array( 'label' => __( 'Contact Email', 'holt-holdings' ), 'default' => 'holtholdings@outlook.com', 'type' => 'email' ),
+		'contact_email'          => array( 'label' => __( 'Contact Email', 'holt-holdings' ), 'default' => 'holtholdingsllc@outlook.com', 'type' => 'email' ),
+		'merch_recipient_email'  => array( 'label' => __( 'Merch Request Notification Email', 'holt-holdings' ), 'default' => 'holtholdingsllc@outlook.com', 'type' => 'email' ),
 		'ga4_measurement_id'     => array( 'label' => __( 'GA4 Measurement ID', 'holt-holdings' ), 'default' => '', 'type' => 'text' ),
 		'hands_on_idaho_url'     => array( 'label' => __( 'Hands On Idaho URL', 'holt-holdings' ), 'default' => 'https://handsonidaho.com/', 'type' => 'url' ),
 		'hands_on_instagram_url' => array( 'label' => __( 'Hands On Idaho Instagram URL', 'holt-holdings' ), 'default' => 'https://www.instagram.com/handsonidaho/', 'type' => 'url' ),
@@ -329,10 +330,28 @@ function holt_holdings_setting( $name, $default = '' ) {
  * @return string
  */
 function holt_holdings_contact_email() {
-	$email = strtolower( trim( holt_holdings_setting( 'contact_email', 'holtholdings@outlook.com' ) ) );
+	$email = strtolower( trim( holt_holdings_setting( 'contact_email', 'holtholdingsllc@outlook.com' ) ) );
 
-	if ( empty( $email ) || 'hello@holtholdings.us' === $email ) {
-		return 'holtholdings@outlook.com';
+	if ( empty( $email ) || in_array( $email, array( 'holtholdings@outlook.com', 'hello@holtholdings.us' ), true ) ) {
+		return 'holtholdingsllc@outlook.com';
+	}
+
+	return $email;
+}
+
+/**
+ * Return the merchandise notification recipient.
+ *
+ * Blank and known legacy values safely migrate to the LLC mailbox. Any other
+ * valid address remains an intentional administrator override.
+ *
+ * @return string
+ */
+function holt_holdings_merch_recipient_email() {
+	$email = strtolower( trim( holt_holdings_setting( 'merch_recipient_email', 'holtholdingsllc@outlook.com' ) ) );
+
+	if ( ! is_email( $email ) || in_array( $email, array( 'holtholdings@outlook.com', 'hello@holtholdings.us' ), true ) ) {
+		return 'holtholdingsllc@outlook.com';
 	}
 
 	return $email;
@@ -826,6 +845,7 @@ function holt_holdings_merch_request_columns( $columns ) {
 		'cb'             => $columns['cb'],
 		'title'          => __( 'Request', 'holt-holdings' ),
 		'merch_email'    => __( 'Customer email', 'holt-holdings' ),
+		'merch_to'       => __( 'Attempted destination', 'holt-holdings' ),
 		'merch_delivery' => __( 'Email handoff', 'holt-holdings' ),
 		'date'           => $columns['date'],
 	);
@@ -841,12 +861,54 @@ add_filter( 'manage_holt_merch_request_posts_columns', 'holt_holdings_merch_requ
 function holt_holdings_merch_request_column_content( $column, $post_id ) {
 	if ( 'merch_email' === $column ) {
 		echo esc_html( get_post_meta( $post_id, '_customer_email', true ) );
+	} elseif ( 'merch_to' === $column ) {
+		echo esc_html( get_post_meta( $post_id, '_email_destination', true ) );
 	} elseif ( 'merch_delivery' === $column ) {
 		$status = get_post_meta( $post_id, '_email_status', true );
 		echo esc_html( 'accepted' === $status ? __( 'Accepted by WordPress mail', 'holt-holdings' ) : __( 'Email handoff failed', 'holt-holdings' ) );
 	}
 }
 add_action( 'manage_holt_merch_request_posts_custom_column', 'holt_holdings_merch_request_column_content', 10, 2 );
+
+/**
+ * Add read-only email handoff details to each saved request.
+ */
+function holt_holdings_merch_request_meta_boxes() {
+	add_meta_box(
+		'holt-merch-email-handoff',
+		__( 'Email handoff details', 'holt-holdings' ),
+		'holt_holdings_merch_request_handoff_meta_box',
+		'holt_merch_request',
+		'side',
+		'high'
+	);
+}
+add_action( 'add_meta_boxes_holt_merch_request', 'holt_holdings_merch_request_meta_boxes' );
+
+/**
+ * Render a saved request's mail destination, status, attempt time, and error.
+ *
+ * @param WP_Post $post Current merchandise request.
+ */
+function holt_holdings_merch_request_handoff_meta_box( $post ) {
+	$destination = get_post_meta( $post->ID, '_email_destination', true );
+	$status      = get_post_meta( $post->ID, '_email_status', true );
+	$attempted   = get_post_meta( $post->ID, '_email_attempted_at', true );
+	$error       = get_post_meta( $post->ID, '_email_error', true );
+	$status_text = 'accepted' === $status
+		? __( 'Accepted by WordPress mail', 'holt-holdings' )
+		: __( 'Email handoff failed', 'holt-holdings' );
+	?>
+	<p><strong><?php esc_html_e( 'Attempted destination:', 'holt-holdings' ); ?></strong><br><?php echo esc_html( $destination ?: __( 'Not recorded', 'holt-holdings' ) ); ?></p>
+	<p><strong><?php esc_html_e( 'Status:', 'holt-holdings' ); ?></strong><br><?php echo esc_html( $status_text ); ?></p>
+	<p><strong><?php esc_html_e( 'Attempted (UTC):', 'holt-holdings' ); ?></strong><br><?php echo esc_html( $attempted ?: __( 'Not recorded', 'holt-holdings' ) ); ?></p>
+	<?php if ( $error ) : ?>
+		<p><strong><?php esc_html_e( 'Mail error:', 'holt-holdings' ); ?></strong><br><?php echo esc_html( $error ); ?></p>
+	<?php elseif ( 'accepted' === $status ) : ?>
+		<p><?php esc_html_e( 'WordPress accepted the handoff. This does not confirm inbox delivery.', 'holt-holdings' ); ?></p>
+	<?php endif; ?>
+	<?php
+}
 
 /**
  * Process the public merchandise inquiry form.
@@ -880,7 +942,7 @@ function holt_holdings_handle_merch_inquiry() {
 		exit;
 	}
 
-	$destination = holt_holdings_contact_email();
+	$destination = holt_holdings_merch_recipient_email();
 	$content     = sprintf( "Name: %s\nEmail: %s\nPhone: %s\nProduct: %s\nQuantity: %d\nColor: %s\nSize: %s\nPickup/shipping: %s\n\nNotes:\n%s", $name, $email, $phone, $product, $quantity, $color, $size, $fulfillment, $notes );
 	$request_id = wp_insert_post( array(
 		'post_type'    => 'holt_merch_request',

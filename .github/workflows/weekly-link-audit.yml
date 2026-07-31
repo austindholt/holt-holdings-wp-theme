@@ -45,6 +45,9 @@ jobs:
           if (!template.includes('name="website"')) failures.push('Merchandise honeypot is missing.');
           if (!source.includes("register_post_type( 'holt_merch_request'") || !source.includes("wp_insert_post(")) failures.push('WordPress merchandise request backup storage is missing.');
           if (!source.includes("wp_mail(")) failures.push('Merchandise email delivery is missing.');
+          if (!source.includes("'merch_recipient_email'") || !source.includes("'holtholdingsllc@outlook.com'")) failures.push('Correct merchandise recipient setting is missing.');
+          if (!source.includes("'_email_destination'") || !source.includes("'_email_status'") || !source.includes("'_email_error'")) failures.push('Merchandise mail audit metadata is incomplete.');
+          if (!source.includes("'merch_to'") || !source.includes('Email handoff details')) failures.push('Merchandise destination/status admin visibility is missing.');
 
           for (const failure of failures) console.error(`FAIL: ${failure}`);
           console.log(`PASS: ${uniquePayhip.length} unique Payhip URLs are configured from the homepage source of truth.`);
