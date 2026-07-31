@@ -39,6 +39,8 @@ jobs:
 
           if (uniquePayhip.length < 13) failures.push(`Expected at least 13 configured Payhip URLs; found ${uniquePayhip.length}.`);
           if (!template.includes('id="products"')) failures.push('#products is missing.');
+          if (!source.includes('https://lowvoltvault.com') || !template.includes('product_portals')) failures.push('LowVolt Vault product portal is missing.');
+          if (!template.includes('Digital Guides & LowVolt Vault') || !template.includes('Individual Guide Downloads')) failures.push('Updated product positioning is missing.');
           if (!template.includes('id="merch"')) failures.push('#merch is missing.');
           if (!template.includes('data-merch-status')) failures.push('Merchandise status metadata is missing.');
           if (!template.includes('holt_merch_nonce') || !source.includes("wp_verify_nonce")) failures.push('Merchandise nonce validation is missing.');

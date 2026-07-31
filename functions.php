@@ -92,7 +92,7 @@ function holt_holdings_meta_tags() {
 	}
 
 	$title       = 'Austin Holt / Holt Holdings - Digital Products, Field Guides, Tools, and Projects';
-	$description = 'Austin Holt and Holt Holdings hub for Payhip field guides, practical resources, affiliate tools, business projects, and creator links.';
+	$description = 'Austin Holt and Holt Holdings hub for LowVolt Vault, low-voltage field guides, technician resources, digital downloads, practical tools, and business projects.';
 	$url         = home_url( '/' );
 	$image       = get_template_directory_uri() . '/assets/images/holt-holdings-logo.jpeg';
 	?>
@@ -237,6 +237,7 @@ function holt_holdings_customize_register( $wp_customize ) {
 		),
 		// Update social/product URLs here. Empty project URLs render as non-clickable Coming Soon labels.
 		'payhip_store_url'       => array( 'label' => __( 'LowVoltHolt Payhip Store URL', 'holt-holdings' ), 'default' => 'https://payhip.com/LowVoltHolt', 'type' => 'url' ),
+		'lowvolt_vault_url'      => array( 'label' => __( 'LowVolt Vault URL', 'holt-holdings' ), 'default' => 'https://lowvoltvault.com', 'type' => 'url' ),
 		'course_url'             => array( 'label' => __( 'Low Voltage Crash Course URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/3GVP5', 'type' => 'url' ),
 		'everyday_money_url'     => array( 'label' => __( 'Everyday Money Moves URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/sa17H', 'type' => 'url' ),
 		'windows_rebuild_url'    => array( 'label' => __( 'Windows Rebuild Guide URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/kROjv', 'type' => 'url' ),
@@ -517,6 +518,7 @@ function holt_holdings_button_link( $url, $label, $class = 'button' ) {
 function holt_holdings_home_config() {
 	$links = array(
 		'main_site'          => 'https://holtholdings.us/',
+		'lowvolt_vault'      => holt_holdings_link_setting( 'lowvolt_vault_url', 'https://lowvoltvault.com' ),
 		'payhip_store'       => holt_holdings_link_setting( 'payhip_store_url', 'https://payhip.com/LowVoltHolt' ),
 		'crash_course'       => holt_holdings_link_setting( 'course_url', 'https://payhip.com/b/3GVP5' ),
 		'everyday_money'     => holt_holdings_link_setting( 'everyday_money_url', 'https://payhip.com/b/sa17H' ),
@@ -559,8 +561,8 @@ function holt_holdings_home_config() {
 		// Hands-On Idaho Nextdoor, Dirty Dumps Facebook, and Dirty Dumps Nextdoor.
 		'featured_links'  => array(
 			array(
-				'name'        => 'Digital Products',
-				'description' => 'Payhip field guides, practical checklists, and learning resources.',
+				'name'        => 'Digital Guides & LowVolt Vault',
+				'description' => 'A growing low-voltage resource library plus individual Payhip downloads.',
 				'url'         => '#products',
 				'button'      => 'Browse Products',
 			),
@@ -624,15 +626,25 @@ function holt_holdings_home_config() {
 				'visible'     => true,
 			),
 		),
-		'digital_products' => array(
+		'product_portals'  => array(
 			array(
-				'name'        => 'LowVoltHolt Payhip Store',
-				'kicker'      => 'Full store',
-				'description' => 'The main Payhip storefront for current field guides, checklists, and practical digital resources.',
-				'url'         => $links['payhip_store'],
-				'button'      => 'Visit Store',
-				'group'       => 'Featured Products',
+				'name'        => 'LowVolt Vault',
+				'kicker'      => 'Live Resource Library / Growing Library',
+				'description' => 'LowVolt Vault is the new home for my low-voltage field guides, checklists, troubleshooting notes, and technician resources. The searchable resource library is live now, with more guides being uploaded and organized.',
+				'url'         => $links['lowvolt_vault'],
+				'button'      => 'Browse LowVolt Vault',
+				'class'       => 'product-portal-vault',
 			),
+			array(
+				'name'        => 'Individual Guide Downloads',
+				'kicker'      => 'Payhip Storefront',
+				'description' => 'Prefer a single PDF or troubleshooting checklist? Individual guides are still available through Payhip while the full LowVolt Vault library continues being built out.',
+				'url'         => $links['payhip_store'],
+				'button'      => 'View Payhip Store',
+				'class'       => 'product-portal-payhip',
+			),
+		),
+		'digital_products' => array(
 			array(
 				'name'        => 'Local Business Website Launch Kit',
 				'kicker'      => 'Website product',

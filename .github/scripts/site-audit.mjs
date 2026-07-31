@@ -119,6 +119,10 @@ async function main() {
   }
 
   const productSection = rawHtml.match(/<section\b[^>]*id=["']products["'][\s\S]*?<\/section>/i)?.[0] || "";
+  if (/https:\/\/lowvoltvault\.com\/?/i.test(productSection) && /Browse LowVolt Vault/i.test(productSection)) pass("LowVolt Vault feature is rendered in #products.");
+  else fail("LowVolt Vault feature or CTA is missing from #products.");
+  if (/Individual Guide Downloads/i.test(productSection) && /View Payhip Store/i.test(productSection)) pass("Payhip individual-download option is rendered.");
+  else fail("Payhip individual-download option is missing.");
   const productAnchors = tags(productSection, "a").map((tag) => attr(tag, "href")).filter((href) => href.includes("payhip.com"));
   if (productAnchors.length === 0) fail("No active Payhip product links are rendered.");
   else if (productAnchors.every((href) => /^https:\/\/(?:www\.)?payhip\.com\//i.test(href))) pass(`${productAnchors.length} rendered Payhip links use valid HTTPS URLs.`);

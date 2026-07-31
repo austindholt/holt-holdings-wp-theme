@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.14.0
+
+- Positions LowVolt Vault as the growing primary library for low-voltage field guides, checklists, troubleshooting notes, and technician resources.
+- Keeps Payhip prominent for individual guide downloads and preserves every existing product link.
+- Adds live and source audit coverage for both resource-library paths without duplicating the products section.
+
 ## 1.13.2
 
 - Corrects Holt Holdings and merchandise-request email defaults to `holtholdingsllc@outlook.com`.

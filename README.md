@@ -80,6 +80,7 @@ The main homepage copy and public links can be edited in **Appearance > Customiz
 - Homeowner AC Tips / Home Cooling Guide link
 - BitReady Index project and GitHub links
 - LowVoltHolt Payhip Store and field guide links
+- LowVolt Vault growing resource library link
 - Amazon affiliate/resource links
 - Contact email
 - Business links
@@ -88,6 +89,10 @@ The main homepage copy and public links can be edited in **Appearance > Customiz
 General Holt Holdings / Austin Holt contact uses `holtholdingsllc@outlook.com`. Merchandise notifications use the separate **Merch Request Notification Email** Customizer setting, which defaults to the same address. Business-specific contact details, such as Hands On Idaho phone/email details, stay with their own business pages or sections.
 
 Unknown public links are kept empty so the theme hides them or renders non-clickable Coming Soon / Under Construction labels instead of misleading placeholder buttons.
+
+### LowVolt Vault and Payhip
+
+LowVolt Vault (`https://lowvoltvault.com`) is the future main resource library for low-voltage field guides, technician resources, troubleshooting checklists, and field notes. The library is live and still being populated. Payhip remains the active storefront for individual PDF and checklist downloads while that work continues. Once LowVolt Vault is fully populated, the main Products CTA can point more directly to the library; for now, homepage Products links intentionally lead to the combined `#products` section so both options remain clear.
 
 Amazon affiliate links use `rel="sponsored noopener noreferrer"` and include a visible disclosure near the resource cards and in the footer.
 

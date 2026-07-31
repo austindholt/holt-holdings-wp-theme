@@ -81,17 +81,24 @@ $home_config   = holt_holdings_home_config();
 
 	<section class="section" id="products">
 		<div class="section-heading">
-			<span class="eyebrow"><?php esc_html_e( 'Digital Products', 'holt-holdings' ); ?></span>
-			<h2><?php esc_html_e( 'Payhip guides, SOPs, and practical learning resources.', 'holt-holdings' ); ?></h2>
-			<p><?php esc_html_e( 'Digital products here are guides, checklists, field notes, and practical resources. Low-voltage topics are framed as learning material, not a service offering.', 'holt-holdings' ); ?></p>
-			<div class="section-actions">
-				<?php holt_holdings_button_link( $home_config['links']['payhip_store'], 'View All Products', 'button secondary' ); ?>
-			</div>
+			<span class="eyebrow"><?php esc_html_e( 'Digital Guides & LowVolt Vault', 'holt-holdings' ); ?></span>
+			<h2><?php esc_html_e( 'Field guides, technician resources, and individual digital downloads.', 'holt-holdings' ); ?></h2>
+			<p><?php esc_html_e( 'LowVolt Vault is becoming the main home for low-voltage field guides, troubleshooting checklists, field notes, and technician resources. The library is live and still being built out, while Payhip remains available for individual downloads.', 'holt-holdings' ); ?></p>
+		</div>
+		<div class="product-portals" aria-label="Digital guide library options">
+			<?php foreach ( $home_config['product_portals'] as $portal ) : ?>
+				<article class="product-portal <?php echo esc_attr( $portal['class'] ); ?>">
+					<span class="card-kicker"><?php echo esc_html( $portal['kicker'] ); ?></span>
+					<h3><?php echo esc_html( $portal['name'] ); ?></h3>
+					<p><?php echo esc_html( $portal['description'] ); ?></p>
+					<div class="card-actions"><?php holt_holdings_button_link( $portal['url'], $portal['button'] ); ?></div>
+				</article>
+			<?php endforeach; ?>
 		</div>
 		<?php
 		$product_groups = array();
 		foreach ( $home_config['digital_products'] as $product ) {
-			$group                    = isset( $product['group'] ) ? $product['group'] : __( 'Digital Products', 'holt-holdings' );
+			$group                    = isset( $product['group'] ) ? $product['group'] : __( 'Individual Guide Downloads', 'holt-holdings' );
 			$product_groups[ $group ][] = $product;
 		}
 		?>
