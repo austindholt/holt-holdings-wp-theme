@@ -1,6 +1,19 @@
 # Holt Holdings WordPress Theme
 
-A custom lightweight WordPress theme for `holtholdings.us`, built as Austin Holt's personal-brand hub for digital products, field guides, affiliate resources, business projects, and Holt Holdings LLC updates.
+A custom lightweight WordPress theme for `holtholdings.us`, built as Austin Holt's multi-page portfolio for businesses, public projects, digital products, field guides, affiliate resources, merchandise, and Holt Holdings LLC updates.
+
+## Public site architecture
+
+Version `1.16.0` uses a concise homepage plus six dedicated pages:
+
+- `/businesses-projects/` — operating businesses, public projects, and clearly labeled works in progress
+- `/digital-products/` — LowVolt Vault, Payhip, and the categorized guide catalog
+- `/tools-resources/` — tools, technology, business resources, and affiliate disclosure
+- `/merch/` — merchandise catalog and secure request form
+- `/about/` — Austin Holt, the Holt Holdings ecosystem, and public social links
+- `/contact/` — general inquiries, collaborations, product support, and merchandise routing
+
+The theme creates a missing managed page by slug but never overwrites an existing page. Templates keep content sourced from the existing configuration arrays in `functions.php`, and the homepage intentionally previews rather than duplicates the full catalogs.
 
 ## Repository Structure
 
@@ -92,7 +105,7 @@ Unknown public links are kept empty so the theme hides them or renders non-click
 
 ### LowVolt Vault and Payhip
 
-LowVolt Vault (`https://lowvoltvault.com`) is the future main resource library for low-voltage field guides, technician resources, troubleshooting checklists, and field notes. The library is live and still being populated. Payhip remains the active storefront for individual PDF and checklist downloads while that work continues. Once LowVolt Vault is fully populated, the main Products CTA can point more directly to the library; for now, homepage Products links intentionally lead to the combined `#products` section so both options remain clear.
+LowVolt Vault (`https://lowvoltvault.com`) is the future main resource library for low-voltage field guides, technician resources, troubleshooting checklists, and field notes. The library is live and still being populated. Payhip remains the active storefront for individual PDF and checklist downloads while that work continues. Homepage product calls to action lead to `/digital-products/`, where both options remain clear.
 
 Amazon affiliate links use `rel="sponsored noopener noreferrer"` and include a visible disclosure near the resource cards and in the footer.
 

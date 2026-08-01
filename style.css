@@ -3,8 +3,8 @@ Theme Name: Holt Holdings
 Theme URI: https://holtholdings.us
 Author: Austin Holt
 Author URI: https://holtholdings.us
-Description: A lightweight personal-brand hub for Austin Holt, digital products, resources, and Holt Holdings LLC projects.
-Version: 1.15.0
+Description: A lightweight multi-page portfolio for Austin Holt, Holt Holdings businesses, digital products, resources, merchandise, and public projects.
+Version: 1.16.0
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
@@ -208,6 +208,9 @@ img { display: block; height: auto; max-width: 100%; }
 .panel-line span { color: rgba(255,255,255,0.74); font-size: 0.88rem; }
 
 .section { padding-block: 44px; scroll-margin-top: 92px; }
+.section-first { padding-top: 12px; }
+.section-compact { padding-block: 38px; }
+.section-contrast { background: var(--soft-navy); border-block: 1px solid var(--line); max-width: none !important; padding-inline: max(20px, calc((100vw - var(--max)) / 2 + 20px)) !important; }
 .section-heading { display: grid; gap: 10px; margin-bottom: 22px; }
 .section-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
 .section-heading h2, .page-title, .entry-title { font-size: clamp(1.9rem, 7vw, 3.2rem); letter-spacing: 0; line-height: 1; margin: 0; }
@@ -226,7 +229,7 @@ img { display: block; height: auto; max-width: 100%; }
 .product-grid { display: grid; gap: 14px; }
 .product-portals { display: grid; gap: 16px; margin-bottom: 30px; }
 .product-portal { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); display: flex; flex-direction: column; padding: clamp(22px, 4vw, 34px); }
-.product-portal h3 { font-size: clamp(1.55rem, 4vw, 2rem); line-height: 1.1; margin: 10px 0; }
+.product-portal h2, .product-portal h3 { font-size: clamp(1.55rem, 4vw, 2rem); line-height: 1.1; margin: 10px 0; }
 .product-portal p { color: var(--muted); margin: 0 0 20px; max-width: 68ch; }
 .product-portal-vault { background: linear-gradient(135deg, rgba(18, 39, 56, .11), rgba(255, 255, 255, .96) 62%); border-color: rgba(18, 39, 56, .28); }
 .product-group { display: grid; gap: 16px; margin-top: 26px; }
@@ -247,6 +250,13 @@ img { display: block; height: auto; max-width: 100%; }
 .check-list li::before { background: var(--navy); content: ""; height: 8px; left: 2px; position: absolute; top: 0.65em; width: 8px; }
 .coming-soon { background: var(--soft-navy); border: 1px solid var(--line); display: inline-flex; padding: 4px 8px; width: fit-content; }
 .contact-band { align-items: center; display: grid; gap: 18px; }
+.contact-paths, .story-grid { display: grid; gap: 18px; }
+.contact-paths .hub-card h2, .story-grid h2 { font-size: 1.5rem; line-height: 1.15; margin: 10px 0; }
+.section-cta { margin: 24px 0 0; }
+.page-hero { padding-block: 64px 30px; }
+.page-hero .section-heading { margin-bottom: 0; }
+.page-hero h1 { font-size: clamp(2.6rem, 9vw, 5.2rem); letter-spacing: -.02em; line-height: .98; margin: 8px 0; }
+.inner-page .section-heading p, .page-hero p { color: var(--muted); font-size: clamp(1.02rem, 2.4vw, 1.2rem); max-width: 780px; }
 .social-list { list-style: none; margin-bottom: 0; padding: 0; }
 .social-list a { border: 1px solid var(--line); display: inline-flex; font-weight: 800; padding: 10px 12px; text-decoration: none; }
 .social-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -282,7 +292,9 @@ img { display: block; height: auto; max-width: 100%; }
 .site-footer { background: var(--dark-navy); color: #fff; margin-top: 34px; padding-block: 34px; }
 .footer-inner { display: grid; gap: 18px; }
 .footer-main { display: grid; gap: 8px; max-width: 760px; }
-.footer-nav ul { display: flex; flex-wrap: wrap; gap: 8px 18px; list-style: none; margin: 0; padding: 0; }
+.footer-nav { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.footer-socials { display: flex; flex-wrap: wrap; gap: 8px 16px; grid-column: 1 / -1; }
+.footer-socials a { font-size: .9rem; font-weight: 700; }
 .footer-nav a, .footer-inner a { color: #fff; }
 .footer-small { color: rgba(255,255,255,0.72); font-size: 0.9rem; margin: 0; }
 .page-shell { padding-block: 52px; }
@@ -291,10 +303,6 @@ img { display: block; height: auto; max-width: 100%; }
 .entry-content > *:last-child { margin-bottom: 0; }
 
 @media (min-width: 760px) {
-  .menu-toggle { display: none; }
-  .primary-navigation, .primary-navigation.is-open { background: transparent; border: 0; display: block; padding: 0; position: static; }
-  .primary-navigation ul { align-items: center; flex-direction: row; gap: 18px; }
-  .primary-navigation a { padding: 0; }
   .hero { padding-block: 86px 58px; }
   .hero-grid { grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr); }
   .section { padding-block: 62px; }
@@ -305,7 +313,15 @@ img { display: block; height: auto; max-width: 100%; }
   .product-feature, .contact-band { grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr); }
   .product-grid .product-feature { grid-template-columns: 1fr; }
   .social-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .contact-paths { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .story-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .footer-inner { align-items: center; grid-template-columns: minmax(0, 1fr) auto; }
+}
+@media (min-width: 1040px) {
+  .menu-toggle { display: none; }
+  .primary-navigation, .primary-navigation.is-open { background: transparent; border: 0; display: block; padding: 0; position: static; }
+  .primary-navigation ul { align-items: center; flex-direction: row; gap: 14px; }
+  .primary-navigation a { font-size: .86rem; padding: 0; white-space: nowrap; }
 }
 @media (max-width: 430px) {
   .header-inner, .site-main > section, .page-shell, .footer-inner { padding-inline: 16px; }
@@ -340,6 +356,6 @@ img { display: block; height: auto; max-width: 100%; }
 .merch-form input:focus, .merch-form select:focus, .merch-form textarea:focus { outline: 3px solid rgba(18, 39, 56, .25); outline-offset: 2px; }
 .honeypot { left: -10000px; position: absolute; }
 .form-notice { background: var(--soft-navy); border-left: 4px solid var(--navy); padding: 12px 16px; }
-.footer-nav > a { color: inherit; margin-inline-start: 16px; }
+.footer-nav > a { color: inherit; }
 @media (min-width: 760px) { .merch-form { grid-template-columns: repeat(2, minmax(0, 1fr)); } .form-wide { grid-column: 1 / -1; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }

@@ -9,6 +9,48 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once get_template_directory() . '/template-parts/site-components.php';
+
+/**
+ * Public page architecture managed by the theme.
+ *
+ * @return array
+ */
+function holt_holdings_site_pages() {
+	return array(
+		'businesses-projects' => array( 'title' => 'Businesses & Projects', 'description' => 'Explore Holt Holdings businesses, public projects, inventions, and works in progress.' ),
+		'digital-products'    => array( 'title' => 'Digital Products', 'description' => 'Browse LowVolt Vault, low-voltage field guides, technician resources, checklists, and individual digital downloads.' ),
+		'tools-resources'     => array( 'title' => 'Tools & Resources', 'description' => 'Practical tools, technology, business resources, and clearly disclosed affiliate recommendations from Holt Holdings.' ),
+		'merch'               => array( 'title' => 'Merch', 'description' => 'Request small-batch Holt Holdings, Low Volt Holt, and Hands On Idaho hats, shirts, and merchandise.' ),
+		'about'               => array( 'title' => 'About', 'description' => 'Learn about Austin Holt and how Holt Holdings connects practical businesses, inventions, digital resources, and content.' ),
+		'contact'             => array( 'title' => 'Contact', 'description' => 'Contact Holt Holdings for general inquiries, collaborations, product support, and merchandise questions.' ),
+	);
+}
+
+/**
+ * Create missing portfolio pages without altering existing pages or content.
+ */
+function holt_holdings_ensure_site_pages() {
+	if ( get_transient( 'holt_holdings_pages_checked_116' ) ) {
+		return;
+	}
+	foreach ( holt_holdings_site_pages() as $slug => $page ) {
+		if ( get_page_by_path( $slug, OBJECT, 'page' ) ) {
+			continue;
+		}
+		wp_insert_post( array(
+			'post_type'    => 'page',
+			'post_status'  => 'publish',
+			'post_title'   => $page['title'],
+			'post_name'    => $slug,
+			'post_excerpt' => $page['description'],
+			'post_content' => '',
+		) );
+	}
+	set_transient( 'holt_holdings_pages_checked_116', 1, DAY_IN_SECONDS );
+}
+add_action( 'init', 'holt_holdings_ensure_site_pages', 20 );
+
 /**
  * Register theme features and menu locations.
  */
@@ -84,16 +126,44 @@ function holt_holdings_canonical_url() {
 add_action( 'wp_head', 'holt_holdings_canonical_url', 4 );
 
 /**
- * Add lightweight SEO and sharing meta for the homepage.
+ * Return unique SEO content for each theme-managed page.
+ *
+ * @return array
+ */
+function holt_holdings_page_meta() {
+	if ( is_front_page() || is_home() ) {
+		return array(
+			'title'       => 'Austin Holt / Holt Holdings - Businesses, Products, Resources, and Projects',
+			'description' => 'Holt Holdings connects Austin Holt\'s practical businesses, LowVolt Vault resources, digital products, tools, inventions, merchandise, and public projects.',
+			'url'         => home_url( '/' ),
+		);
+	}
+	if ( is_page() ) {
+		$slug  = get_post_field( 'post_name', get_queried_object_id() );
+		$pages = holt_holdings_site_pages();
+		if ( isset( $pages[ $slug ] ) ) {
+			return array(
+				'title'       => $pages[ $slug ]['title'] . ' | Holt Holdings',
+				'description' => $pages[ $slug ]['description'],
+				'url'         => get_permalink(),
+			);
+		}
+	}
+	return array();
+}
+
+/**
+ * Add lightweight SEO and sharing metadata.
  */
 function holt_holdings_meta_tags() {
-	if ( ! is_front_page() && ! is_home() ) {
+	$meta = holt_holdings_page_meta();
+	if ( ! $meta ) {
 		return;
 	}
 
-	$title       = 'Austin Holt / Holt Holdings - Digital Products, Field Guides, Tools, and Projects';
-	$description = 'Austin Holt and Holt Holdings hub for LowVolt Vault, low-voltage field guides, technician resources, digital downloads, practical tools, and business projects.';
-	$url         = home_url( '/' );
+	$title       = $meta['title'];
+	$description = $meta['description'];
+	$url         = $meta['url'];
 	$image       = get_template_directory_uri() . '/assets/images/holt-holdings-logo.jpeg';
 	?>
 	<meta name="description" content="<?php echo esc_attr( $description ); ?>">
@@ -111,6 +181,21 @@ function holt_holdings_meta_tags() {
 	<?php
 }
 add_action( 'wp_head', 'holt_holdings_meta_tags', 5 );
+
+/**
+ * Align WordPress document titles with the managed page metadata.
+ *
+ * @param array $parts Document title parts.
+ * @return array
+ */
+function holt_holdings_document_title_parts( $parts ) {
+	$meta = holt_holdings_page_meta();
+	if ( $meta ) {
+		$parts['title'] = preg_replace( '/\s*\|\s*Holt Holdings$/', '', $meta['title'] );
+	}
+	return $parts;
+}
+add_filter( 'document_title_parts', 'holt_holdings_document_title_parts' );
 
 /**
  * Output accurate JSON-LD for the homepage hub.
@@ -543,7 +628,7 @@ function holt_holdings_home_config() {
 		'dirty_dumps_instagram' => holt_holdings_link_setting( 'dirty_dumps_instagram_url', 'https://www.instagram.com/dirtydumpshaulingco/' ),
 		'wireman'            => holt_holdings_link_setting( 'wireman_url', 'https://wireman.com/' ),
 		'bitready'           => holt_holdings_link_setting( 'bitready_url', 'https://bitreadyindex.com/' ),
-		'future'             => '#socials',
+		'future'             => home_url( '/tools-resources/' ),
 		'facebook'           => holt_holdings_link_setting( 'facebook_url', 'https://www.facebook.com/share/1HF3jGFF8L/?mibextid=wwXIfr' ),
 		'instagram'          => holt_holdings_link_setting( 'instagram_url', 'https://www.instagram.com/austindholt/' ),
 		'youtube'            => holt_holdings_link_setting( 'youtube_url', 'https://youtube.com/@austindholt' ),
@@ -559,32 +644,32 @@ function holt_holdings_home_config() {
 			array(
 				'name'        => 'Digital Guides & LowVolt Vault',
 				'description' => 'A growing low-voltage resource library plus individual Payhip downloads.',
-				'url'         => '#products',
+				'url'         => home_url( '/digital-products/' ),
 				'button'      => 'Browse Products',
 			),
 			array(
 				'name'        => 'Merchandise',
 				'description' => 'Small-batch hats, shirts, and gear from the brands being built.',
-				'url'         => '#merch',
+				'url'         => home_url( '/merch/' ),
 				'button'      => 'Browse Merch',
 			),
 			array(
 				'name'        => 'Tools & Resources',
 				'description' => 'Affiliate links for useful tools, gear, audiobooks, and business buying.',
-				'url'         => '#resources',
+				'url'         => home_url( '/tools-resources/' ),
 				'button'      => 'View Resources',
 			),
 			array(
 				'name'        => 'Businesses & Projects',
 				'description' => 'Separate public business/project links connected to Austin Holt.',
-				'url'         => '#businesses',
+				'url'         => home_url( '/businesses-projects/' ),
 				'button'      => 'Explore Projects',
 			),
 			array(
 				'name'        => 'Follow & Contact',
 				'description' => 'Creator links, social profiles, and the main Linktree hub.',
-				'url'         => '#socials',
-				'button'      => 'Follow Along',
+				'url'         => home_url( '/about/' ),
+				'button'      => 'About & Social Links',
 			),
 		),
 		'businesses'      => array(
@@ -610,6 +695,14 @@ function holt_holdings_home_config() {
 				'description' => 'Dirty Dumps Hauling Co. is a separate junk removal and hauling project.',
 				'url'         => $links['dirty_dumps'],
 				'button'      => 'Visit Dirty Dumps',
+				'visible'     => true,
+			),
+			array(
+				'name'        => 'LowVolt Vault',
+				'kicker'      => 'Growing resource library',
+				'description' => 'LowVolt Vault is the live and growing home for low-voltage field guides, technician resources, troubleshooting checklists, and field notes.',
+				'url'         => $links['lowvolt_vault'],
+				'button'      => 'Browse LowVolt Vault',
 				'visible'     => true,
 			),
 			array(
@@ -813,7 +906,7 @@ function holt_holdings_merchandise_config() {
 		'sizes'         => array(),
 		'availability'  => 'inquiry',
 		'featured'      => false,
-		'url'           => '#merch-order',
+		'url'           => home_url( '/merch/#merch-order' ),
 		'button'        => 'Request to Order',
 	);
 
@@ -833,13 +926,13 @@ function holt_holdings_merchandise_config() {
 function holt_holdings_fallback_menu() {
 	?>
 	<ul id="primary-menu">
-		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#businesses"><?php esc_html_e( 'Businesses', 'holt-holdings' ); ?></a></li>
-		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#products"><?php esc_html_e( 'Digital Products', 'holt-holdings' ); ?></a></li>
-		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#merch"><?php esc_html_e( 'Merch', 'holt-holdings' ); ?></a></li>
-		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#resources"><?php esc_html_e( 'Resources', 'holt-holdings' ); ?></a></li>
-		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#works"><?php esc_html_e( 'Works in Progress', 'holt-holdings' ); ?></a></li>
-		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#socials"><?php esc_html_e( 'Follow', 'holt-holdings' ); ?></a></li>
-		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#contact"><?php esc_html_e( 'Contact', 'holt-holdings' ); ?></a></li>
+		<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'holt-holdings' ); ?></a></li>
+		<li><a href="<?php echo esc_url( home_url( '/businesses-projects/' ) ); ?>"><?php esc_html_e( 'Businesses & Projects', 'holt-holdings' ); ?></a></li>
+		<li><a href="<?php echo esc_url( home_url( '/digital-products/' ) ); ?>"><?php esc_html_e( 'Digital Products', 'holt-holdings' ); ?></a></li>
+		<li><a href="<?php echo esc_url( home_url( '/tools-resources/' ) ); ?>"><?php esc_html_e( 'Tools & Resources', 'holt-holdings' ); ?></a></li>
+		<li><a href="<?php echo esc_url( home_url( '/merch/' ) ); ?>"><?php esc_html_e( 'Merch', 'holt-holdings' ); ?></a></li>
+		<li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>"><?php esc_html_e( 'About', 'holt-holdings' ); ?></a></li>
+		<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact', 'holt-holdings' ); ?></a></li>
 	</ul>
 	<?php
 }
@@ -1023,7 +1116,7 @@ function holt_holdings_merch_request_handoff_meta_box( $post ) {
  * Process the public merchandise inquiry form.
  */
 function holt_holdings_handle_merch_inquiry() {
-	$redirect = home_url( '/#merch-order' );
+	$redirect = home_url( '/merch/#merch-order' );
 	$nonce    = isset( $_POST['holt_merch_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['holt_merch_nonce'] ) ) : '';
 
 	if ( ! wp_verify_nonce( $nonce, 'holt_merch_inquiry' ) ) {

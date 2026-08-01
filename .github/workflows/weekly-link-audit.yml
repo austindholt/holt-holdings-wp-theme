@@ -32,19 +32,27 @@ jobs:
           node <<'NODE'
           const fs = require('fs');
           const source = fs.readFileSync('functions.php', 'utf8');
-          const template = fs.readFileSync('front-page.php', 'utf8');
+          const homepage = fs.readFileSync('front-page.php', 'utf8');
+          const components = fs.readFileSync('template-parts/site-components.php', 'utf8');
+          const products = fs.readFileSync('page-digital-products.php', 'utf8');
+          const merch = fs.readFileSync('page-merch.php', 'utf8');
+          const pages = ['page-businesses-projects.php', 'page-digital-products.php', 'page-tools-resources.php', 'page-merch.php', 'page-about.php', 'page-contact.php'];
           const failures = [];
           const payhip = [...source.matchAll(/https:\/\/payhip\.com\/(?:LowVoltHolt|b\/[A-Za-z0-9]+)/g)].map((m) => m[0]);
           const uniquePayhip = [...new Set(payhip)];
 
           if (uniquePayhip.length < 13) failures.push(`Expected at least 13 configured Payhip URLs; found ${uniquePayhip.length}.`);
-          if (!template.includes('id="products"')) failures.push('#products is missing.');
-          if (!source.includes('https://lowvoltvault.com') || !template.includes('product_portals')) failures.push('LowVolt Vault product portal is missing.');
-          if (!template.includes('Digital Guides & LowVolt Vault') || !template.includes('Individual Guide Downloads')) failures.push('Updated product positioning is missing.');
-          if (!template.includes('id="merch"')) failures.push('#merch is missing.');
-          if (!template.includes('data-merch-status')) failures.push('Merchandise status metadata is missing.');
-          if (!template.includes('holt_merch_nonce') || !source.includes("wp_verify_nonce")) failures.push('Merchandise nonce validation is missing.');
-          if (!template.includes('name="website"')) failures.push('Merchandise honeypot is missing.');
+          if (!pages.every((file) => fs.existsSync(file))) failures.push('One or more required page templates are missing.');
+          if (!source.includes('holt_holdings_site_pages') || !source.includes('businesses-projects') || !source.includes('digital-products')) failures.push('Managed WordPress page creation is incomplete.');
+          if (!source.includes('https://lowvoltvault.com') || !products.includes('holt_holdings_product_portals')) failures.push('LowVolt Vault product page is missing.');
+          if (!products.includes('Individual Guide Downloads')) failures.push('Digital product positioning is missing.');
+          if (!merch.includes('holt_holdings_merch_form') || !components.includes('data-merch-status')) failures.push('Dedicated merchandise catalog is incomplete.');
+          if (!components.includes('holt_merch_nonce') || !source.includes("wp_verify_nonce")) failures.push('Merchandise nonce validation is missing.');
+          if (!components.includes('name="website"')) failures.push('Merchandise honeypot is missing.');
+          if (homepage.includes('holt_holdings_merch_form')) failures.push('Homepage duplicates the full merchandise form.');
+          for (const route of ['/businesses-projects/', '/digital-products/', '/tools-resources/', '/merch/', '/about/', '/contact/']) {
+            if (!homepage.includes(route)) failures.push(`Homepage is missing curated link to ${route}.`);
+          }
           if (!source.includes("register_post_type( 'holt_merch_request'") || !source.includes("wp_insert_post(")) failures.push('WordPress merchandise request backup storage is missing.');
           if (!source.includes("wp_mail(")) failures.push('Merchandise email delivery is missing.');
           if (!source.includes("'merch_recipient_email'") || !source.includes("'holtholdingsllc@outlook.com'")) failures.push('Correct merchandise recipient setting is missing.');
@@ -62,6 +70,4 @@ jobs:
 
       - name: Lint WordPress PHP
         run: |
-          for file in *.php; do
-            php -l "$file"
-          done
+          find . -path './.git' -prune -o -name '*.php' -print0 | xargs -0 -n1 php -l

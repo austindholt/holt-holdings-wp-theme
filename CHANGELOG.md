@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.16.0
+
+- Converts the long homepage hub into a curated homepage and six dedicated portfolio pages.
+- Adds real page navigation for Businesses & Projects, Digital Products, Tools & Resources, Merch, About, and Contact.
+- Preserves centralized business, product, resource, social, merchandise, form-storage, and notification configuration.
+- Moves the complete merchandise catalog and secure request form to `/merch/` while retaining WordPress-first storage.
+- Gives every managed page unique title, description, canonical, Open Graph, and Twitter metadata.
+- Expands live and responsive audits across all seven public routes.
+
 ## 1.15.0
 
 - Removes the public BitReady GitHub button and legacy deployment/test comments from customer-facing HTML.

@@ -30,14 +30,7 @@
 		</button>
 
 		<nav id="site-navigation" class="primary-navigation" aria-label="<?php esc_attr_e( 'Primary navigation', 'holt-holdings' ); ?>">
-			<?php
-			wp_nav_menu( array(
-				'theme_location' => 'primary',
-				'menu_id'        => 'primary-menu',
-				'container'      => false,
-				'fallback_cb'    => 'holt_holdings_fallback_menu',
-			) );
-			?>
+			<?php holt_holdings_fallback_menu(); ?>
 		</nav>
 	</div>
 </header>
