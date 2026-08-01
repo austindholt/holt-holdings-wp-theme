@@ -49,7 +49,10 @@ jobs:
           if (!source.includes("wp_mail(")) failures.push('Merchandise email delivery is missing.');
           if (!source.includes("'merch_recipient_email'") || !source.includes("'holtholdingsllc@outlook.com'")) failures.push('Correct merchandise recipient setting is missing.');
           if (!source.includes("'_email_destination'") || !source.includes("'_email_status'") || !source.includes("'_email_error'")) failures.push('Merchandise mail audit metadata is incomplete.');
-          if (!source.includes("'merch_to'") || !source.includes('Email handoff details')) failures.push('Merchandise destination/status admin visibility is missing.');
+          if (!source.includes("'merch_customer'") || !source.includes("'merch_product'") || !source.includes('Email handoff details')) failures.push('Merchandise request admin visibility is incomplete.');
+          if (!source.includes('holt_merch_rate_') || !source.includes('holt_merch_dup_')) failures.push('Merchandise rate/duplicate protection is missing.');
+          if (source.includes('View GitHub') || source.includes('bitready_github')) failures.push('BitReady GitHub promotion remains in public theme configuration.');
+          if (/deploy test|deploy automation active|weekly audit enabled/i.test(fs.readFileSync('footer.php', 'utf8'))) failures.push('Legacy deployment/test comments remain in footer.php.');
 
           for (const failure of failures) console.error(`FAIL: ${failure}`);
           console.log(`PASS: ${uniquePayhip.length} unique Payhip URLs are configured from the homepage source of truth.`);

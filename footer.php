@@ -35,17 +35,6 @@
 		</nav>
 	</div>
 </footer>
-<!-- Holt Holdings theme deploy test: GitHub-to-WordPress update active -->
-<!-- Holt Holdings deploy automation active -->
-<!-- Holt Holdings external links fixed -->
-<!-- Holt Holdings external product links updated -->
-<!-- External product links fixed test -->
-<!-- Auto deploy workflow test active -->
-<!-- Holt Holdings social links updated -->
-<!-- Holt Holdings weekly audit enabled -->
-<!-- Holt Holdings creator hub update active -->
-<!-- Holt Holdings canonical URL added -->
-<!-- Holt Holdings theme version: <?php echo esc_html( wp_get_theme()->get( 'Version' ) ); ?> -->
 <?php wp_footer(); ?>
 </body>
 </html>

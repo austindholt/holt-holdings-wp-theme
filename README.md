@@ -131,7 +131,7 @@ It runs `.github/scripts/site-audit.mjs` against the live site at `https://holth
 - internal same-page anchor destinations exist
 - Amazon links use `rel="sponsored noopener noreferrer"` and open in a new tab
 - affiliate disclosure is visible
-- footer portfolio disclaimer and deployment/version marker are visible
+- footer portfolio disclaimer is visible and the deployment version meta tag is present in page source
 - internal links are reachable
 - external links are checked where practical, with bot-protected third-party failures deduplicated as warnings
 - title tag, meta description, Open Graph tags, canonical URL, one H1, and image alt basics
@@ -312,13 +312,15 @@ Requests post to WordPress `admin-post.php`, are sanitized and validated, and ar
 
 As of version `1.13.1`, every validated request is first stored as a private **Merch Request** in the WordPress dashboard. The request records the configured destination and whether WordPress accepted or rejected the email handoff. A successful `wp_mail()` return does not prove inbox delivery, so the public confirmation no longer claims that an email was delivered.
 
+Version `1.15.0` limits request review to administrators, adds customer/product/fulfillment/request-status columns, and rejects rapid duplicates, excessive submissions, invalid fulfillment values, oversized fields, and header-injection input. Merchandise entries support separate square front and angled photos plus optional design, item color, logo/thread color, price, quantity, reorder, style/closure, and size fields; empty values stay hidden publicly.
+
 Form storage in WordPress confirms the form works. If a request appears under **WordPress Admin → Merch Requests** but no notification email arrives, the remaining issue is WordPress mail deliverability/SMTP, not the form itself.
 
 To test manually, submit the public merchandise form with a monitored requester email and note the request number in the confirmation. Open **WordPress Admin → Merch Requests**, find the same request number, and confirm the attempted destination is `holtholdingsllc@outlook.com`. The list and request details will show either **Accepted by WordPress mail** or **Email handoff failed**. “Accepted” confirms only that `wp_mail()` handed the message to the configured mail system; verify the Outlook inbox and junk folder separately.
 
 ### Deployment troubleshooting
 
-The deploy workflow now polls the public homepage for the version marker in `footer.php`. If the webhook is green but the marker remains stale, open **WordPress Admin → Deployer for Git → Holt Holdings theme → Update Theme**, then rerun the deploy and weekly site audits. The secret deployment URL is never printed.
+The deploy workflow sends Deployer for Git a GitHub-compatible `push` event payload, then polls the public homepage for the `holt-theme-version` meta tag. If the webhook is green but the marker remains stale, open **WordPress Admin → Deployer for Git → Holt Holdings theme → Update Theme**, then rerun the deploy and weekly site audits. The secret deployment URL is never printed.
 
 ### Audit behavior
 

@@ -103,13 +103,18 @@ async function main() {
     ? pass(`Canonical is ${HOME_URL}.`)
     : fail(`Expected one canonical ${HOME_URL}; found ${canonicals.join(", ") || "none"}.`);
 
-  const liveVersion = html.match(/Holt Holdings theme version:\s*([^<\s]+)/i)?.[1];
+  const versionMeta = tags(rawHtml, "meta").find((tag) => attr(tag, "name") === "holt-theme-version");
+  const liveVersion = versionMeta ? attr(versionMeta, "content") : "";
   liveVersion === expectedVersion
     ? pass(`Live theme version ${liveVersion} matches repository.`)
     : fail(`Live deployment marker ${liveVersion || "missing"} does not match repository ${expectedVersion}.`);
 
   if (html.includes("https://a.co/d/0aEp6yu6")) fail("Known broken Amazon short URL is still rendered.");
   else pass("Known broken Amazon short URL is absent.");
+  if (/href=["'][^"']*github\.com\//i.test(rawHtml)) fail("A public GitHub repository/profile link is rendered on the homepage.");
+  else pass("No public GitHub repository/profile links are rendered.");
+  if (/deploy automation|deploy test|weekly audit enabled|external links fixed test/i.test(rawHtml)) fail("Legacy deployment/test comments are exposed in public HTML.");
+  else pass("Legacy deployment/test comments are absent from public HTML.");
 
   for (const anchor of anchors) {
     if (!anchor.href || anchor.href === "#") fail(`Empty/fake href on “${anchor.label}”.`);

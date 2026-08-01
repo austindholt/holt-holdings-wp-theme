@@ -130,10 +130,40 @@ $home_config   = holt_holdings_home_config();
 		<div class="merch-grid">
 			<?php foreach ( $home_config['merchandise'] as $item ) : ?>
 				<article class="merch-card" data-merch-status="<?php echo esc_attr( $item['availability'] ); ?>">
-					<div class="merch-placeholder" aria-hidden="true"><?php echo esc_html( strtoupper( substr( $item['brand'], 0, 2 ) ) ); ?></div>
+					<div class="merch-media">
+						<?php if ( $item['front_image'] ) : ?>
+							<img class="merch-photo" src="<?php echo esc_url( $item['front_image'] ); ?>" alt="<?php echo esc_attr( sprintf( __( '%s front view', 'holt-holdings' ), $item['name'] ) ); ?>" width="720" height="720" loading="lazy">
+							<?php if ( $item['angled_image'] ) : ?>
+								<img class="merch-photo merch-photo-angle" src="<?php echo esc_url( $item['angled_image'] ); ?>" alt="<?php echo esc_attr( sprintf( __( '%s angled view', 'holt-holdings' ), $item['name'] ) ); ?>" width="240" height="240" loading="lazy">
+							<?php endif; ?>
+						<?php else : ?>
+							<div class="merch-placeholder" role="img" aria-label="<?php echo esc_attr( sprintf( __( 'Product photo coming soon for %s', 'holt-holdings' ), $item['name'] ) ); ?>">
+								<strong aria-hidden="true"><?php echo esc_html( strtoupper( substr( $item['brand'], 0, 2 ) ) ); ?></strong>
+								<small><?php esc_html_e( 'Product photo coming soon', 'holt-holdings' ); ?></small>
+							</div>
+						<?php endif; ?>
+					</div>
 					<span class="card-kicker"><?php echo esc_html( $item['brand'] ); ?></span>
 					<h3><?php echo esc_html( $item['name'] ); ?></h3>
 					<p><?php echo esc_html( $item['description'] ); ?></p>
+					<?php
+					$details = array(
+						__( 'Type', 'holt-holdings' )              => $item['type'],
+						__( 'Brand / design', 'holt-holdings' )    => $item['design'],
+						__( 'Item color', 'holt-holdings' )        => $item['product_color'],
+						__( 'Logo / thread', 'holt-holdings' )     => $item['logo_color'],
+						__( 'Available', 'holt-holdings' )         => $item['quantity'],
+						__( 'Reorder', 'holt-holdings' )           => $item['reorder'],
+						__( 'Style / closure', 'holt-holdings' )   => $item['style'],
+						__( 'Sizes', 'holt-holdings' )             => $item['sizes'] ? implode( ', ', $item['sizes'] ) : '',
+					);
+					$details = array_filter( $details );
+					?>
+					<?php if ( $details ) : ?>
+						<dl class="merch-details">
+							<?php foreach ( $details as $label => $value ) : ?><div class="merch-detail"><dt><?php echo esc_html( $label ); ?></dt><dd><?php echo esc_html( $value ); ?></dd></div><?php endforeach; ?>
+						</dl>
+					<?php endif; ?>
 					<strong class="merch-price"><?php echo esc_html( $item['price'] ); ?></strong>
 					<div class="card-actions"><?php holt_holdings_button_link( $item['url'], $item['button'], 'button secondary merch-request-link' ); ?></div>
 				</article>
@@ -152,6 +182,10 @@ $home_config   = holt_holdings_home_config();
 					$notice = sprintf( __( 'Request #%d was saved in WordPress, but the email notification could not be handed off. Holt Holdings can still retrieve it from the WordPress dashboard.', 'holt-holdings' ), $request_id );
 				} elseif ( 'storage_failed' === $merch_status ) {
 					$notice = __( 'The request could not be saved. Please contact Holt Holdings directly using the backup email link below.', 'holt-holdings' );
+				} elseif ( 'duplicate' === $merch_status ) {
+					$notice = sprintf( __( 'Your request was already received as request #%d. There is no need to submit it again.', 'holt-holdings' ), $request_id );
+				} elseif ( 'rate_limited' === $merch_status ) {
+					$notice = __( 'Several requests were submitted recently. Please wait about ten minutes before trying again, or use the backup email link below.', 'holt-holdings' );
 				} else {
 					$notice = __( 'The request was not accepted. Please check the required fields or use the backup email link below.', 'holt-holdings' );
 				}

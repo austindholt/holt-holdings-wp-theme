@@ -19,14 +19,39 @@ jobs:
         env:
           WP_DEPLOY_URL: ${{ secrets.WP_DEPLOY_URL }}
         run: |
+          set -euo pipefail
+
           if [ -z "$WP_DEPLOY_URL" ]; then
             echo "WP_DEPLOY_URL secret is not set."
             exit 1
           fi
 
-          echo "Calling Deployer for Git push-to-deploy endpoint..."
+          echo "Sending a GitHub-compatible push event to Deployer for Git..."
+
+          jq -n \
+            --arg ref "refs/heads/${GITHUB_REF_NAME}" \
+            --arg after "$GITHUB_SHA" \
+            --arg repository "$GITHUB_REPOSITORY" \
+            --arg clone_url "https://github.com/${GITHUB_REPOSITORY}.git" \
+            --arg html_url "https://github.com/${GITHUB_REPOSITORY}" \
+            '{
+              ref: $ref,
+              after: $after,
+              repository: {
+                full_name: $repository,
+                default_branch: "main",
+                clone_url: $clone_url,
+                html_url: $html_url
+              },
+              head_commit: { id: $after }
+            }' > /tmp/deployer-push.json
 
           http_code=$(curl --fail-with-body --show-error --silent --location \
+            --request POST \
+            --header "Content-Type: application/json" \
+            --header "X-GitHub-Event: push" \
+            --header "X-GitHub-Delivery: ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+            --data-binary @/tmp/deployer-push.json \
             --output /tmp/deployer-response.txt \
             --write-out "%{http_code}" \
             --retry 3 \
@@ -53,7 +78,7 @@ jobs:
               --header "Pragma: no-cache" \
               --retry 2 --retry-all-errors --retry-delay 3 \
               "https://holtholdings.us/") || true
-            live_version=$(printf '%s' "$live_html" | sed -n 's/.*Holt Holdings theme version: *\([^<[:space:]]*\).*/\1/p' | head -n 1)
+            live_version=$(printf '%s' "$live_html" | sed -n 's/.*name="holt-theme-version"[^>]*content="\([^"]*\)".*/\1/p' | head -n 1)
             if [ "$live_version" = "$expected_version" ]; then
               echo "Production is serving theme version $live_version."
               exit 0

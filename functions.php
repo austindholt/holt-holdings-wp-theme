@@ -107,6 +107,7 @@ function holt_holdings_meta_tags() {
 	<meta name="twitter:title" content="<?php echo esc_attr( $title ); ?>">
 	<meta name="twitter:description" content="<?php echo esc_attr( $description ); ?>">
 	<meta name="twitter:image" content="<?php echo esc_url( $image ); ?>">
+	<meta name="holt-theme-version" content="<?php echo esc_attr( wp_get_theme()->get( 'Version' ) ); ?>">
 	<?php
 }
 add_action( 'wp_head', 'holt_holdings_meta_tags', 5 );
@@ -269,9 +270,7 @@ function holt_holdings_customize_register( $wp_customize ) {
 		'youtube_url'            => array( 'label' => __( 'YouTube URL', 'holt-holdings' ), 'default' => 'https://youtube.com/@austindholt', 'type' => 'url' ),
 		'tiktok_url'             => array( 'label' => __( 'TikTok URL', 'holt-holdings' ), 'default' => 'https://www.tiktok.com/@austindholt', 'type' => 'url' ),
 		'linkedin_url'           => array( 'label' => __( 'LinkedIn URL', 'holt-holdings' ), 'default' => '', 'type' => 'url' ),
-		'github_url'             => array( 'label' => __( 'GitHub URL', 'holt-holdings' ), 'default' => '', 'type' => 'url' ),
 		'bitready_url'           => array( 'label' => __( 'BitReady Index Project URL', 'holt-holdings' ), 'default' => 'https://bitreadyindex.com/', 'type' => 'url' ),
-		'bitready_github_url'    => array( 'label' => __( 'BitReady GitHub URL', 'holt-holdings' ), 'default' => 'https://github.com/austindholt/bitready', 'type' => 'url' ),
 		'linktree_url'           => array( 'label' => __( 'Austin Holt / Linktree URL', 'holt-holdings' ), 'default' => 'https://linktr.ee/austindholt', 'type' => 'url' ),
 	);
 
@@ -544,21 +543,18 @@ function holt_holdings_home_config() {
 		'dirty_dumps_instagram' => holt_holdings_link_setting( 'dirty_dumps_instagram_url', 'https://www.instagram.com/dirtydumpshaulingco/' ),
 		'wireman'            => holt_holdings_link_setting( 'wireman_url', 'https://wireman.com/' ),
 		'bitready'           => holt_holdings_link_setting( 'bitready_url', 'https://bitreadyindex.com/' ),
-		'bitready_github'    => holt_holdings_link_setting( 'bitready_github_url', 'https://github.com/austindholt/bitready' ),
 		'future'             => '#socials',
 		'facebook'           => holt_holdings_link_setting( 'facebook_url', 'https://www.facebook.com/share/1HF3jGFF8L/?mibextid=wwXIfr' ),
 		'instagram'          => holt_holdings_link_setting( 'instagram_url', 'https://www.instagram.com/austindholt/' ),
 		'youtube'            => holt_holdings_link_setting( 'youtube_url', 'https://youtube.com/@austindholt' ),
 		'tiktok'             => holt_holdings_link_setting( 'tiktok_url', 'https://www.tiktok.com/@austindholt' ),
 		'linkedin'           => holt_holdings_link_setting( 'linkedin_url', '' ),
-		'github'             => holt_holdings_link_setting( 'github_url', '' ),
 		'linktree'           => holt_holdings_link_setting( 'linktree_url', 'https://linktr.ee/austindholt' ),
 	);
 
 	return array(
 		'links'           => $links,
-		// TODO when real URLs are ready: LinkedIn, Austin's general GitHub profile,
-		// Hands-On Idaho Nextdoor, Dirty Dumps Facebook, and Dirty Dumps Nextdoor.
+		// Unknown optional destinations stay empty until a verified public URL exists.
 		'featured_links'  => array(
 			array(
 				'name'        => 'Digital Guides & LowVolt Vault',
@@ -742,14 +738,7 @@ function holt_holdings_home_config() {
 				'group'       => 'Free Field Guides and Resources',
 			),
 		),
-		'merchandise'      => array(
-			array( 'name' => 'Holt Holdings Hat', 'brand' => 'Holt Holdings', 'description' => 'Small-batch branded hat.', 'price' => '$25', 'image' => '', 'colors' => array(), 'sizes' => array(), 'availability' => 'inquiry', 'featured' => true, 'url' => '#merch-order', 'button' => 'Request to Order' ),
-			array( 'name' => 'Low Volt Holt Hat', 'brand' => 'Low Volt Holt', 'description' => 'Trade-focused Low Volt Holt branded hat.', 'price' => '$25', 'image' => '', 'colors' => array(), 'sizes' => array(), 'availability' => 'inquiry', 'featured' => true, 'url' => '#merch-order', 'button' => 'Request to Order' ),
-			array( 'name' => 'Hands On Idaho Hat', 'brand' => 'Hands On Idaho', 'description' => 'Hands On Idaho branded hat.', 'price' => '$25', 'image' => '', 'colors' => array(), 'sizes' => array(), 'availability' => 'inquiry', 'featured' => false, 'url' => '#merch-order', 'button' => 'Request to Order' ),
-			array( 'name' => 'Holt Holdings Shirt', 'brand' => 'Holt Holdings', 'description' => 'Holt Holdings branded shirt. Pricing, colors, and sizes are confirmed directly.', 'price' => 'Contact for pricing', 'image' => '', 'colors' => array(), 'sizes' => array(), 'availability' => 'inquiry', 'featured' => false, 'url' => '#merch-order', 'button' => 'Request to Order' ),
-			array( 'name' => 'Low Volt Holt Shirt', 'brand' => 'Low Volt Holt', 'description' => 'Low Volt Holt branded shirt. Pricing, colors, and sizes are confirmed directly.', 'price' => 'Contact for pricing', 'image' => '', 'colors' => array(), 'sizes' => array(), 'availability' => 'inquiry', 'featured' => false, 'url' => '#merch-order', 'button' => 'Request to Order' ),
-			array( 'name' => 'Custom / Other Merch Request', 'brand' => 'Holt Holdings', 'description' => 'Ask about another brand, item, or small-batch merchandise idea.', 'price' => 'Contact for pricing', 'image' => '', 'colors' => array(), 'sizes' => array(), 'availability' => 'inquiry', 'featured' => false, 'url' => '#merch-order', 'button' => 'Send an Inquiry' ),
-		),
+		'merchandise'      => holt_holdings_merchandise_config(),
 		'resources'        => array(
 			array(
 				'name'        => 'Amazon Storefront',
@@ -782,8 +771,6 @@ function holt_holdings_home_config() {
 				'description' => 'BitReady Index is a patent-protected practical tool project currently moving through prototype and product-development stages.',
 				'url'         => $links['bitready'],
 				'button'      => 'View Project',
-				'secondary_url' => $links['bitready_github'],
-				'secondary_button' => 'View GitHub',
 				'status'      => 'in_development',
 			),
 			array(
@@ -803,6 +790,40 @@ function holt_holdings_home_config() {
 			array( 'label' => 'Hands On Idaho Facebook', 'url' => $links['hands_on_facebook'], 'status' => 'active' ),
 			array( 'label' => 'Dirty Dumps Instagram', 'url' => $links['dirty_dumps_instagram'], 'status' => 'active' ),
 		),
+	);
+}
+
+/**
+ * Merchandise catalog data prepared for real product photography and inventory details.
+ * Keep unknown values empty so the public cards never invent availability or specifications.
+ *
+ * @return array
+ */
+function holt_holdings_merchandise_config() {
+	$defaults = array(
+		'front_image'   => '',
+		'angled_image'  => '',
+		'design'        => '',
+		'product_color' => '',
+		'logo_color'    => '',
+		'price'         => '',
+		'quantity'      => '',
+		'reorder'       => '',
+		'style'         => '',
+		'sizes'         => array(),
+		'availability'  => 'inquiry',
+		'featured'      => false,
+		'url'           => '#merch-order',
+		'button'        => 'Request to Order',
+	);
+
+	return array(
+		array_merge( $defaults, array( 'name' => 'Holt Holdings Hat', 'brand' => 'Holt Holdings', 'type' => 'Hat', 'description' => 'Small-batch branded hat.', 'price' => '$25', 'featured' => true ) ),
+		array_merge( $defaults, array( 'name' => 'Low Volt Holt Hat', 'brand' => 'Low Volt Holt', 'type' => 'Hat', 'description' => 'Trade-focused Low Volt Holt branded hat.', 'price' => '$25', 'featured' => true ) ),
+		array_merge( $defaults, array( 'name' => 'Hands On Idaho Hat', 'brand' => 'Hands On Idaho', 'type' => 'Hat', 'description' => 'Hands On Idaho branded hat.', 'price' => '$25' ) ),
+		array_merge( $defaults, array( 'name' => 'Holt Holdings Shirt', 'brand' => 'Holt Holdings', 'type' => 'Shirt', 'description' => 'Holt Holdings branded shirt. Pricing, colors, and sizes are confirmed directly.', 'price' => 'Contact for pricing' ) ),
+		array_merge( $defaults, array( 'name' => 'Low Volt Holt Shirt', 'brand' => 'Low Volt Holt', 'type' => 'Shirt', 'description' => 'Low Volt Holt branded shirt. Pricing, colors, and sizes are confirmed directly.', 'price' => 'Contact for pricing' ) ),
+		array_merge( $defaults, array( 'name' => 'Custom / Other Merch Request', 'brand' => 'Holt Holdings', 'type' => 'Custom request', 'description' => 'Ask about another brand, item, or small-batch merchandise idea.', 'price' => 'Contact for pricing', 'button' => 'Send an Inquiry' ) ),
 	);
 }
 
@@ -837,9 +858,19 @@ function holt_holdings_register_merch_requests() {
 		'show_ui'             => true,
 		'show_in_menu'        => true,
 		'menu_icon'           => 'dashicons-email-alt',
-		'supports'            => array( 'title', 'editor' ),
-		'capability_type'     => 'post',
-		'map_meta_cap'        => true,
+		'supports'            => array( 'title' ),
+		'capabilities'        => array(
+			'edit_post'          => 'manage_options',
+			'read_post'          => 'manage_options',
+			'delete_post'        => 'manage_options',
+			'edit_posts'         => 'manage_options',
+			'edit_others_posts'  => 'manage_options',
+			'delete_posts'       => 'manage_options',
+			'publish_posts'      => 'manage_options',
+			'read_private_posts' => 'manage_options',
+			'create_posts'       => 'do_not_allow',
+		),
+		'map_meta_cap'        => false,
 		'exclude_from_search' => true,
 		'show_in_rest'        => false,
 	) );
@@ -856,9 +887,12 @@ function holt_holdings_merch_request_columns( $columns ) {
 	return array(
 		'cb'             => $columns['cb'],
 		'title'          => __( 'Request', 'holt-holdings' ),
-		'merch_email'    => __( 'Customer email', 'holt-holdings' ),
-		'merch_to'       => __( 'Attempted destination', 'holt-holdings' ),
-		'merch_delivery' => __( 'Email handoff', 'holt-holdings' ),
+		'merch_customer' => __( 'Customer', 'holt-holdings' ),
+		'merch_contact'  => __( 'Contact', 'holt-holdings' ),
+		'merch_product'  => __( 'Product / quantity', 'holt-holdings' ),
+		'merch_fulfill'  => __( 'Pickup / shipping', 'holt-holdings' ),
+		'merch_status'   => __( 'Request status', 'holt-holdings' ),
+		'merch_delivery' => __( 'Email notification', 'holt-holdings' ),
 		'date'           => $columns['date'],
 	);
 }
@@ -871,21 +905,58 @@ add_filter( 'manage_holt_merch_request_posts_columns', 'holt_holdings_merch_requ
  * @param int    $post_id Request ID.
  */
 function holt_holdings_merch_request_column_content( $column, $post_id ) {
-	if ( 'merch_email' === $column ) {
+	if ( 'merch_customer' === $column ) {
+		echo esc_html( get_post_meta( $post_id, '_customer_name', true ) );
+	} elseif ( 'merch_contact' === $column ) {
 		echo esc_html( get_post_meta( $post_id, '_customer_email', true ) );
-	} elseif ( 'merch_to' === $column ) {
-		echo esc_html( get_post_meta( $post_id, '_email_destination', true ) );
+		$phone = get_post_meta( $post_id, '_customer_phone', true );
+		if ( $phone ) {
+			echo '<br>' . esc_html( $phone );
+		}
+	} elseif ( 'merch_product' === $column ) {
+		echo esc_html( get_post_meta( $post_id, '_product', true ) );
+		echo '<br>' . esc_html( sprintf( __( 'Qty: %d', 'holt-holdings' ), (int) get_post_meta( $post_id, '_quantity', true ) ) );
+	} elseif ( 'merch_fulfill' === $column ) {
+		echo esc_html( get_post_meta( $post_id, '_fulfillment', true ) ?: __( 'Not specified', 'holt-holdings' ) );
+	} elseif ( 'merch_status' === $column ) {
+		echo esc_html( ucfirst( get_post_meta( $post_id, '_request_status', true ) ?: 'received' ) );
 	} elseif ( 'merch_delivery' === $column ) {
 		$status = get_post_meta( $post_id, '_email_status', true );
-		echo esc_html( 'accepted' === $status ? __( 'Accepted by WordPress mail', 'holt-holdings' ) : __( 'Email handoff failed', 'holt-holdings' ) );
+		echo esc_html( holt_holdings_merch_email_status_label( $status ) );
+		echo '<br><small>' . esc_html( get_post_meta( $post_id, '_email_destination', true ) ) . '</small>';
 	}
 }
 add_action( 'manage_holt_merch_request_posts_custom_column', 'holt_holdings_merch_request_column_content', 10, 2 );
 
 /**
+ * Convert a saved mail state to an honest admin label.
+ *
+ * @param string $status Stored email status.
+ * @return string
+ */
+function holt_holdings_merch_email_status_label( $status ) {
+	if ( 'accepted' === $status ) {
+		return __( 'Accepted by WordPress mail', 'holt-holdings' );
+	}
+	if ( 'failed' === $status ) {
+		return __( 'Email handoff failed', 'holt-holdings' );
+	}
+
+	return __( 'Pending / not attempted', 'holt-holdings' );
+}
+
+/**
  * Add read-only email handoff details to each saved request.
  */
 function holt_holdings_merch_request_meta_boxes() {
+	add_meta_box(
+		'holt-merch-request-details',
+		__( 'Request details', 'holt-holdings' ),
+		'holt_holdings_merch_request_details_meta_box',
+		'holt_merch_request',
+		'normal',
+		'high'
+	);
 	add_meta_box(
 		'holt-merch-email-handoff',
 		__( 'Email handoff details', 'holt-holdings' ),
@@ -898,6 +969,34 @@ function holt_holdings_merch_request_meta_boxes() {
 add_action( 'add_meta_boxes_holt_merch_request', 'holt_holdings_merch_request_meta_boxes' );
 
 /**
+ * Render the stored customer and requested-item details without editable fields.
+ *
+ * @param WP_Post $post Current merchandise request.
+ */
+function holt_holdings_merch_request_details_meta_box( $post ) {
+	$fields = array(
+		__( 'Customer name', 'holt-holdings' )       => get_post_meta( $post->ID, '_customer_name', true ),
+		__( 'Email', 'holt-holdings' )               => get_post_meta( $post->ID, '_customer_email', true ),
+		__( 'Phone', 'holt-holdings' )               => get_post_meta( $post->ID, '_customer_phone', true ),
+		__( 'Product', 'holt-holdings' )             => get_post_meta( $post->ID, '_product', true ),
+		__( 'Quantity', 'holt-holdings' )            => get_post_meta( $post->ID, '_quantity', true ),
+		__( 'Requested color', 'holt-holdings' )     => get_post_meta( $post->ID, '_color', true ),
+		__( 'Requested size', 'holt-holdings' )      => get_post_meta( $post->ID, '_size', true ),
+		__( 'Pickup / shipping', 'holt-holdings' )   => get_post_meta( $post->ID, '_fulfillment', true ),
+		__( 'Request status', 'holt-holdings' )      => get_post_meta( $post->ID, '_request_status', true ) ?: 'received',
+	);
+	?>
+	<table class="widefat striped"><tbody>
+		<?php foreach ( $fields as $label => $value ) : ?>
+			<tr><th scope="row"><?php echo esc_html( $label ); ?></th><td><?php echo esc_html( $value ?: __( 'Not specified', 'holt-holdings' ) ); ?></td></tr>
+		<?php endforeach; ?>
+	</tbody></table>
+	<h3><?php esc_html_e( 'Notes', 'holt-holdings' ); ?></h3>
+	<p><?php echo nl2br( esc_html( get_post_meta( $post->ID, '_notes', true ) ?: __( 'No notes supplied.', 'holt-holdings' ) ) ); ?></p>
+	<?php
+}
+
+/**
  * Render a saved request's mail destination, status, attempt time, and error.
  *
  * @param WP_Post $post Current merchandise request.
@@ -907,9 +1006,7 @@ function holt_holdings_merch_request_handoff_meta_box( $post ) {
 	$status      = get_post_meta( $post->ID, '_email_status', true );
 	$attempted   = get_post_meta( $post->ID, '_email_attempted_at', true );
 	$error       = get_post_meta( $post->ID, '_email_error', true );
-	$status_text = 'accepted' === $status
-		? __( 'Accepted by WordPress mail', 'holt-holdings' )
-		: __( 'Email handoff failed', 'holt-holdings' );
+	$status_text = holt_holdings_merch_email_status_label( $status );
 	?>
 	<p><strong><?php esc_html_e( 'Attempted destination:', 'holt-holdings' ); ?></strong><br><?php echo esc_html( $destination ?: __( 'Not recorded', 'holt-holdings' ) ); ?></p>
 	<p><strong><?php esc_html_e( 'Status:', 'holt-holdings' ); ?></strong><br><?php echo esc_html( $status_text ); ?></p>
@@ -934,23 +1031,41 @@ function holt_holdings_handle_merch_inquiry() {
 		exit;
 	}
 	if ( ! empty( $_POST['website'] ) ) {
-		wp_safe_redirect( add_query_arg( 'merch_status', 'success', $redirect ) );
+		wp_safe_redirect( $redirect );
 		exit;
 	}
 
-	$name        = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
-	$email       = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
-	$phone       = isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '';
-	$product     = isset( $_POST['product'] ) ? sanitize_text_field( wp_unslash( $_POST['product'] ) ) : '';
-	$quantity    = isset( $_POST['quantity'] ) ? min( 25, max( 1, absint( $_POST['quantity'] ) ) ) : 1;
-	$color       = isset( $_POST['color'] ) ? sanitize_text_field( wp_unslash( $_POST['color'] ) ) : '';
-	$size        = isset( $_POST['size'] ) ? sanitize_text_field( wp_unslash( $_POST['size'] ) ) : '';
-	$fulfillment = isset( $_POST['fulfillment'] ) ? sanitize_text_field( wp_unslash( $_POST['fulfillment'] ) ) : '';
-	$notes       = isset( $_POST['notes'] ) ? sanitize_textarea_field( wp_unslash( $_POST['notes'] ) ) : '';
+	$raw_name    = isset( $_POST['name'] ) ? wp_unslash( $_POST['name'] ) : '';
+	$raw_email   = isset( $_POST['email'] ) ? wp_unslash( $_POST['email'] ) : '';
+	$name        = substr( sanitize_text_field( $raw_name ), 0, 120 );
+	$email       = substr( sanitize_email( $raw_email ), 0, 190 );
+	$phone       = isset( $_POST['phone'] ) ? substr( sanitize_text_field( wp_unslash( $_POST['phone'] ) ), 0, 40 ) : '';
+	$product     = isset( $_POST['product'] ) ? substr( sanitize_text_field( wp_unslash( $_POST['product'] ) ), 0, 160 ) : '';
+	$quantity    = isset( $_POST['quantity'] ) ? absint( wp_unslash( $_POST['quantity'] ) ) : 0;
+	$color       = isset( $_POST['color'] ) ? substr( sanitize_text_field( wp_unslash( $_POST['color'] ) ), 0, 80 ) : '';
+	$size        = isset( $_POST['size'] ) ? substr( sanitize_text_field( wp_unslash( $_POST['size'] ) ), 0, 80 ) : '';
+	$fulfillment = isset( $_POST['fulfillment'] ) ? substr( sanitize_text_field( wp_unslash( $_POST['fulfillment'] ) ), 0, 30 ) : '';
+	$notes       = isset( $_POST['notes'] ) ? substr( sanitize_textarea_field( wp_unslash( $_POST['notes'] ) ), 0, 2000 ) : '';
 	$products    = wp_list_pluck( holt_holdings_home_config()['merchandise'], 'name' );
 
-	if ( ! $name || ! is_email( $email ) || ! in_array( $product, $products, true ) ) {
+	if ( ! $name || ! is_email( $email ) || preg_match( '/[\r\n]/', $raw_name . $raw_email ) || ! in_array( $product, $products, true ) || $quantity < 1 || $quantity > 25 || ! in_array( $fulfillment, array( '', 'Pickup', 'Shipping' ), true ) ) {
 		wp_safe_redirect( add_query_arg( 'merch_status', 'error', $redirect ) );
+		exit;
+	}
+
+	$remote_address = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown';
+	$rate_key       = 'holt_merch_rate_' . substr( hash_hmac( 'sha256', $remote_address, wp_salt( 'nonce' ) ), 0, 32 );
+	$rate_count     = (int) get_transient( $rate_key );
+	if ( $rate_count >= 3 ) {
+		wp_safe_redirect( add_query_arg( 'merch_status', 'rate_limited', $redirect ) );
+		exit;
+	}
+
+	$fingerprint   = hash_hmac( 'sha256', strtolower( $email ) . '|' . $product . '|' . $quantity . '|' . $color . '|' . $size . '|' . $fulfillment . '|' . $notes, wp_salt( 'nonce' ) );
+	$duplicate_key = 'holt_merch_dup_' . substr( $fingerprint, 0, 32 );
+	$duplicate_id  = absint( get_transient( $duplicate_key ) );
+	if ( $duplicate_id && 'holt_merch_request' === get_post_type( $duplicate_id ) ) {
+		wp_safe_redirect( add_query_arg( array( 'merch_status' => 'duplicate', 'request_id' => $duplicate_id ), $redirect ) );
 		exit;
 	}
 
@@ -978,12 +1093,15 @@ function holt_holdings_handle_merch_inquiry() {
 		'_size'                => $size,
 		'_fulfillment'         => $fulfillment,
 		'_notes'               => $notes,
+		'_request_status'      => 'received',
 		'_email_destination'   => $destination,
 		'_email_status'        => 'pending',
 	);
 	foreach ( $meta as $key => $value ) {
 		update_post_meta( $request_id, $key, $value );
 	}
+	set_transient( $duplicate_key, $request_id, 15 * MINUTE_IN_SECONDS );
+	set_transient( $rate_key, $rate_count + 1, 10 * MINUTE_IN_SECONDS );
 
 	$mail_error = '';
 	$mail_failure_handler = function( $error ) use ( &$mail_error ) {
@@ -1000,8 +1118,9 @@ function holt_holdings_handle_merch_inquiry() {
 
 	update_post_meta( $request_id, '_email_status', $mail_accepted ? 'accepted' : 'failed' );
 	update_post_meta( $request_id, '_email_attempted_at', current_time( 'mysql', true ) );
-	if ( $mail_error ) {
-		update_post_meta( $request_id, '_email_error', sanitize_text_field( $mail_error ) );
+	if ( ! $mail_accepted ) {
+		$error_message = $mail_error ?: __( 'wp_mail() returned false without an additional mail-system error.', 'holt-holdings' );
+		update_post_meta( $request_id, '_email_error', sanitize_text_field( $error_message ) );
 	}
 
 	wp_safe_redirect( add_query_arg( array(

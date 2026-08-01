@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.15.0
+
+- Removes the public BitReady GitHub button and legacy deployment/test comments from customer-facing HTML.
+- Prepares merchandise cards for square front/angled photos and optional design, color, inventory, reorder, style, and size details.
+- Restricts merchandise requests to administrator review and expands the request list with customer, product, fulfillment, request, and notification status.
+- Adds duplicate submission detection, per-origin rate limiting, stricter field limits, fulfillment allow-listing, and explicit header-injection rejection.
+- Keeps request storage authoritative even when the WordPress email handoff fails.
+- Sends a GitHub-compatible push payload to Deployer for Git and verifies deployment with a non-customer-facing version meta tag.
+
 ## 1.14.0
 
 - Positions LowVolt Vault as the growing primary library for low-voltage field guides, checklists, troubleshooting notes, and technician resources.
