@@ -4,7 +4,7 @@ Theme URI: https://holtholdings.us
 Author: Austin Holt
 Author URI: https://holtholdings.us
 Description: A lightweight multi-page portfolio for Austin Holt, Holt Holdings businesses, digital products, resources, merchandise, and public projects.
-Version: 1.16.0
+Version: 1.16.1
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
@@ -142,6 +142,8 @@ img { display: block; height: auto; max-width: 100%; }
 
 .hero { padding-block: 56px 40px; }
 .hero-grid { align-items: center; display: grid; gap: 34px; }
+.hero-grid > *, .card-grid > *, .quick-link-grid > *, .product-grid > *, .product-portals > *, .merch-grid > *, .contact-paths > *, .story-grid > * { min-width: 0; }
+h1, h2, h3, h4, .button, .panel-line span { overflow-wrap: anywhere; }
 .eyebrow, .card-kicker, .coming-soon {
   color: var(--steel);
   font-size: 0.78rem;
@@ -203,7 +205,8 @@ img { display: block; height: auto; max-width: 100%; }
 .hero-panel::after { background: var(--white); content: ""; height: 8px; inset: auto 0 0; position: absolute; opacity: 0.9; }
 .panel-label { color: rgba(255,255,255,0.72); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 .panel-lines { display: grid; gap: 12px; margin-top: 24px; }
-.panel-line { align-items: center; border-top: 1px solid rgba(255,255,255,0.18); display: flex; gap: 12px; justify-content: space-between; padding-top: 12px; }
+.panel-line { align-items: center; border-top: 1px solid rgba(255,255,255,0.18); display: flex; gap: 12px; justify-content: space-between; min-width: 0; padding-top: 12px; }
+.panel-line > * { min-width: 0; }
 .panel-line strong { font-size: 1.05rem; }
 .panel-line span { color: rgba(255,255,255,0.74); font-size: 0.88rem; }
 

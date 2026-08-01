@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.16.1
+
+- Prevents intrinsic card and hero content widths from causing horizontal overflow on 320 px and 375 px homepages.
+
 ## 1.16.0
 
 - Converts the long homepage hub into a curated homepage and six dedicated portfolio pages.
