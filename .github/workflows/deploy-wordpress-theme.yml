@@ -77,7 +77,7 @@ jobs:
               --header "Cache-Control: no-cache" \
               --header "Pragma: no-cache" \
               --retry 2 --retry-all-errors --retry-delay 3 \
-              "https://holtholdings.us/") || true
+              "https://holtholdings.us/?deploy_verify=${GITHUB_SHA}") || true
             live_version=$(printf '%s' "$live_html" | sed -n 's/.*name="holt-theme-version"[^>]*content="\([^"]*\)".*/\1/p' | head -n 1)
             if [ "$live_version" = "$expected_version" ]; then
               echo "Production is serving theme version $live_version."

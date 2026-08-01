@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.16.2
+
+- Cache-busts production version checks by commit SHA so a stale homepage cache cannot create a false deployment failure.
+
 ## 1.16.1
 
 - Prevents intrinsic card and hero content widths from causing horizontal overflow on 320 px and 375 px homepages.
