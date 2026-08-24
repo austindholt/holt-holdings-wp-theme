@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.16.3
+
+- Corrected the HTTP status returned with WordPress core sitemap XML.
+- Updated the weekly live-site audit to validate the canonical `/wp-sitemap.xml` endpoint and its XML content.
+
 ## 1.16.2
 
 - Cache-busts production version checks by commit SHA so a stale homepage cache cannot create a false deployment failure.

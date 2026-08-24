@@ -115,10 +115,17 @@ async function main() {
   liveVersion === expectedVersion ? pass(`Live version ${liveVersion} matches repository.`) : fail(`Live version ${liveVersion || "missing"} does not match ${expectedVersion}.`);
   if ([...pages.values()].some((html) => html.includes("https://a.co/d/0aEp6yu6"))) fail("Known broken Amazon short URL is rendered.");
 
-  for (const path of ["/sitemap.xml", "/robots.txt"]) {
-    const result = await checkUrl(`${SITE_URL}${path}`);
-    result.ok ? pass(`${path} is available (${result.status}).`) : fail(`${path} is unavailable (${result.status}).`);
+  const sitemapPath = "/wp-sitemap.xml";
+  const sitemapResponse = await fetchTimed(`${SITE_URL}${sitemapPath}`, { method: "GET", timeoutMs: 12000 });
+  const sitemapXml = await sitemapResponse.text();
+  if (sitemapResponse.status >= 200 && sitemapResponse.status < 400 && /<(?:sitemapindex|urlset)\b/i.test(sitemapXml)) {
+    pass(`${sitemapPath} is available (${sitemapResponse.status}) and contains sitemap XML.`);
+  } else {
+    fail(`${sitemapPath} is invalid or unavailable (${sitemapResponse.status}).`);
   }
+
+  const robotsResult = await checkUrl(`${SITE_URL}/robots.txt`);
+  robotsResult.ok ? pass(`/robots.txt is available (${robotsResult.status}).`) : fail(`/robots.txt is unavailable (${robotsResult.status}).`);
 
   const unique = new Map();
   for (const anchor of allAnchors) {

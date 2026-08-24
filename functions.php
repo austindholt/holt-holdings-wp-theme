@@ -52,6 +52,20 @@ function holt_holdings_ensure_site_pages() {
 add_action( 'init', 'holt_holdings_ensure_site_pages', 20 );
 
 /**
+ * Correct the HTTP status for WordPress core sitemap responses.
+ *
+ * Some hosting rewrite configurations leave the sitemap request marked as a
+ * 404 even though WordPress successfully renders the sitemap XML. Search
+ * engines and the weekly audit must receive a successful status code.
+ */
+function holt_holdings_sitemap_status() {
+	if ( get_query_var( 'sitemap' ) ) {
+		status_header( 200 );
+	}
+}
+add_action( 'template_redirect', 'holt_holdings_sitemap_status', 0 );
+
+/**
  * Register theme features and menu locations.
  */
 function holt_holdings_setup() {
