@@ -1,70 +1,28 @@
 <?php
-/**
- * Curated Holt Holdings front page.
- *
- * @package HoltHoldings
- */
-
+/** Curated company homepage. @package HoltHoldings */
 get_header();
 $config = holt_holdings_home_config();
 ?>
 <main id="primary" class="site-main">
-	<section class="hero" id="home">
-		<div class="hero-grid">
-			<div>
-				<div class="eyebrow"><?php esc_html_e( 'Holt Holdings LLC', 'holt-holdings' ); ?></div>
-				<h1><?php esc_html_e( 'Practical businesses, field resources, products, and projects built to be useful.', 'holt-holdings' ); ?></h1>
-				<p><?php esc_html_e( 'Holt Holdings is the portfolio behind Austin Holt\'s operating businesses, trade-focused resources, inventions, digital products, and growing public projects.', 'holt-holdings' ); ?></p>
-				<div class="hero-actions">
-					<a class="button" href="<?php echo esc_url( home_url( '/businesses-projects/' ) ); ?>"><?php esc_html_e( 'Explore Businesses & Projects', 'holt-holdings' ); ?></a>
-					<a class="button secondary" href="<?php echo esc_url( home_url( '/digital-products/' ) ); ?>"><?php esc_html_e( 'Browse Digital Products', 'holt-holdings' ); ?></a>
-				</div>
-			</div>
-			<aside class="hero-panel" aria-label="<?php esc_attr_e( 'Holt Holdings focus areas', 'holt-holdings' ); ?>">
-				<div class="panel-label"><?php esc_html_e( 'Built around practical work', 'holt-holdings' ); ?></div>
-				<div class="panel-lines">
-					<div class="panel-line"><strong><?php esc_html_e( 'Businesses', 'holt-holdings' ); ?></strong><span><?php esc_html_e( 'Public brands and services', 'holt-holdings' ); ?></span></div>
-					<div class="panel-line"><strong><?php esc_html_e( 'Knowledge', 'holt-holdings' ); ?></strong><span><?php esc_html_e( 'Field guides and resources', 'holt-holdings' ); ?></span></div>
-					<div class="panel-line"><strong><?php esc_html_e( 'Projects', 'holt-holdings' ); ?></strong><span><?php esc_html_e( 'Products and inventions in progress', 'holt-holdings' ); ?></span></div>
-				</div>
-			</aside>
-		</div>
-	</section>
-
-	<section class="section" id="explore">
-		<div class="section-heading"><span class="eyebrow"><?php esc_html_e( 'Explore Holt Holdings', 'holt-holdings' ); ?></span><h2><?php esc_html_e( 'Find the part of the ecosystem that fits what you need.', 'holt-holdings' ); ?></h2></div>
-		<div class="quick-link-grid">
-			<?php
-			$destinations = array(
-				array( 'Businesses & Projects', 'Operating businesses, public projects, and honest works in progress.', '/businesses-projects/', 'View Portfolio' ),
-				array( 'Digital Products', 'LowVolt Vault plus individual field guides and downloads through Payhip.', '/digital-products/', 'Browse Products' ),
-				array( 'Tools & Resources', 'Useful tools, technology, business resources, and disclosed affiliate links.', '/tools-resources/', 'View Resources' ),
-				array( 'About Holt Holdings', 'The background, practical approach, and person connecting the work.', '/about/', 'Learn More' ),
-			);
-			foreach ( $destinations as $destination ) : ?>
-				<article class="hub-card quick-link-card"><h3><?php echo esc_html( $destination[0] ); ?></h3><p><?php echo esc_html( $destination[1] ); ?></p><div class="card-actions"><a class="button secondary" href="<?php echo esc_url( home_url( $destination[2] ) ); ?>"><?php echo esc_html( $destination[3] ); ?></a></div></article>
-			<?php endforeach; ?>
-		</div>
-	</section>
-
-	<section class="section section-compact" id="business-preview">
-		<div class="section-heading"><span class="eyebrow"><?php esc_html_e( 'Selected Businesses', 'holt-holdings' ); ?></span><h2><?php esc_html_e( 'Independent brands connected by practical work.', 'holt-holdings' ); ?></h2><p><?php esc_html_e( 'Each business or project keeps its own purpose, audience, and public destination.', 'holt-holdings' ); ?></p></div>
-		<?php holt_holdings_business_cards( $config['businesses'], 3 ); ?>
-		<p class="section-cta"><a class="button secondary" href="<?php echo esc_url( home_url( '/businesses-projects/' ) ); ?>"><?php esc_html_e( 'See All Businesses & Projects', 'holt-holdings' ); ?></a></p>
-	</section>
-
-	<section class="section section-compact" id="product-preview">
-		<div class="section-heading"><span class="eyebrow"><?php esc_html_e( 'Featured Digital Resources', 'holt-holdings' ); ?></span><h2><?php esc_html_e( 'Field knowledge in useful formats.', 'holt-holdings' ); ?></h2><p><?php esc_html_e( 'LowVolt Vault is the growing resource library; Payhip remains available for individual guide downloads.', 'holt-holdings' ); ?></p></div>
-		<?php holt_holdings_product_catalog( array_slice( $config['digital_products'], 0, 3 ) ); ?>
-		<p class="section-cta"><a class="button" href="<?php echo esc_url( home_url( '/digital-products/' ) ); ?>"><?php esc_html_e( 'Explore Digital Products', 'holt-holdings' ); ?></a></p>
-	</section>
-
-	<section class="section section-compact" id="merch-preview">
-		<div class="section-heading"><span class="eyebrow"><?php esc_html_e( 'Merch Preview', 'holt-holdings' ); ?></span><h2><?php esc_html_e( 'Small-batch gear from the brands being built.', 'holt-holdings' ); ?></h2><p><?php esc_html_e( 'Product photos and confirmed options will be added as they become available. Requests are handled directly.', 'holt-holdings' ); ?></p></div>
-		<?php holt_holdings_merch_cards( $config['merchandise'], 3 ); ?>
-		<p class="section-cta"><a class="button secondary" href="<?php echo esc_url( home_url( '/merch/' ) ); ?>"><?php esc_html_e( 'View Merch & Request an Item', 'holt-holdings' ); ?></a></p>
-	</section>
-
-	<section class="section"><div class="contact-band"><div><span class="eyebrow"><?php esc_html_e( 'Start a Conversation', 'holt-holdings' ); ?></span><h2><?php esc_html_e( 'Questions, collaborations, product support, or project inquiries.', 'holt-holdings' ); ?></h2><p><?php esc_html_e( 'Choose the right contact path and include enough context to make the conversation useful.', 'holt-holdings' ); ?></p></div><div><a class="button" href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact Holt Holdings', 'holt-holdings' ); ?></a></div></div></section>
+<section class="hero" id="home"><div class="hero-grid"><div>
+<span class="eyebrow">Holt Holdings LLC · Built by Austin Holt</span>
+<h1>Practical work.<br>Useful businesses.</h1>
+<p>We build businesses and products around problems we understand. Holt Holdings connects hands-on services, field knowledge, and independent projects built by Austin Holt.</p>
+<div class="hero-actions"><a class="button" href="<?php echo esc_url( home_url( '/businesses-projects/' ) ); ?>">Explore our projects</a><a class="text-link" href="<?php echo esc_url( $config['links']['lowvolt_vault'] ); ?>" data-track="outbound-link" data-link-category="business" data-link-label="Low Volt Vault hero">Visit Low Volt Vault <span aria-hidden="true">↗</span></a></div>
+</div><aside class="venture-index" aria-label="Current ventures"><span class="eyebrow">What we're building</span>
+<a href="#low-volt-vault"><strong>Low Volt Vault</strong><span>Live · Technician resource platform</span></a>
+<a href="<?php echo esc_url( $config['links']['hands_on'] ); ?>"><strong>Hands On Idaho</strong><span>Local handyman & home improvement</span></a>
+<a href="<?php echo esc_url( home_url( '/businesses-projects/' ) ); ?>"><strong>More from Holt Holdings</strong><span>Hauling, tools, and projects in development</span></a>
+</aside></div></section>
+<section class="section vault-section" id="low-volt-vault"><?php holt_holdings_vault_feature(); ?></section>
+<section class="section" id="business-preview"><div class="section-heading"><span class="eyebrow">Beyond the vault</span><h2>Different projects.<br>The same practical approach.</h2><p>Local services, useful tools, and digital resources each have their own purpose.</p></div>
+<?php
+$other_businesses = array_filter( $config['businesses'], function ( $business ) { return ! in_array( $business['name'], array( 'Low Volt Vault', 'Hands-On Idaho Google Review', 'Wireman' ), true ); } );
+holt_holdings_business_cards( $other_businesses );
+?>
+<p class="section-cta"><a class="text-link" href="<?php echo esc_url( home_url( '/businesses-projects/' ) ); ?>">All businesses & projects <span aria-hidden="true">→</span></a></p></section>
+<section class="section" id="explore"><div class="resource-strip"><div><span class="eyebrow">Useful things, in their own place</span><h2>Guides, gear, and resources.</h2><p>Browse individual downloads, tools Austin uses, and merchandise from the brands.</p></div><nav aria-label="Products and resources"><a href="<?php echo esc_url( home_url( '/digital-products/' ) ); ?>">Digital products <span aria-hidden="true">→</span></a><a href="<?php echo esc_url( home_url( '/tools-resources/' ) ); ?>">Tools & resources <span aria-hidden="true">→</span></a><a href="<?php echo esc_url( home_url( '/merch/' ) ); ?>">Merchandise requests <span aria-hidden="true">→</span></a></nav></div></section>
+<section class="section founder-section"><span class="eyebrow">The person behind the projects</span><div class="founder-grid"><h2>Built from hands-on experience.</h2><div><p>Austin Holt's work spans low-voltage systems, field troubleshooting, local services, and practical technology. Holt Holdings brings those businesses and projects together.</p><p>The approach is straightforward: solve a real problem, document what works, and keep improving.</p><a class="text-link" href="<?php echo esc_url( home_url( '/about/' ) ); ?>">About Austin & Holt Holdings <span aria-hidden="true">→</span></a></div></div></section>
+<section class="section"><div class="contact-band"><div><span class="eyebrow">Start a conversation</span><h2>Have a question or a project in mind?</h2><p>Get in touch about Holt Holdings, product support, or a possible collaboration.</p></div><a class="button" href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact Holt Holdings</a></div></section>
 </main>
 <?php get_footer(); ?>

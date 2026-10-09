@@ -13,7 +13,7 @@ $footer_config = holt_holdings_home_config();
 			<p class="footer-small">
 				<?php
 				printf(
-					esc_html__( 'Copyright %s Holt Holdings LLC. Built as a lightweight WordPress hub.', 'holt-holdings' ),
+					esc_html__( 'Copyright %s Holt Holdings LLC.', 'holt-holdings' ),
 					esc_html( gmdate( 'Y' ) )
 				);
 				?>
@@ -23,6 +23,7 @@ $footer_config = holt_holdings_home_config();
 		</div>
 		<nav class="footer-nav" aria-label="<?php esc_attr_e( 'Footer navigation', 'holt-holdings' ); ?>">
 			<a href="<?php echo esc_url( home_url( '/businesses-projects/' ) ); ?>"><?php esc_html_e( 'Businesses & Projects', 'holt-holdings' ); ?></a>
+			<a href="<?php echo esc_url( $footer_config['links']['lowvolt_vault'] ); ?>">Low Volt Vault</a>
 			<a href="<?php echo esc_url( home_url( '/digital-products/' ) ); ?>"><?php esc_html_e( 'Digital Products', 'holt-holdings' ); ?></a>
 			<a href="<?php echo esc_url( home_url( '/tools-resources/' ) ); ?>"><?php esc_html_e( 'Tools & Resources', 'holt-holdings' ); ?></a>
 			<a href="<?php echo esc_url( home_url( '/merch/' ) ); ?>"><?php esc_html_e( 'Merch', 'holt-holdings' ); ?></a>

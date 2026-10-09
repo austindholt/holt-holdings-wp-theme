@@ -11,6 +11,14 @@
     toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
   });
 
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && navigation.classList.contains("is-open")) {
+      navigation.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.focus();
+    }
+  });
+
   navigation.addEventListener("click", function (event) {
     if (event.target.tagName !== "A") {
       return;

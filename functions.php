@@ -18,8 +18,8 @@ require_once get_template_directory() . '/template-parts/site-components.php';
  */
 function holt_holdings_site_pages() {
 	return array(
-		'businesses-projects' => array( 'title' => 'Businesses & Projects', 'description' => 'Explore Holt Holdings businesses, public projects, inventions, and works in progress.' ),
-		'digital-products'    => array( 'title' => 'Digital Products', 'description' => 'Browse LowVolt Vault, low-voltage field guides, technician resources, checklists, and individual digital downloads.' ),
+		'businesses-projects' => array( 'title' => 'Businesses & Projects', 'description' => 'Explore Low Volt Vault, a live Holt Holdings LLC product, Hands On Idaho, and other practical businesses and projects.' ),
+		'digital-products'    => array( 'title' => 'Digital Products', 'description' => 'Explore Low Volt Vault, developed by Holt Holdings LLC: Free and Pro field resources for low-voltage technicians, plus individual guide downloads.' ),
 		'tools-resources'     => array( 'title' => 'Tools & Resources', 'description' => 'Practical tools, technology, business resources, and clearly disclosed affiliate recommendations from Holt Holdings.' ),
 		'merch'               => array( 'title' => 'Merch', 'description' => 'Request small-batch Holt Holdings, Low Volt Holt, and Hands On Idaho hats, shirts, and merchandise.' ),
 		'about'               => array( 'title' => 'About', 'description' => 'Learn about Austin Holt and how Holt Holdings connects practical businesses, inventions, digital resources, and content.' ),
@@ -147,8 +147,8 @@ add_action( 'wp_head', 'holt_holdings_canonical_url', 4 );
 function holt_holdings_page_meta() {
 	if ( is_front_page() || is_home() ) {
 		return array(
-			'title'       => 'Austin Holt / Holt Holdings - Businesses, Products, Resources, and Projects',
-			'description' => 'Holt Holdings connects Austin Holt\'s practical businesses, LowVolt Vault resources, digital products, tools, inventions, merchandise, and public projects.',
+			'title'       => 'Holt Holdings LLC | Practical Businesses & Low Volt Vault',
+			'description' => 'Holt Holdings LLC builds practical businesses and products, including Low Volt Vault, the live field-resource platform for low-voltage technicians.',
 			'url'         => home_url( '/' ),
 		);
 	}
@@ -178,7 +178,7 @@ function holt_holdings_meta_tags() {
 	$title       = $meta['title'];
 	$description = $meta['description'];
 	$url         = $meta['url'];
-	$image       = get_template_directory_uri() . '/assets/images/holt-holdings-logo.jpeg';
+	$image       = get_template_directory_uri() . '/assets/images/holt-holdings-social.png';
 	?>
 	<meta name="description" content="<?php echo esc_attr( $description ); ?>">
 	<meta property="og:site_name" content="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
@@ -187,6 +187,9 @@ function holt_holdings_meta_tags() {
 	<meta property="og:type" content="website">
 	<meta property="og:url" content="<?php echo esc_url( $url ); ?>">
 	<meta property="og:image" content="<?php echo esc_url( $image ); ?>">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:image:alt" content="Holt Holdings LLC — practical businesses and products, including Low Volt Vault">
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:title" content="<?php echo esc_attr( $title ); ?>">
 	<meta name="twitter:description" content="<?php echo esc_attr( $description ); ?>">
@@ -206,6 +209,10 @@ function holt_holdings_document_title_parts( $parts ) {
 	$meta = holt_holdings_page_meta();
 	if ( $meta ) {
 		$parts['title'] = preg_replace( '/\s*\|\s*Holt Holdings$/', '', $meta['title'] );
+		unset( $parts['tagline'] );
+		if ( is_front_page() || is_home() ) {
+			unset( $parts['site'] );
+		}
 	}
 	return $parts;
 }
@@ -268,6 +275,16 @@ function holt_holdings_structured_data() {
 				'name'  => 'Holt Holdings LLC',
 				'url'   => home_url( '/' ),
 				'logo'  => $image,
+			),
+			array(
+				'@type' => 'SoftwareApplication',
+				'@id' => 'https://lowvoltvault.com/#application',
+				'name' => 'Low Volt Vault',
+				'url' => 'https://lowvoltvault.com',
+				'applicationCategory' => 'ReferenceApplication',
+				'operatingSystem' => 'Web browser',
+				'description' => 'Free and Pro field resources for low-voltage technicians.',
+				'creator' => array( '@id' => home_url( '/#organization' ) ),
 			),
 			array(
 				'@type' => 'WebSite',
@@ -337,7 +354,7 @@ function holt_holdings_customize_register( $wp_customize ) {
 		),
 		// Update social/product URLs here. Empty project URLs render as non-clickable Coming Soon labels.
 		'payhip_store_url'       => array( 'label' => __( 'LowVoltHolt Payhip Store URL', 'holt-holdings' ), 'default' => 'https://payhip.com/LowVoltHolt', 'type' => 'url' ),
-		'lowvolt_vault_url'      => array( 'label' => __( 'LowVolt Vault URL', 'holt-holdings' ), 'default' => 'https://lowvoltvault.com', 'type' => 'url' ),
+		'lowvolt_vault_url'      => array( 'label' => __( 'Low Volt Vault URL', 'holt-holdings' ), 'default' => 'https://lowvoltvault.com', 'type' => 'url' ),
 		'course_url'             => array( 'label' => __( 'Low Voltage Crash Course URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/3GVP5', 'type' => 'url' ),
 		'everyday_money_url'     => array( 'label' => __( 'Everyday Money Moves URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/sa17H', 'type' => 'url' ),
 		'windows_rebuild_url'    => array( 'label' => __( 'Windows Rebuild Guide URL', 'holt-holdings' ), 'default' => 'https://payhip.com/b/kROjv', 'type' => 'url' ),
@@ -656,8 +673,8 @@ function holt_holdings_home_config() {
 		// Unknown optional destinations stay empty until a verified public URL exists.
 		'featured_links'  => array(
 			array(
-				'name'        => 'Digital Guides & LowVolt Vault',
-				'description' => 'A growing low-voltage resource library plus individual Payhip downloads.',
+				'name'        => 'Digital Guides & Low Volt Vault',
+				'description' => 'A live Free and Pro resource platform for low-voltage technicians, plus individual guide downloads.',
 				'url'         => home_url( '/digital-products/' ),
 				'button'      => 'Browse Products',
 			),
@@ -712,11 +729,11 @@ function holt_holdings_home_config() {
 				'visible'     => true,
 			),
 			array(
-				'name'        => 'LowVolt Vault',
-				'kicker'      => 'Growing resource library',
-				'description' => 'LowVolt Vault is the live and growing home for low-voltage field guides, technician resources, troubleshooting checklists, and field notes.',
+				'name'        => 'Low Volt Vault',
+				'kicker'      => 'Live technician resource platform',
+				'description' => 'Low Volt Vault is a live subscription web application developed by Holt Holdings LLC. Free and Pro guides bring practical troubleshooting and system-specific knowledge to low-voltage technicians.',
 				'url'         => $links['lowvolt_vault'],
-				'button'      => 'Browse LowVolt Vault',
+				'button'      => 'Explore Low Volt Vault',
 				'visible'     => true,
 			),
 			array(
@@ -731,17 +748,17 @@ function holt_holdings_home_config() {
 		),
 		'product_portals'  => array(
 			array(
-				'name'        => 'LowVolt Vault',
-				'kicker'      => 'Live Resource Library / Growing Library',
-				'description' => 'LowVolt Vault is the new home for my low-voltage field guides, checklists, troubleshooting notes, and technician resources. The searchable resource library is live now, with more guides being uploaded and organized.',
+				'name'        => 'Low Volt Vault',
+				'kicker'      => 'Live product · Free & Pro resources',
+				'description' => 'Low Volt Vault is a live resource platform developed by Holt Holdings LLC for low-voltage technicians. Search practical guides, troubleshooting references, and system-specific resources with Free and Pro access.',
 				'url'         => $links['lowvolt_vault'],
-				'button'      => 'Browse LowVolt Vault',
+				'button'      => 'Explore Low Volt Vault',
 				'class'       => 'product-portal-vault',
 			),
 			array(
 				'name'        => 'Individual Guide Downloads',
 				'kicker'      => 'Payhip Storefront',
-				'description' => 'Prefer a single PDF or troubleshooting checklist? Individual guides are still available through Payhip while the full LowVolt Vault library continues being built out.',
+				'description' => 'Prefer an individual download? Selected PDFs, field guides, and checklists are also available through the LowVoltHolt Payhip store.',
 				'url'         => $links['payhip_store'],
 				'button'      => 'View Payhip Store',
 				'class'       => 'product-portal-payhip',

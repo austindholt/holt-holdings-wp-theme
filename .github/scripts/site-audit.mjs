@@ -84,12 +84,14 @@ async function main() {
   }
 
   const home = pages.get("/") || "";
+  if (home.includes('id="low-volt-vault"') && /href="https:\/\/lowvoltvault\.com\/?"/.test(home) && /href="https:\/\/lowvoltvault\.com\/library"/.test(home)) pass("Homepage features the live Low Volt Vault product and library links.");
+  else fail("Homepage is missing the live Low Volt Vault feature or product destinations.");
   for (const route of routes.slice(1)) if (!home.includes(`href="${SITE_URL}${route}"`)) fail(`Homepage does not link to ${route}.`);
   if (/<form\b[^>]*holt_merch/i.test(home) || /name=["']holt_merch_nonce["']/i.test(home)) fail("Homepage duplicates the merchandise form.");
   else pass("Homepage is curated and does not duplicate the merchandise form.");
 
   const products = pages.get("/digital-products/") || "";
-  if (/https:\/\/lowvoltvault\.com\/?/i.test(products) && /Browse LowVolt Vault/i.test(products)) pass("LowVolt Vault feature is on Digital Products."); else fail("LowVolt Vault feature is missing.");
+  if (/https:\/\/lowvoltvault\.com\/?/i.test(products) && /Explore Low Volt Vault/i.test(products)) pass("Low Volt Vault feature is on Digital Products."); else fail("Low Volt Vault feature is missing.");
   const payhipLinks = tags(products, "a").map((tag) => attr(tag, "href")).filter((href) => /^https:\/\/(?:www\.)?payhip\.com\//i.test(href));
   payhipLinks.length >= 13 ? pass(`${payhipLinks.length} Payhip links are preserved.`) : fail(`Expected at least 13 Payhip links; found ${payhipLinks.length}.`);
 

@@ -7,7 +7,7 @@ A custom lightweight WordPress theme for `holtholdings.us`, built as Austin Holt
 Version `1.16.0` uses a concise homepage plus six dedicated pages:
 
 - `/businesses-projects/` — operating businesses, public projects, and clearly labeled works in progress
-- `/digital-products/` — LowVolt Vault, Payhip, and the categorized guide catalog
+- `/digital-products/` — Low Volt Vault, Payhip, and the categorized guide catalog
 - `/tools-resources/` — tools, technology, business resources, and affiliate disclosure
 - `/merch/` — merchandise catalog and secure request form
 - `/about/` — Austin Holt, the Holt Holdings ecosystem, and public social links
@@ -93,7 +93,7 @@ The main homepage copy and public links can be edited in **Appearance > Customiz
 - Homeowner AC Tips / Home Cooling Guide link
 - BitReady Index project and GitHub links
 - LowVoltHolt Payhip Store and field guide links
-- LowVolt Vault growing resource library link
+- Low Volt Vault growing resource library link
 - Amazon affiliate/resource links
 - Contact email
 - Business links
@@ -103,9 +103,9 @@ General Holt Holdings / Austin Holt contact uses `holtholdingsllc@outlook.com`. 
 
 Unknown public links are kept empty so the theme hides them or renders non-clickable Coming Soon / Under Construction labels instead of misleading placeholder buttons.
 
-### LowVolt Vault and Payhip
+### Low Volt Vault and Payhip
 
-LowVolt Vault (`https://lowvoltvault.com`) is the future main resource library for low-voltage field guides, technician resources, troubleshooting checklists, and field notes. The library is live and still being populated. Payhip remains the active storefront for individual PDF and checklist downloads while that work continues. Homepage product calls to action lead to `/digital-products/`, where both options remain clear.
+Low Volt Vault (`https://lowvoltvault.com`) is a live subscription web application developed by Holt Holdings LLC for low-voltage technicians, with Free and Pro resources. The homepage and portfolio feature it directly. Payhip remains available for individual downloads. Current Pro pricing lives on the product website; this company site does not duplicate pricing tables.
 
 Amazon affiliate links use `rel="sponsored noopener noreferrer"` and include a visible disclosure near the resource cards and in the footer.
 
@@ -338,3 +338,21 @@ The deploy workflow sends Deployer for Git a GitHub-compatible `push` event payl
 ### Audit behavior
 
 Confirmed HTTP 404/410 responses and broken internal links fail. Payhip and other known bot-protected hosts returning 401, 403, 405, 429, or a timeout produce one deduplicated warning per host when the rendered anchor itself is valid.
+
+
+
+## Version 1.17.0 review workflow
+
+This batch preserves WordPress and all existing routes, integrations, mail handling, and Customizer link settings. Low Volt Vault is now featured as a live Holt Holdings LLC product on the homepage, portfolio, Digital Products, About, and footer. Merchandise and individual download catalogs stay on their dedicated pages.
+
+Production still deploys from `main`. Do not merge or manually run the production workflow before review and WordPress staging validation.
+
+For a local visual preview (PHP 8+), run from the repository root:
+
+```powershell
+php -S localhost:8787 scripts/preview-router.php
+```
+
+Open http://localhost:8787. The router renders the actual templates with a minimal WordPress compatibility shim and default settings. It has no database or mail system, emits noindex metadata, and blocks submissions. It is excluded from the theme ZIP. It does not verify WordPress plugin behavior, saved Customizer settings, stored requests, SMTP delivery, or analytics collection.
+
+Before production release, apply this branch to a WordPress staging copy and verify the existing merchandise form, saved Customizer settings, site identity, analytics and metadata/plugin interactions there. Clear site caching after the approved release and check the theme version marker is 1.17.0.

@@ -4,7 +4,7 @@ Theme URI: https://holtholdings.us
 Author: Austin Holt
 Author URI: https://holtholdings.us
 Description: A lightweight multi-page portfolio for Austin Holt, Holt Holdings businesses, digital products, resources, merchandise, and public projects.
-Version: 1.16.3
+Version: 1.17.0
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
@@ -362,3 +362,75 @@ h1, h2, h3, h4, .button, .panel-line span { overflow-wrap: anywhere; }
 .footer-nav > a { color: inherit; }
 @media (min-width: 760px) { .merch-form { grid-template-columns: repeat(2, minmax(0, 1fr)); } .form-wide { grid-column: 1 / -1; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+/* Parent-brand polish: restrained typography, clear sections, and a live flagship. */
+.hero { padding-block: 48px 28px; }
+.hero h1 { font-size: clamp(2.4rem, 5.4vw, 4.3rem); line-height: 1.06; letter-spacing: -.035em; max-width: 720px; }
+.hero p { max-width: 58ch; font-size: 1.08rem; }
+.hero-grid { gap: 36px; }
+.hero-actions { align-items: center; gap: 14px 24px; }
+.text-link { display: inline-flex; align-items: center; gap: 10px; font-weight: 750; min-height: 44px; text-decoration-thickness: 1px; }
+.venture-index { border-left: 2px solid var(--line); padding-left: 26px; }
+.venture-index > a { border-bottom: 1px solid var(--line); display: grid; gap: 3px; padding-block: 15px; text-decoration: none; }
+.venture-index strong { font-size: 1.1rem; }
+.venture-index a span { color: var(--muted); font-size: .9rem; }
+.venture-index a:hover strong { text-decoration: underline; }
+.vault-section { padding-block: 26px 40px; }
+.vault-feature { background: var(--ink); color: #fff; display: grid; gap: 32px; padding: clamp(24px, 4vw, 44px); border-radius: 8px; }
+.live-label { display: inline-flex; align-items: center; gap: 9px; color: #dbe9e7; font-size: .8rem; font-weight: 700; }
+.live-label > span { height: 7px; width: 7px; border-radius: 50%; background: #9bd5bd; flex-shrink: 0; }
+.vault-copy h2 { font-size: clamp(2rem, 4.2vw, 3rem); line-height: 1.1; letter-spacing: -.025em; margin: 18px 0 12px; }
+.vault-copy p { color: #d2dde5; max-width: 62ch; margin: 0 0 16px; }
+.vault-copy .vault-lead { color: #fff; font-size: clamp(1.2rem, 2.5vw, 1.45rem); line-height: 1.4; }
+.vault-button { background: #fff; border-color: #fff; color: var(--ink); }
+.vault-button:hover, .vault-button:focus { background: #dce9e7; border-color: #dce9e7; color: var(--ink); }
+.vault-link, .vault-link:hover, .vault-link:focus { color: #fff; text-decoration-color: #aebfca; }
+.vault-topics { border-top: 1px solid #496071; padding-top: 22px; }
+.vault-topics ul { list-style: none; padding: 0; margin: 16px 0; }
+.vault-topics li { border-bottom: 1px solid #496071; display: grid; font-weight: 700; padding-block: 12px; }
+.vault-topics li span, .vault-topics p { color: #c2d1dc; font-size: .87rem; font-weight: 400; }
+.vault-topics p { margin-bottom: 0; }
+.section-heading h2 { font-size: clamp(1.8rem, 3.2vw, 2.65rem); line-height: 1.15; letter-spacing: -.02em; }
+.hub-card { box-shadow: none; padding: 24px; }
+.hub-card h3 { font-size: 1.5rem; }
+.resource-strip, .founder-grid { display: grid; gap: 24px; }
+.resource-strip { border-block: 1px solid var(--line); padding-block: 32px; }
+.resource-strip h2, .founder-grid h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 1.15; letter-spacing: -.02em; margin: 12px 0 16px; }
+.resource-strip p, .founder-grid p { color: var(--muted); margin-top: 0; }
+.resource-strip nav { display: grid; align-content: center; }
+.resource-strip nav a { border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 16px; padding-block: 14px; font-weight: 700; text-decoration: none; }
+.resource-strip nav a:hover { text-decoration: underline; }
+.founder-section { padding-top: 24px; }
+.contact-band { background: var(--soft-navy); border: 0; padding: 28px; }
+.contact-band > .button { justify-self: start; }
+.product-portal-vault { background: var(--soft-navy); }
+.product-feature { background: var(--surface); }
+.page-hero h1 { font-size: clamp(2.3rem, 6vw, 4rem); line-height: 1.08; }
+.primary-navigation a { min-height: 44px; display: flex; align-items: center; }
+.footer-nav a, .footer-socials a { display: inline-flex; align-items: center; min-height: 44px; }
+.site-footer { padding-block: 40px; }
+@media (min-width: 760px) {
+ .hero { padding-block: 64px 30px; }
+ .hero-grid { grid-template-columns: minmax(0, 1.6fr) minmax(240px, .8fr); }
+ .vault-feature { grid-template-columns: minmax(0, 1.5fr) minmax(230px, .8fr); align-items: center; }
+ .vault-topics { border-top: 0; border-left: 1px solid #496071; padding: 0 0 0 28px; }
+ .resource-strip, .founder-grid { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 52px; }
+ #business-preview .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .section { padding-block: 44px; }
+ .vault-section { padding-block: 26px 40px; }
+}
+@media (max-width: 759px) {
+ .venture-index { display: none; }
+ .hero h1 { font-size: clamp(2.25rem, 9vw, 3.1rem); }
+ .vault-feature { gap: 22px; }
+ .vault-topics li { padding-block: 9px; }
+ .section { padding-block: 30px; }
+ .vault-section { padding-top: 14px; }
+ .founder-section { padding-top: 16px; }
+}
+@media (max-width: 430px) {
+ .hero-actions { align-items: flex-start; gap: 10px; }
+ .hero-actions .text-link { padding-block: 4px; }
+ .live-label { font-size: .75rem; }
+}
+.merch-card, .merch-order { box-shadow: none; }
+.inner-page .section-first { padding-top: 12px; }

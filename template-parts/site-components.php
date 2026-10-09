@@ -21,6 +21,28 @@ function holt_holdings_page_hero( $eyebrow, $title, $description ) {
 	<?php
 }
 
+/** Live product feature using the existing outbound analytics helper. */
+function holt_holdings_vault_feature() {
+	$config = holt_holdings_home_config();
+	?>
+	<article class="vault-feature">
+		<div class="vault-copy">
+			<span class="live-label"><span aria-hidden="true"></span> Live product · A Holt Holdings LLC project</span>
+			<h2>Low Volt Vault</h2>
+			<p class="vault-lead">Practical field resources for low-voltage technicians.</p>
+			<p>Guides, troubleshooting references, and system-specific knowledge for the work in front of you—from access control and cameras to networking, intercoms, and cabling.</p>
+			<p>Explore the Free resources or go deeper with Pro. Built by Holt Holdings LLC and available now at lowvoltvault.com.</p>
+			<div class="section-actions"><?php holt_holdings_button_link( $config['links']['lowvolt_vault'], 'Explore Low Volt Vault', 'button vault-button' ); ?><?php holt_holdings_button_link( 'https://lowvoltvault.com/library', 'Browse the library', 'text-link vault-link' ); ?></div>
+		</div>
+		<div class="vault-topics" aria-label="Low Volt Vault resource areas">
+			<span class="panel-label">Knowledge for the field</span>
+			<ul><li>Access control <span>Doors, readers & systems</span></li><li>Video surveillance <span>Planning & troubleshooting</span></li><li>Networking & cabling <span>Connections & infrastructure</span></li><li>Intercoms & field knowledge <span>Setup & practical references</span></li></ul>
+			<p>Searchable guides. Free & Pro access.</p>
+		</div>
+	</article>
+	<?php
+}
+
 function holt_holdings_business_cards( $businesses, $limit = 0 ) {
 	$shown = 0;
 	?>
@@ -87,17 +109,12 @@ function holt_holdings_merch_cards( $items, $limit = 0 ) {
 	<div class="merch-grid">
 		<?php foreach ( $items as $item ) : ?>
 			<article class="merch-card" data-merch-status="<?php echo esc_attr( $item['availability'] ); ?>">
+				<?php if ( $item['front_image'] ) : ?>
 				<div class="merch-media">
-					<?php if ( $item['front_image'] ) : ?>
 						<img class="merch-photo" src="<?php echo esc_url( $item['front_image'] ); ?>" alt="<?php echo esc_attr( sprintf( __( '%s front view', 'holt-holdings' ), $item['name'] ) ); ?>" width="720" height="720" loading="lazy">
 						<?php if ( $item['angled_image'] ) : ?><img class="merch-photo merch-photo-angle" src="<?php echo esc_url( $item['angled_image'] ); ?>" alt="<?php echo esc_attr( sprintf( __( '%s angled view', 'holt-holdings' ), $item['name'] ) ); ?>" width="240" height="240" loading="lazy"><?php endif; ?>
-					<?php else : ?>
-						<div class="merch-placeholder" role="img" aria-label="<?php echo esc_attr( sprintf( __( 'Product photo coming soon for %s', 'holt-holdings' ), $item['name'] ) ); ?>">
-							<strong aria-hidden="true"><?php echo esc_html( strtoupper( substr( $item['brand'], 0, 2 ) ) ); ?></strong>
-							<small><?php esc_html_e( 'Product photo coming soon', 'holt-holdings' ); ?></small>
-						</div>
-					<?php endif; ?>
 				</div>
+				<?php endif; ?>
 				<span class="card-kicker"><?php echo esc_html( $item['brand'] ); ?></span>
 				<h3><?php echo esc_html( $item['name'] ); ?></h3>
 				<p><?php echo esc_html( $item['description'] ); ?></p>
